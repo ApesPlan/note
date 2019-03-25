@@ -10,3 +10,26 @@
 // 启动
 // 首先
 sudo apt-get update
+sudo apt-get install nginx
+sudo service nginx restart
+
+sudo apt-get install mysql-server mysql-client
+mysql -u root -p
+sudo mysql
+mysqld_safe --skip-grant-tables &
+sudo service mysql restart
+use mysql;
+update mysql.user set authentication_string=PASSWORD('447728'),plugin='mysql_native_password' where user='root';
+flush privileges;
+show databases;
+exit;
+sudo apt-get install php7.2 php7.2-fpm php7.2-mysql
+
+sudo vim /etc/nginx/sites-available/default
+sudo cp default default.bak
+sudo vim /etc/php/7.2/fpm/pool.d/www.conf
+sudo service php7.2-fpm start
+cd /mnt/d/ruanjian/phpStudy/PHPTutorial/WWW
+
+use joyway_campus_activity;
+source /mnt/f/joyway_campus_activity_20190325.sql;
