@@ -1,0 +1,1 @@
+AnswerStore::where("valid", true)->select(["question", "right_index", "selects"])->get()->toArray();

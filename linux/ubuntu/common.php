@@ -32,4 +32,8 @@ sudo service php7.2-fpm start
 cd /mnt/d/ruanjian/phpStudy/PHPTutorial/WWW
 
 use joyway_campus_activity;
-source /mnt/f/joyway_campus_activity_20190325.sql;
+win     source f:/joyway_campus_activity_20190325.sql;
+linux   source /mnt/f/joyway_campus_activity_20190325.sql;
+use joyway_campus;
+win     source f:/joyway_campus_20190325.sql;
+linux   source /mnt/f/joyway_campus_20190325.sql;
