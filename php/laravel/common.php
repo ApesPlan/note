@@ -31,12 +31,16 @@ return $this->response(Code::ok, ["can" => $act->isCanJoin()]);
 const QuestionsNumb = 6;
 self::QuestionsNumb
 
+json格式返回
+return Json::response(Code::ok, $awards);
 
+if (preg_match('/^\d*/', $prize->name, $matches)) {}
 
-
-
-
-
+$data = array_map(function ($item) use ($targetKey) {
+    return array_merge($item, [
+    'initials' => $this->getInitials($item[$targetKey]),
+    ]);
+}, $data);
 
 
 
