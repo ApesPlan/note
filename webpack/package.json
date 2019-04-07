@@ -1,0 +1,20 @@
+{
+    "name": "webpack_import_module",
+    "sideEffects": ["@babel/polly-fill", "*.css"], // 表示使用tree shaking 这些文件不被忽略
+    "version": "1.0.0",
+    "description": "",
+    "private": true, // 私有项目将不会发布npm仓库里
+    "main": "index.js", // 向外暴露
+    "scripts": {
+//        "bundle": "webpack" // 命令行执行 npm run bundle = npm webpack
+        "watch": "webpack --watch", // 实时打包 命令方式
+        "start": "webpack-dev-server", // 打包完毕启动服务器 也是实时刷新 webpack服务器
+        "middleware": "node server.js" // 自己写的服务器 在node中直接使用webpack
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0"
+    }
+}

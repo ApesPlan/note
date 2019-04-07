@@ -1,4 +1,4 @@
-composer create-project laravel/laravel laravel54 "5.4.*"
+composer create-project  --prefer-dist  laravel/laravel=5.5.*  blog
 
 $class = new ReflectionClass('\\App\\Models\\Act\\' . $modelName);
 $obj = $class->newInstance();
