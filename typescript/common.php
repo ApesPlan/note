@@ -17,4 +17,9 @@ for (v of arr) {}
 
 await 操作符用于等待一个 Promise 对象, 它只能在异步函数 async function 内部使用.
 
-
+ts中使用vue需要引入vue-class-component和vue-property-decorator
+vue class component 是vue 官方出的
+vue property decorator 是社区出的
+其中vue class component 提供了 vue component 等等
+vue property decorator 深度依赖了 vue class component 拓展出了很多操作符 @Prop @Emit @Inject 等等 可以说是 vue class component 的一个超集
+正常开发的时候 你只需要使用 vue property decorator 中提供的操作符即可 不用再从vue class componen 引入vue component
