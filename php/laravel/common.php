@@ -1,3 +1,4 @@
+composer config -g repo.packagist composer https://packagist.laravel-china.org
 composer create-project  --prefer-dist  laravel/laravel=5.5.*  blog
 
 $class = new ReflectionClass('\\App\\Models\\Act\\' . $modelName);
