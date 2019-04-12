@@ -25,3 +25,17 @@ keep-alive用法
     3.this.$router.go(n)
 
     相对于当前页面向前或向后跳转多少个页面,类似 window.history.go(n)。n可为正数可为负数。正数返回上一个页面
+
+
+    路由守卫的触发流程
+    1.点击路由跳转
+    2.在失活的组件（即将离开的页面组件）里调用离开路由守卫 beforeRouteLeave
+    3.调用全局的前置守卫 beforeEach
+    4.在重用的组件里调用 beforeRouteUpdate
+    5.调用路由独享的守卫 beforeEnter
+    6.解析异步路由组件
+    7.在被激活的组件（即将进入的页面组件）里调用 beforeRouteEnter
+    8.调用全局的解析守卫 beforeResolve
+    9.导航被确认
+    10.调用全局的后置守卫 afterEach
+    11.触发DOM更新
