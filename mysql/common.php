@@ -13,3 +13,5 @@ show databases;
 use 库名;
 // 向数据库里导入数据
 source d:/文件名;
+
+like  %在后才能使用到索引
