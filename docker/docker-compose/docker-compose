@@ -1,0 +1,12 @@
+安装docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+查看是否安装成功
+docker-compose -v
+
+
+使用Compose 基本上分为三步：
+
+Dockerfile 定义应用的运行环境
+docker-compose.yml 定义组成应用的各服务
+docker-compose up 启动整个应用

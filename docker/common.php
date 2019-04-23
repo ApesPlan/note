@@ -7,6 +7,7 @@ docker run -d --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www
 
 
 docker network create -d bridge lnmp7
+docker network ls
 docker pull mysql:5.7
 docker run -d --name mysql57 --network lnmp7 -p 6668:3306 -v /data/mysql57:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=447728 mysql:5.7
 docker exec -it mysql57 /bin/bash
