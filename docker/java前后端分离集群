@@ -1,0 +1,97 @@
+docker search java
+docker pull docker.io/java
+// 导出镜像和导入镜像
+docker save java > /home/java.tar.gz // 导出
+docker load < /home/java.tar.gz // 导入
+exit 退出容器
+docker pull percona/percona-xtradb-cluster
+docker tag percona/percona-xtradb-cluster pxc
+docker network create --subnet=172.19.0.0/24 net1
+docker inspect net1
+docker volume create --name v1 // 创建docker卷
+docker inspect v1
+docker volume rm v1
+
+创建pxc容器 XTRABACKUP_PASSWORD=abc123456 // 数据库同步密码
+docker run -d -p 3306:3306 -v v1:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged --name=node1 --net=net1 --ip 172.18.0.2 pxc
+创建5个
+
+docker volume create --name v1
+docker volume create --name v2
+docker volume create --name v3
+docker volume create --name v4
+docker volume create --name v5
+
+docker run -d -p 5506:3306 -v v1:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged --name=node1 --net=net1 --ip 172.19.0.2 pxc
+docker run -d -p 5507:3306 -v v2:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged -e CLUSTER=node1 --name=node2 --net=net1 --ip 172.19.0.3 pxc
+docker run -d -p 5508:3306 -v v3:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged -e CLUSTER=node1 --name=node3 --net=net1 --ip 172.19.0.4 pxc
+docker run -d -p 5509:3306 -v v4:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged -e CLUSTER=node1 --name=node4 --net=net1 --ip 172.19.0.5 pxc
+docker run -d -p 5510:3306 -v v5:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 --privileged -e CLUSTER=node1 --name=node5 --net=net1 --ip 172.19.0.6 pxc
+一个一个的创建，创建mysql至少两分钟以上，确认能连上mysql的时候在创建下一个
+
+docker pull haproxy
+touch /home/soft/haproxy.cfg
+配置haproxy.cfg
+// 8888监控端口
+docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name haproxy --privileged --net=net1 haproxy
+haproxy -f /usr/local/etc/haproxy/haproxy.cfg
+创建两个
+docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --privileged --net=net1 haproxy
+docker run -it -d -p 4003:8888 -p 4004:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h2 --privileged --net=net1 haproxy
+docker exec -it h1 bash
+
+在数据库上创建haproxy账号
+CREATE USER 'haproxy'@'%' IDENTIFIED BY '';
+
+登录监控
+宿主机ip:4001/dbs
+docker stop node1
+不能同步了
+连接数据库就可以进行同步了
+
+安装keepalived
+apt-get update
+apt-get install keepalived
+
+apt-get install vim
+vim /etc/keepalived/keepalived.conf
+
+service keeplived start
+ping 172.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

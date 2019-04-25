@@ -1,0 +1,1 @@
+scp -r ./custom root@10.10.10.180:/data
