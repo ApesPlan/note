@@ -40,3 +40,5 @@ git tag release-v0.0.4
 git push --tag
 git push
 git push --tags // 上传所有标签
+
+git reset --soft HEAD^ // 撤销commit
