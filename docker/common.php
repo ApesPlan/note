@@ -47,6 +47,26 @@ docker exec -it [CONTAINER_NAME or CONTAINER_ID] /bin/bash
 
 vim /etc/sysconfig/network-scripts/ifcfg-enp0s3
 
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="dhcp"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp0s3"
+UUID="31178fbf-0efa-453a-b611-75892b4ae6bc"
+DEVICE="enp0s3"
+ONBOOT="yes"
+
+
+
+
 TYPE="Ethernet"
 PROXY_METHOD="none"
 BROWSER_ONLY="no"
@@ -97,3 +117,11 @@ sysctl net.ipv4.ip_forward
 
 docker network create -d bridge test1 网络桥
 docker network remove  bridge lnmp7
+
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+
+WARNING: IPv4 forwarding is disabled. Networking will not work.
+echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
+service network restart

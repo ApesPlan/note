@@ -1,5 +1,5 @@
 // 进入数据库
-mysql -hlocalhost -uroot -p447728
+mysql -h  localhost -uroot -p447728
 // 查看数据库列表
 show databases;
 // 使用某数据库
