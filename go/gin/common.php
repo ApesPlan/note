@@ -1,0 +1,1 @@
+govendor要放到path中,如果不在，可以用临时环境变量加入GOPATH

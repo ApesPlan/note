@@ -1,0 +1,32 @@
+// 日期
+$start_time = date('Y-m-01'); // 当月1号 日期
+$end_time = date('Y-m-d', strtotime("+1 day")); // 明天 日期
+$startDate = date('Y-m-d', strtotime("-1 month")); // 12.4---1.4
+$today = date('Y-m-d', time()).' 00:00:00'; // 当天凌晨 日期
+$date = date("Y-m"); //当月 日期
+$today = date('Y-m-d'); //今天 日期
+$subtractDay = ($endTime - $startTime) / 86400; // 天数
+date("Y-m-d H:i:s",time()) // 今天时间
+
+
+// 时间戳
+$start_time = strtotime(date('Y-m-01')); // 当月1号的时间戳
+$endTime = strtotime(date("Y-m-01", strtotime('+1 month'))); // 月末时间戳
+
+$today = date('Y-m-d'); // 今天 日期 2018-11-07
+$start = strtotime($today); // 1541520000  => 2018-11-07 00:00:00
+$end = strtotime("$today+1 day"); // 明天的时间戳 $today为日期 1541606400  => 2018-11-08 00:00:00
+$endTime = strtotime($today. '+1 day'); // 明天的时间戳 1541606400  => 2018-11-08 00:00:00
+
+$start_time = strtotime(date('Y-m-01')); // 当月1号的时间戳
+$nextTime = $startTime + 86400; // 下一天的时间戳
+$date = date("Y-m-d"); //当日 日期
+$begin = strtotime($date . '000000');  //2018-11-07 00:00:00
+$end = strtotime($date . '235959');
+$timeStamp = time();
+$sTime = mktime(0,0,0, date('m', $timeStamp), 1, date('Y', $timeStamp)); // 1541001600 => 2018-11-01 00:00:00
+$eTime = mktime(0,0,0, date('m', $timeStamp) + 1, 1, date('Y', $timeStamp)) - 1; // 1543593599 => 2018-11-30 23:59:59
+mktime('23','59','59'); // 1535558399 2018-08-29 23:59:59
+mktime('0','0','0'); // 今天时间戳
+
+date_default_timezone_set("PRC");

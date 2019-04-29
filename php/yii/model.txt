@@ -1,0 +1,327 @@
+/**
+ * @inheritdoc
+ */
+public function rules()
+{
+	return [
+		['email', 'email'],
+		['user_name', 'string', 'min' => 2, 'max' => 255],
+		['user_name', 'required', 'message' => '请填写用户名'],
+		[['user_name', 'realname'], 'filter', 'filter' => 'trim'],
+		['nickname', 'string', 'min' => 3, 'max' => 10, 'tooShort' => "用户名不能少于3位", 'tooLong' => "昵称不能多于10位"],
+		['nickname', 'unique', 'targetClass' => '\common\models\UserinfoBase', 'targetAttribute' => 'name', 'message' => '用户名已存在'],
+		['nickname', 'checkBadWord'],
+		['nickname', 'checkSpecialCharacter'],
+		['phone', 'match', 'pattern' => '/^1[3458][0-9]{9}$/i', 'message' => '请填写合法的手机号'],
+		['mobile', 'required', 'message' => '请填写手机号'],
+		['mobile', 'string', 'min' => 11, 'max' => 11, 'message' => '手机号码格式错误'],
+		['password', 'trim'],
+		['password', 'required', 'message' => '请填写密码'],
+		['password', 'string', 'min' => 6, 'max' => 18, 'tooShort' => '密码在6-18位之间！', 'tooLong' => '密码在6-18位之间！'],['password', 'string', 'min' => 6, 'tooShort' => '至少填写6位密码'],
+		['channel_source', 'match', 'not'=> false, 'pattern'=> '/^[a-z0-9-_.]+$/i', 'message' => '渠道来源格式错误'],
+		['pic', 'required', 'on' => static::SCENARIO_DEFAULT],
+		['pic', 'file', 'extensions' => 'png,jpg', 'maxSize' => '512000'],
+		['imaged', 'file', 'extensions' => 'png,jpg', 'maxSize' => '512000'],
+		[['add_time'], 'default', 'value' => time()],
+		[['add_time', 'last_login'], 'integer'],
+		[['password'], 'string', 'max' => 32],
+		[['last_ip'], 'string', 'max' => 15],
+	];
+}
+public function rules()
+{
+	return [
+		['mobile', 'trim'],
+		['mobile', 'required', 'message' => '请填写手机号'],
+		['mobile', 'string', 'min' => 11, 'max' => 11, 'message' => '手机号码格式错误'],
+
+		['code', 'required', 'message' => '请填写验证码', 'on' => 'code'],
+
+		['password', 'trim'],
+		['password', 'required', 'message' => '请填写密码'],
+		['password', 'string', 'min' => 6, 'max' => 18, 'tooShort' => '密码在6-18位之间！', 'tooLong' => '密码在6-18位之间！'],
+
+		[['referrer', 'invitation_code', 'channel_source'], 'string'],
+		[['channel_id'], 'integer'],
+
+		['nickname', 'trim'],
+		['nickname', 'string', 'min' => 3, 'max' => 10, 'tooShort' => "用户名不能少于3位", 'tooLong' => "昵称不能多于10位"],
+		['nickname', 'unique', 'targetClass' => '\common\models\UserinfoBase', 'targetAttribute' => 'name', 'message' => '用户名已存在'],
+		['nickname', 'checkBadWord'],
+		['nickname', 'checkSpecialCharacter'],
+
+		['channel_source', 'trim'],
+		['channel_source', 'string', 'max' => 20, 'tooLong' => '渠道来源不能多于20位'],
+		['channel_source', 'match', 'not'=> false, 'pattern'=> '/^[a-z0-9-_.]+$/i', 'message' => '渠道来源格式错误'],
+
+		['pic', 'required', 'on' => static::SCENARIO_DEFAULT],
+
+		['pic', 'file', 'extensions' => 'png,jpg', 'maxSize' => '512000'],
+		['imaged', 'file', 'extensions' => 'png,jpg', 'maxSize' => '512000'],
+	];
+}
+	
+public function rules()
+{
+	return [
+		['code', 'required', 'message' => '请填写渠道编码'],
+		['code', 'string', 'min' => 2, 'max' => 200],
+		['user_name', 'string', 'min' => 2, 'max' => 255],
+		['user_name', 'required', 'message' => '请填写用户名'],
+		[['user_name', 'realname'], 'filter', 'filter' => 'trim'],
+	];
+}
+
+public function scenarios()
+{
+	$scenarios = parent::scenarios();
+	$scenarios['create'] = ['realname', 'phone', 'email'];
+	return $scenarios;
+}
+
+const DATA_VISIBLE = 1;
+const DATA_INVISIBLE = 0;
+
+public static $visibleText = [
+	self::DATA_VISIBLE => '可见',
+	self::DATA_INVISIBLE => '不可见',
+];
+
+public function getUser()
+{
+	return $this->hasOne(UserinfoBase::className(), ['userid' => 'userid']);
+}
+
+/**
+ * 获取分类下所有文章
+ */
+public function getArticles()
+{
+	return $this->hasMany(Article::className(), ['cat_id' => 'id']);
+}
+
+public function getModifier()
+{
+	return $this->hasOne(\backend\models\AdminUser::className(), ['user_id' => 'modifier_id']);
+}
+
+public static function agoMoneyRecord($userid, $page)
+{
+	return static::find()
+		->where(['userid' => $userid])
+		->OrderBy(['id' => SORT_DESC])
+		->limit(8)
+		->offset(($page - 1) * 8)
+		->all();
+}
+
+// 获取所有渠道名称
+$model = Channel::find()->select(['name', 'id']);
+$channelNameRes = $model->where(['in', 'id', $channelAll])->all();
+$ChannelNameData = [];
+foreach ($channelNameRes as $k => $v) {
+	$ChannelNameData[$v->id] = $v->name;
+}
+
+$params['ChannelAccountLogSearch']['startTime'] = $startTime;
+$params['ChannelAccountLogSearch']['endTime'] = $endTime;
+$params['ChannelAccountLogSearch']['channel_id'] = $channel->id;
+$dataProvider = $searchModel->search($params);
+return $this->render('profit', [
+            'searchModel' =>$searchModel,
+            'dataProvider' =>$dataProvider,
+			]);
+			
+public function search($params)
+{
+	$query = ChannelAccountLog::find();
+	$query->alias('cal');
+	$query->joinWith(['user user']);
+	$query->joinWith(['channel channel']);
+	$query->joinWith(['room room', 'user u']);
+	$query->select('w.*');
+	// add conditions that should always apply here
+	$dataProvider = new ActiveDataProvider([
+		'query' => $query,
+		'pagination' => [
+			'pageSize' => 10,
+		],
+		'sort' => [
+			'defaultOrder' => [
+				'add_time' => SORT_DESC
+			]
+		]
+	]);
+
+	$this->load($params);
+
+	if (!$this->validate()) {
+		// uncomment the following line if you do not want to return any records when validation fails
+		// $query->where('0=1');
+		return $dataProvider;
+	}
+	// grid filtering conditions
+
+	$query->andFilterWhere([
+		'add_time' => $this->add_time,
+		'userid' => $this->userid,
+		'user.name' => $this->name,
+		'order_id' => $this->order_id,
+		'money' => $this->money,
+		'order_money' => $this->order_money,
+		'current_rate' => $this->current_rate,
+		'count_rate' => $this->count_rate,
+		'desc' => $this->desc,
+	]);
+	$channelIds = [$this->channel_id];
+	$subBranches = Channel::findAll([
+		'parent_id' => $this->channel_id
+	]);
+	foreach ($subBranches as $v) {
+		$channelIds[] = $v['id'];
+	}
+	$query->andwhere(['>', 'money', 0]);
+	$query->andWhere(['in', 'cal.channel_id' , $channelIds]);
+	if ($this->startTime) {
+		$query->andFilterWhere(['>=', 'add_time', $this->startTime]);
+	}
+	if ($this->endTime) {
+		$query->andFilterWhere(['<', 'add_time', $this->endTime]);
+	}
+	
+	$query->andFilterWhere(['like', 'desc', $this->desc]);
+	$query->orderBy(['id' => SORT_DESC]);
+	
+	return $dataProvider;
+}
+
+public static function getAnimalBetByIssue($issueId, $userid)
+{
+	return AnimalBet::find()
+		->where(['issue_id' => $issueId, 'userid' => $userid])
+		->andWhere(['!=', 'status', AnimalBet::STATUS_REVOKE])
+		->all();
+}
+
+public static function findBetList()
+{
+	return AnimalBet::find()
+		->from(['b' => AnimalBet::tableName()])
+		->leftJoin(['i' => self::tableName()], '[[b.issue_id]]=[[i.id]]')
+		->where(['!=', 'b.status', AnimalBet::STATUS_REVOKE]);
+}
+$betList = self::findBetList()
+	->andWhere(['i.issue_no' => $issueNo])
+	->select(['b.*'])
+	->all();
+
+public static function getQuizzesCount($startTime, $endTime, $getIssueNo, $getSomeone)
+{
+	$params = [
+		':start_time' => $startTime,
+		':endTime' => $endTime,
+	];
+	// 当用户填写期号时，给予其查询参数
+	$where = '';
+	if(!empty($getIssueNo)){
+		$where = "AND ai.issue_no like :getIssueNo ";
+		$params[':getIssueNo'] = $getIssueNo . '%';
+	}
+	// 当用户选择参与人数不为0时，通过联合查询订单列表中订单不为空的数据
+	$whereSomeone = '';
+	if($getSomeone == 1){
+		$whereSomeone = "AND ag.order_no != '' ";
+	}
+	$sql = "SELECT count(ai.issue_no) count "
+		. " FROM live_animal_issue AS ai "
+		. " LEFT JOIN live_animal_guess AS ag ON ai.issue_no = ag.issue_no "
+		. " WHERE ai.start_time >= :start_time AND ai.start_time < :endTime "
+		. $where
+		. $whereSomeone;
+	$rankingResult = Yii::$app->db->createCommand($sql, $params)->queryOne();
+	$count = $rankingResult['count'];
+	return $count;
+}
+
+$params = [
+	':start_time' => $startTime,
+	':endTime' => $endTime,
+	':page' => $page,
+	':pageSize' => $pageSize,
+];
+// 当用户填写期号时，给予其查询参数
+$where = '';
+if(!empty($getIssueNo)){
+	$where = "AND ai.issue_no like :getIssueNo ";
+	$params[':getIssueNo'] = $getIssueNo . '%';
+}
+// 当用户选择参与人数不为0时，通过联合查询订单列表中订单不为空的数据
+$whereSomeone = '';
+if($getSomeone == 1){
+	$whereSomeone = "AND ag.order_no != '' ";
+}
+$sql = "SELECT ai.id, ai.issue_no, ai.status, ai.start_time "
+	. " FROM live_animal_issue AS ai "
+	. " LEFT JOIN live_animal_guess AS ag ON ai.issue_no = ag.issue_no "
+	. " WHERE ai.start_time >= :start_time AND ai.start_time < :endTime "
+	. $where
+	. $whereSomeone
+	. " GROUP BY ai.issue_no "
+	. " ORDER BY ai.start_time DESC "
+	. " LIMIT :page , :pageSize ";
+$rankingIssueId = Yii::$app->db->createCommand($sql, $params)->queryAll();
+
+public function beforeSave($insert)
+{
+	$now = time();
+	$userId = Yii::$app->user->getId();
+
+	if ($insert) {
+		$this->creator_id = $userId;
+		$this->created = $now;
+	}
+
+	$this->modifier_id = $userId;
+	$this->modified = $now;
+
+	return parent::beforeSave($insert);
+}
+
+public function afterSave($insert, $changedAttributes)
+{
+	if ($insert) {
+		Yii::$app->redis->sadd("channel-ids", $this->id);
+	}
+	parent::afterSave($insert, $changedAttributes);
+}
+
+if (preg_match('/(\\\u[ed][0-9a-f]{3})/i', json_encode($name))) {
+	throw new \Exception('昵称不允许使用表情符号', self::NAME_EMO);
+}
+
+if (!preg_match('/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]{3,10}$/u', $name)) {
+	throw new \Exception('昵称不能包含特殊字符', self::NAME_SPECIAL);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

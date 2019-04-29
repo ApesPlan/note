@@ -1,0 +1,351 @@
+<?php
+if (
+	ChannelAccount::find()
+	->where(['month' => $month, 'channel_id' => $channel->id])
+	->andWhere(['not in', 'status', [ChannelAccount::STATUS_REFUSE]])
+	->exists()
+	) {
+	throw new \Exception("该 {$month} 已申请过结算");
+}
+
+// php 怎么随机从数据库里获取10条数据
+SELECT * FROM table order by rand() limit 10;
+
+$commission = Yii::$app->db
+	->createCommand(
+		"select sum(current_commission) money 
+		from `live_user_mission` 
+		where channel_id = {$channel->id} 
+		and commission_time > {$sTime} 
+		and commission_time < {$eTime}"
+	)
+	->queryOne();
+
+// in  GROUP BY ORDER BY
+$sql = "SELECT userid, channel_id, SUM(order_money) consume_money 
+	FROM live_channel_account_log 
+	WHERE channel_id IN ($allId) 
+	AND add_time > $startTime 
+	AND add_time < $endTime 
+	GROUP BY userid, channel_id 
+	ORDER BY consume_money 
+	DESC LIMIT 100 ";
+$data = $db->createCommand($sql)->queryAll();
+$data = $db->createCommand($sql)->queryOne();
+
+// pdo
+$model = ChannelRateChangeLog::find()
+	->where('channel_id = :channel_id', [':channel_id' => $channelId])
+	->orderBy(['add_time' => SORT_DESC])
+	->one();
+
+// in like
+$sqlChannel = "SELECT id FROM live_channel WHERE id in ($childChannel) AND name like '%$name%' ";
+// in (yii)
+$appinfos = AppInfo::find()->where(['in', 'channel_id', [$channel->parent_id]])->all();
+
+$admin = ChannelAdmin::find()
+	->select(['c.code', 'ca.phone', 'ca.email', 'ca.user_name'])
+	->from(ChannelAdmin::tableName() . ' ca')
+	->innerJoin(Channel::tableName() . ' c', 'c.id=ca.channel_id')
+	->where(['c.code' => $code])
+	->andWhere(['ca.user_name' => $user_name])
+	->asArray()
+	->one();
+	
+// sql嵌套
+$moneySql = "select SUM(m.order_money) order_money 
+	from (
+		select order_money, order_id 
+		from `" . ChannelAccountLog::tableName() . "` 
+		where channel_id = $channelId 
+		GROUP BY order_id
+	) m ";
+
+// DISTINCT 去重
+$registerUserSql = "select count(DISTINCT(u.userid)) register_count 
+	from `" . UserinfoBase::tableName() . "` u 
+	left join `" . AccountLog::tableName() . "` l 
+	on u.userid = l.userid 
+	where u.channel_id 
+	in ($childChannel) ";
+
+// 根据时间筛选信息
+$moneySql = "select from_unixtime(add_time, '%Y-%m') time, SUM(order_money) order_money 
+	from `" . ChannelAccountLog::tableName() . "` 
+	where channel_id = $channelId 
+	GROUP BY time";
+$registerUserSql = "select from_unixtime(`regtime`,'%Y-%m') time, count(DISTINCT(u.userid)) register_count 
+	from `" . UserinfoBase::tableName() . "` u 
+	left join `" . AccountLog::tableName() . "` l 
+	on u.userid = l.userid 
+	where u.channel_id in ($childChannel) 
+	group by time 
+	order by time desc ";
+$registerResult = Yii::$app->db->createCommand("
+	select from_unixtime(`regtime`,'%Y-%m') time, count(DISTINCT(u.userid)) count 
+	from `live_userinfo_base` u 
+	left join `live_account_log` l 
+	on u.userid = l.userid 
+	where u.channel_id in ($channelIds) 
+	group by time 
+	order by time desc
+")
+->queryAll();
+$data = ChannelAccountLog::find()
+	->select(["from_unixtime(`add_time`,'%Y/%m/%d') as time", 'SUM(order_money) as sale_money', 'SUM(money) as agent_money'])
+	->where(['in', 'channel_id', $channelIdList])
+	->groupBy('time')
+	->orderBy(['time' => SORT_DESC])
+	->limit(30)
+	->asArray()
+	->all();
+
+// 拼接模式 （yii）	
+$channelQuery = Channel::find()->where(['in', 'id', $channelIdList]);
+$channelAccountQuery = ChannelAccountLog::find()->where(['in', 'channel_id', $channelIdList]);
+$userQuery = UserinfoBase::find()->where(['in', 'channel_id', $channelIdList]);
+
+$channelQuery->andWhere(['between', 'created', $startTime, $endTime]);
+$channelAccountQuery->andWhere(['between', 'add_time', $startTime, $endTime]);
+$userQuery->andWhere(['between', 'regtime', $startTime, $endTime]);
+
+'order_money' => $channelAccountQuery->sum('order_money') ?? 0,              // 销售额
+'register_count' => $userQuery->count(),                                        // 注册人数
+'consume_num' => $channelAccountQuery->groupBy('userid')->count(),    // 消费人数
+'count_member' => $channelQuery->count(),                                       // 渠道数
+'top_channel' => $channelCount,                                                 // 一级渠道
+'count_one_member' => $channelCount,                                            // 一级渠道
+'agent_money' => $channelAccountQuery->sum('money') ?? 0,                    // 代理费
+// 拼接模式 （yii）
+$query = UserinfoBase::find()
+	->from(['u' => UserinfoBase::tableName()])
+	->leftJoin(['o' => Order::tableName()], '[[u.userid]]=[[o.userid]]')
+	->select(['u.name', 'u.userid', 'u.phone', 'u.channel_id'])
+	->where(['o.id' => null])
+	->andWhere(['in', 'u.channel_id', $allId])
+	->groupBy('u.userid');
+$count = $query->count();
+$users = $query->limit(5)
+	->offset(($page - 1) * 5)
+	->all();
+
+// 批量插入 data中的数据到 ChannelAccount
+Yii::$app->db->createCommand()->batchInsert(
+	ChannelAccount::tableName(),
+	['month', 'add_time', 'channel_id', 'status', 'money', 'desc'],
+	$data
+)->execute();
+
+// sql拼接
+$paramToday = [
+	':today_start' => $startTime,
+	':today_end' => $nextTime,
+	':type' => $regulation,
+];
+$sql = "SELECT sum(integral) today_integral"
+	. " FROM live_integral "
+	. " WHERE created_at >= :today_start AND created_at < :today_end AND type = :type AND action in ("
+	. IntegralStatistics::ACTION_CONSUME . ","
+	. IntegralStatistics::ACTION_GIFT . ","
+	. IntegralStatistics::ACTION_DRAW . ","
+	. IntegralStatistics::ACTION_INVITE . ","
+	. IntegralStatistics::ACTION_SIGNIN . ","
+	. IntegralStatistics::ACTION_SHARE_LOTTERY . ","
+	. IntegralStatistics::ACTION_ATTENTION_WEIXIN . ","
+	. IntegralStatistics::ACTION_IDCARD . ","
+	. IntegralStatistics::ACTION_BUY_LOTTERY . ","
+	. IntegralStatistics::ACTION_GOLD_EGG . ","
+	. IntegralStatistics::ACTION_BOX_NO . ","
+	. IntegralStatistics::ACTION_REFUND_INTEGRAL . ","
+	. IntegralStatistics::ACTION_EXCHANGE . ","
+	. IntegralStatistics::ACTION_ANIMAL_BET . ","
+	. IntegralStatistics::ACTION_ANIMAL_BET_WIN . ","
+	. IntegralStatistics::ACTION_INTEGRAL_RECHARGE .")";
+$today[$regulation] = Yii::$app->db->createCommand($sql, $paramToday)->queryOne();
+
+// LENGTH
+$time = mktime(0,0,0);
+$last = Yii::$app->db->createCommand("
+		SELECT `code` 
+		FROM `live_channel` 
+		WHERE `created` > {$time} 
+		AND LENGTH(`code`) = 10 
+		ORDER BY `id` DESC LIMIT 1
+	")
+	->queryOne();
+	
+// 大联合查询
+$sql = "(SELECT id, concat(0) as type,join_time as add_time, price as money, buy_count, final_money, work_num, concat(0) as order_id, concat('joinScheme') as acc_type 
+			from live_pk_detail 
+			where userid = {$userId} ORDER BY id desc 
+		)
+		UNION (SELECT id, type, add_time, money, concat(0) as buy_count, concat(0) as final_money, concat(0) as work_num, order_id, concat('joinSchemeRefund') as acc_type 
+			FROM  `live_account_log` 
+			WHERE (`userid` = {$userId}) 
+			AND (`action` = ".AccountLog::ACTION_JOIN_SCHEME.") 
+			GROUP BY `action`, `order_id` 
+			ORDER BY	`id` DESC 
+		)
+		UNION (SELECT id, type, add_time, money, concat(0) as buy_count, concat(0) as final_money, concat(0) as work_num, concat(0) as order_id, concat('joinCoupon') as acc_type 
+			from live_coupon_log 
+			WHERE userid = {$userId} 
+			AND action = {$action} 
+			ORDER BY id DESC 
+		)
+		UNION (SELECT id, concat(0) as type, join_time as add_time, price as money, buy_count, final_money, concat(0) as work_num, concat(0) as order_id, concat('hundred') as acc_type 
+			from live_many_pk_detail 
+			where userid = {$userId} 
+			ORDER BY join_time DESC 
+		)
+		ORDER BY add_time DESC 
+		LIMIT 8 OFFSET ". ($page - 1) * 8;
+$list = Yii::$app->dbSlave->createCommand($sql)->queryAll();
+
+// 更新记录
+$sql = "UPDATE live_userinfo_base SET frozen_money = :frozenMoney, user_money = :userMoney, integral = integral - :integral, diamond = diamond - :diamond WHERE userid = :userId";
+$params = [
+	':userId' => $userId,
+	':frozenMoney' => $frozenMoney,
+	':userMoney' => $userMoney,
+	':integral' => $integral,
+	':diamond' => $diamond
+];
+$updateUserRes = Yii::$app->db->createCommand($sql, $params)->query();
+
+// 更新邀请数据统计 有计算
+$inviterSql = "UPDATE " . DistInviter::tableName()
+			   . " SET invite_bonus = invite_bonus + :rateMoney, invitee_consume = invitee_consume + :payMoney WHERE userid = :userid";
+$params = [
+	':userid' => $inviterId,
+	':rateMoney' => $bonusMoney,
+	':payMoney' => $ticketMoney
+];
+$rows = Yii::$app->db->createCommand($inviterSql, $params)->execute();
+
+//FOR UPDATE 行锁
+$row = Yii::$app->db->createCommand('select * from live_userinfo_base where userid=' . $user->userid . ' FOR UPDATE')->queryOne(); 
+
+// 多个条件联合查询
+$employeeCondition = '';
+if (!empty($isEmployee)) {
+	$employeeCondition = " and bo.employee != :employee";
+}
+$typeCondition = '';
+if (!empty($type)) {
+	$typeCondition = " and bo.type = :type";
+}
+$deviceCondition = '';
+if ($device !== '') {
+	$deviceCondition = ' AND bo.device = :device';
+}
+//查询order_batch
+$sql = "SELECT luo.nickname, luo.open_id, bo.id batch_id, bo.userid userid, t.name ticket, t.money shop_money, bo.amount, bo.type, bo.money money, 
+	bo.add_time AS add_time, bo.employee, bo.device device
+	FROM live_batch_order bo 
+	LEFT JOIN live_user_oauth luo ON bo.oauth_id = luo.id 
+	LEFT JOIN shop_type t ON bo.type_id = t.id
+	WHERE bo.add_time >= :startTime AND bo.add_time < :endTime
+	AND bo.source = :source
+	$employeeCondition $typeCondition $deviceCondition
+	ORDER BY bo.id DESC";
+
+
+// sql 其他形式
+$sql = <<<SQL
+	select u.userid, u.name, sum(o.all_money) from live_userinfo_base u
+	left join live_order o on u.userid=o.userid
+	left join live_liveroom r on r.id=o.room_id
+	where o.add_time between $startTime and $endTime
+	$typeCondition
+	group by o.userid
+SQL;
+
+$sql = <<<SQL
+select 
+	case
+	when m <= 30 then '0' 
+	when m > 30 and m <= 100 then '1' 
+	when m > 100 and m <= 300 then '2' 
+	when m > 300 and m <= 600 then '3' 
+    when m > 600 and m <= 1000 then '4' 
+	when m > 1000 and m <= 10000 then '5' 
+	when m > 10000 then '6' 
+	end as level, count(*) count, sum(m) money
+from (select o.userid, sum(o.all_money) m from live_order o left join live_liveroom room on o.room_id=room.id
+where o.add_time between $startTime and $endTime $typeCondition group by o.userid) a
+group by level
+SQL;
+return Yii::$app->dbSlave->createCommand($sql)->queryAll();
+
+$sql = <<<SQL
+	select "注册用户" as label, count(*) value from employee where status=1 and ctime >= $startTime and ctime < $endTime and channel_id = $channel_id and employee = 0
+	union all select "绑定用户", count(*) from employee where status=1 and ctime >= $startTime and ctime < $endTime and employee = 0 and channel_id = $channel_id and phone <> "" and phone is not null and id_card <> "" and id_card is not null
+	union all select "购票用户", count(distinct userid) from live_batch_order where source = $source_id and add_time >= $startTime and add_time < $endTime and employee = 0
+	union all select "销售额", sum(money) from live_batch_order where source = $source_id and add_time >= $startTime and add_time < $endTime and employee = 0
+	union all select "中奖金额", sum(win_money) from live_batch_order where source = $source_id and add_time >= $startTime and add_time < $endTime and employee = 0
+	union all select "人均", sum(money) / count(distinct userid) from live_batch_order where source = $source_id and add_time >= $startTime and add_time < $endTime and employee = 0
+	union all select "充值", sum(money) from live_recharge_record where source=$source_id and tradeStatus='02' and add_time between from_unixtime($startTime) and from_unixtime($endTime) and userid not in (select userid from employee where employee = 1)
+	union all select "退款", sum(a.money) from live_user_refund a left join live_recharge_record b on a.recharge_id=b.id where a.created_at >= $startTime and a.created_at < $endTime and b.source=$source_id and a.userid not in (select userid from employee where employee = 1)
+	union all select "提现", sum(money) from live_account_log where userid in (select userid from employee where channel_id=$channel_id and employee = 0) and action=6 and add_time >= $startTime and add_time < $endTime
+SQL;
+$db->createCommand($sql)->queryScalar() //取多列结果中第一行的第一字段 
+
+// sql 函数 LEFT 从created中左边取10个字符
+$sql = "SELECT LEFT(FROM_UNIXTIME(created), 10) date, SUM(price / 100) money, COUNT(*) count FROM " . Gift::tableName()
+       . " WHERE created BETWEEN :startTime AND :endTime AND anchor_id = :anchorId GROUP BY date ORDER BY date";
+
+// if 和  in
+$orders = Order::find()
+	->select(['sum(all_money) totalMoney', 'date(from_unixtime(add_time)) ctime', 'if(sum(all_money)>=1200,1,0) isTrue'])
+	->where(['>=', 'add_time', $startTime])
+	->andWhere(['<=', 'add_time', $endTime])
+	->andWhere(['userid' => $userId])
+	->andWhere(['in', 'status', array(Order::STATUS_FINISHED, Order::STATUS_SOLD)])
+	->andWhere(['in', 'room_id', array(37, 38, 39)])
+	->groupBy('ctime')
+	->orderBy('ctime desc')
+	->asArray()
+	->all();	
+
+//根据id查询sql
+//方法 bindParam() 和 bindValue() 非常相似。
+//唯一的区别就是前者使用一个PHP变量绑定参数，而后者使用一个值。
+Yii::$app->db->createCommand('select * from post where id = :id and status = :status')
+->bindValue(':id',$_GET['id'])
+->bindValue(':status',1)
+->queryAll();	
+		
+// 连接本地redis
+'redis' => [
+	'class' => 'yii\redis\Connection',
+	'hostname' => '127.0.0.1',
+	'port' => 6379,
+	'database' => 0,
+],	
+
+// to_days 返回从0年开始 到 add_time 或者 now() 天数
+$sql = "select id from live_withdraw_deposit where userid = $userid AND to_days(add_time) = to_days(now()) LIMIT 1";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+

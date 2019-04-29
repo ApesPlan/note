@@ -1,0 +1,393 @@
+$this->title = '我的银行卡';
+$this->params['breadcrumbs'][] = ['label' => '渠道管理', 'url' => ['index']];
+$this->params['breadcrumbs'][] = '我的银行卡';
+
+
+<?php $this->beginBlock('password-confirm') ?>
+$(function() {
+    $('.submit').on('click', function() {
+        var month = $(this).data('month');
+        $.post('/branch/apply', {month: month}, function(res) {
+            if (res.status == 'ok') {
+                alert('操作成功');
+                window.location.reload();
+            } else {
+                alert(res.msg);
+            }
+        });
+    });
+
+    $('#refresh').click(function() {
+        $('#refresh-body').html('');
+        $.get('/branch/refresh-record', function(body) {
+            $('#refresh-body').html(body);
+        });
+    });
+});
+<?php $this->endBlock() ?>
+<?php $this->registerJs($this->blocks['password-confirm'], \yii\web\View::POS_END); ?>
+
+$.post('/operator/password?id='+user, { password:password } ,function(data) {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            window.location.href = '/operator/index';
+        }
+    });
+	
+<?php 
+use yii\widgets\DetailView; 
+use yii\helpers\Html;
+?>
+<?= DetailView::widget([
+	'model' => $model,
+	'attributes' => [
+	// 普通
+		'name',
+		[
+			'attribute' => 'openid',
+			'value' => $model->openid,
+			'visible' => isset($model->openid),
+		],
+		[
+			'attribute' => 'phone',
+			'value' => function($model) {
+				if ($model->channel->phone_visible) {
+					return $model->phone ?: null;
+				} else {
+					return $model->phone ? substr_replace($model->phone, '***', 3, 4) : null;
+				}
+			},
+		],
+		// format
+		[
+			'format' => 'html',
+			'attribute' => 'referrer',
+			'value' => $model->referrer_id ? Html::a($model->referrer->name, ['/channel/view-user', 'id' => $model->referrer_id], ['target' => '_blank']) : '',
+			'visible' => isset($model->referrer_id),
+		],
+		[
+			'label' => '充值金额',
+			'attribute' => 'recharge_money',
+			'format' => 'decimal',
+			'value' => $model->rechargeMoney,
+		],
+		[
+			'attribute' => '注册时间',
+			'value' => time() - $model->ctime,
+			'format' => "duration"
+		],
+		[
+			'attribute' => 'user.name',
+			'label' => '用户昵称',
+			'filter' => Html::textInput(
+				'ChannelAccountLogSearch[name]',
+				$searchModel->name,
+				['class' => 'form-control']
+			),
+		],
+		[
+			'label' => '状态',
+			'value' => \common\models\UserinfoBase::$statusText[$model->status],
+		],
+		'ctime:datetime',
+		[
+			'attribute' => 'ctime',
+			'label' => '关注时间',
+			'filter' => false,
+			'value' => function($model) {
+				return date('Y-m-d H:i:s',$model->ctime);
+			}
+		],
+		[
+			'attribute' => 'regip',
+			'value' => long2ip($model->regip),
+			'visible' => isset($model->regip),
+		],
+		
+	],
+]) ?>
+
+<input type="button" class="btn btn-default pull-right" onclick="javascript:history.back(-1);" value="返回">
+
+
+$cate =  \yii\helpers\ArrayHelper::map(\common\models\Category::find()->all(), 'id', 'name'); // 将返回数据拼装为key为id name为value的一维数组
+
+$page = (int)trim(Yii::$app->request->get('page', 1));// get获取参数
+
+$user = Yii::$app->user->getIdentity(); // 获取实例
+if (empty($user)) {
+	throw new Exception("请先登录", Errors::WRONG_ARGUMENT);
+}
+// 获取id
+Yii::$app->user->getId()
+// 判断是否是游客
+Yii::$app->user->isGuest
+Yii::$app->user->logout(true);// 去掉当前session
+
+public function init()
+{
+	parent::init();
+
+	Yii::$app->response->format = Response::FORMAT_JSON;
+}
+
+// 数组转换
+$getUserIdTwoArray = UserinfoBase::find()
+	->select('user_id')
+	->where(['like', 'name', $getUserId])
+	->asArray()
+	->all();
+// 二维数组转一维数组
+$getUserIdArray = array_column($getUserIdTwoArray, 'user_id');
+// 一位数组转字符串
+$getUserId = implode(',', $getUserIdArray);
+
+// sql拼装
+$model = Channel::find()->select(['name', 'id']);
+$channelNameRes = $model->where(['in', 'id', $channelAll])->all();
+
+// search model		
+public function search($params)
+{
+	$query = ChannelAccountLog::find();
+	$query->alias('cal');
+	$query->joinWith(['user user']);
+	$query->joinWith(['channel channel']);
+	// add conditions that should always apply here
+	$dataProvider = new ActiveDataProvider([
+		'query' => $query,
+		'pagination' => [
+			'pageSize' => 10,
+		],
+		'sort' => [
+			'defaultOrder' => [
+				'add_time' => SORT_DESC
+			]
+		]
+	]);
+
+	$this->load($params);
+
+	if (!$this->validate()) {
+		// uncomment the following line if you do not want to return any records when validation fails
+		// $query->where('0=1');
+		return $dataProvider;
+	}
+	// grid filtering conditions
+
+	$query->andFilterWhere([
+		'add_time' => $this->add_time,
+		'userid' => $this->userid,
+		'user.name' => $this->name,
+		'order_id' => $this->order_id,
+		'money' => $this->money,
+		'order_money' => $this->order_money,
+		'current_rate' => $this->current_rate,
+		'count_rate' => $this->count_rate,
+		'desc' => $this->desc,
+	]);
+	$channelIds = [$this->channel_id];
+	$subBranches = Channel::findAll([
+		'parent_id' => $this->channel_id
+	]);
+	foreach ($subBranches as $v) {
+		$channelIds[] = $v['id'];
+	}
+	$query->andwhere(['>', 'money', 0]);
+	$query->andWhere(['in', 'cal.channel_id' , $channelIds]);
+	if ($this->startTime) {
+		$query->andFilterWhere(['>=', 'add_time', $this->startTime]);
+	}
+	if ($this->endTime) {
+		$query->andFilterWhere(['<', 'add_time', $this->endTime]);
+	}
+	
+	$query->andFilterWhere(['like', 'desc', $this->desc]);
+	
+	return $dataProvider;
+}
+
+// 跳转
+if (!in_array($channelId, $channelAll)) {
+	return $this->redirect('/site/index');
+}
+// 跳转+参数
+return $this->redirect(['view', 'id' => $model->id]);
+
+//返回一个日期的 UNIX 时间戳
+$applyDate = mktime(0, 0, 0, date('m', $applyTime) + 1, date('d', $applyTime), date('Y', $applyTime));
+
+// 页面提示
+Yii::$app->session->setFlash('success', '操作成功');
+Yii::$app->session->setFlash('error', $text);
+
+// 页面刷新
+return $this->refresh();
+
+// 场景
+$model->scenario = 'finance';
+
+// 开启事务
+transaction = Yii::$app->db->beginTransaction();
+$data = Yii::$app->request->post("Channel");
+try {
+	$source = Channel::findOne($data['parent_id']);
+
+	if (!$source || $source->level >= 4 || !$source->sub_allow) {
+		throw new \Exception('该等级不允许建立分支');
+	}
+
+	$channelClassify = ChannelClassify::findOne($source['channel_classify_id']);
+	$code = !empty($data['code']) ? $data['code'] : $channel->getRandCode($channelClassify['channel_prefix']);
+	$level = $source->level + 1;
+	// 渠道分类
+	$channel->channel_classify_id = $channelClassify['id'];
+	// 注册奖励
+	$channel->rebate_register = $channelClassify['reward'];
+	$channel->code = $code;
+	$channel->level = $level;
+	//其它post传入的值
+	$channel->name = $data['name'];
+	$channel->desc = $data['desc'];
+	$channel->rebate_buy = $data['rebate_buy'];
+	$channel->parent_id = $data['parent_id'];
+	$channel->contact_name = $data['contact_name'];
+	$channel->contact_phone = $data['contact_phone'];
+	// 注册佣金
+	$channel->commission = 0;
+	if (!$channel->save()) {
+		throw new \Exception('渠道保存失败');
+	}
+
+	// 创建管理员
+	$user = new ChannelAdmin();
+	$user->user_name = '001';
+	$user->password = md5($code);
+	$user->parent_id = 0;
+	$user->channel_id = $channel->id;
+
+	if (!$user->save()) {
+		throw new \Exception('管理者保存失败');
+	}
+
+	$transaction->commit(); // commit
+	Yii::$app->session->setFlash('message', '添加成功');
+	return $this->redirect(['view', 'id' => $channel->id]);
+} catch (\Exception $e) {
+	$transaction->rollBack();
+	Yii::$app->session->setFlash('error', '操作失败: '.$e->getMessage());
+	return $this->refresh();
+}
+
+// 数据分页
+$username = UserinfoBase::find()
+	->select('userid, name')
+	->where('channel_id = :channel_id', [':channel_id' => $channelId])
+	->andWhere('status = :status', [':status' => UserinfoBase::STATUS_ENABLED])
+	->limit(10)
+	->offset(($userPage - 1) * 10) // 数据开始位置
+	->all();
+
+// 验证是否为 运营管理
+$all = ChannelClassify::verifyType($user);
+// 验证用户权限
+public static function verifyType($channelUser)
+{
+	$result = false;
+	$channel = $channelUser->channel;
+	if ($channel && isset($channel->channelClassifyName) && ($channel->channelClassifyName == self::ADMIN_NAME)) {
+		$result = true;
+	}
+	return $result;
+}
+
+// switch
+switch (count($cate))
+{
+	case 1:
+		$one[] = $cate['three'];
+		break;
+	case 2:
+		$two[] = $cate['three'];
+		$one[] = $cate['two'];
+		break;
+	case 3:
+		$three[] = $cate['three'];
+		$two[] = $cate['two'];
+		$one[] = $cate['one'];
+		break;
+	default:
+		break;
+}
+
+// 去重
+$userList =array_unique($user, SORT_REGULAR);	//二维数组
+$oneChannel =array_unique($one);	// 一维数组
+
+// 生成验证码
+public function getCode()
+{
+	$str = "0123456789";
+	$result = '';
+	for ($i = 0; $i < 6; $i++) {
+		$result .= $str[mt_rand(0, strlen($str) - 1)];
+	}
+	return $result;
+}
+
+// 记录错误日志
+Yii::error('ERROR:保存120中概率失败：' . json_encode($model->getErrors()), __METHOD__);
+
+// 给电话号码添加*号
+substr($this->phone, 0, 3) . '***' . strrev(substr(strrev($this->phone), 0, 4))
+
+// 抛出异常信息
+try {
+	if (strlen($password) < 6) {
+		throw new \Exception('至少填写6位密码');
+	}
+} catch (\Exception $e) {
+	Yii::$app->session->setFlash('error', '操作失败: '.$e->getMessage()); // $e->getMessage() 错误信息 , $e->getCode() 错误代码
+	return $this->refresh();
+}
+
+// andFilterWhere会忽略条件中的空值
+$query->andFilterWhere(['like', 'DATE_FORMAT(`add_time`, \'%Y-%m-%d %H:%i:%s\')', date('Y-m-d', strtotime($this->add_time))]); // 前面是数据库里的字段 后面是数据
+
+// 删除一周以前的数据
+$time = strtotime('-1 week'); // 上一周的现在时间
+$sql = "DELETE FROM " . AnimalIssueChance::tableName() . " where add_time <= $time";
+Yii::$app->db->createCommand($sql)->execute();
+
+// 判断方法是否存在
+if (function_exists('getallheaders')) {
+	$headers = getallheaders();
+}
+
+// 正则
+if (preg_match("/iphone|ipad|ipod|ios/i", $app->request->userAgent)) {}// 模式定界符后面的 "i" 表示不区分大小写字母的搜索
+
+// 通过防止用户多次点击
+public static function getClickRestrictions($userId, $orderNo)
+{
+	$redis = Yii::$app->redis;
+	$beginRedisKey = DartGuess::KEY_CURRENT_DART_USER;
+	
+	$redisKey = $beginRedisKey . ":{$userId}";
+	try {
+		$beginCount = $redis->incr($redisKey);
+		//有效时间
+		$redis->expire($redisKey,  1);
+		if ($beginCount > 1) {
+			throw new Exception("操作频繁，稍后再试");
+		}
+	} catch (\Exception $e) {
+		 $redis->decr($redisKey);
+		throw new Exception($e->getMessage(), $e->getCode());
+	}
+	return [
+		'model' => $redis,
+		'key' => $redisKey
+	];
+}

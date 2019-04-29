@@ -1,0 +1,159 @@
+// 根据用户生成订单号
+public static function getOrderNumber($user_id)
+{
+    return date("YmdHis", time()) . $user_id . mt_rand(10000, 99999);
+}
+
+//get_class (): 获取当前调用方法的类名； 
+//get_called_class():获取静态绑定后的类名；
+
+Yii::info("Channel BillRequest User#{$user->user_id}({$user->user_name}) Channel#{$user->channel_id}({$user->channel->code})");
+Yii::warning($errors, __METHOD__);
+Yii::error('ERROR:保存120中概率失败：' . json_encode($model->getErrors()), __METHOD__);
+
+$user = Yii::$app->user->getIdentity();
+if (empty($user)) {
+	throw new Exception("请先登录", Errors::WRONG_ARGUMENT);
+}
+// 获取id
+Yii::$app->user->getId()
+// 判断是否是游客
+Yii::$app->user->isGuest
+Yii::$app->user->logout(true);// 去掉当前session
+
+date_default_timezone_set("PRC");
+
+if (empty($moneyType) || empty($userLineCount))
+{
+	throw new AppException("缺少参数", Errors::WRONG_ARGUMENT);
+}
+
+$uploadPath = rtrim(Yii::$app->params['staticDir'], "\// ") . DIRECTORY_SEPARATOR . trim(Yii::$app->params['activitiesPicPath'], "\// ") . DIRECTORY_SEPARATOR;
+
+$filename = mt_rand(10000, 99999) . '-' . time() . '.' . $this->imageFile->extension;
+
+if ($result->code != '10000' ) {
+	throw new \Exception('交易失败: code:' . $result->code.'msg:'.$result->sub_msg, Errors::RECHARGE_RETURN_ERROR);
+}
+
+/**
+ * 获取数据库的初始值
+ * @return mixed
+ */
+public static function getAnimalRunSetting()
+{
+	$setting = self::find()->one();
+	if(empty($setting)){
+		$setting = new AnimalRunSetting();
+		$setting->score = 20000;
+		$setting->rate = 20;
+		$setting->extra_score = 1000;
+		$setting->rate_change = -10;
+		$setting->save();
+	}
+	return $setting;
+}
+
+/**
+* 获取区域累计在线人数
+*/
+public static function getAreaOnline()
+{
+	$data = [];
+	$roomsArea = self::getRoomsArea();
+
+	foreach ($roomsArea as $room => $area) {
+		$online = Yii::$app->redis->get('roomOnline:'.$room) ?: 0;
+		// 目的防止报错信息输出:
+		// 例如:@$fp=fopen("data.txt","r");
+		// 在打开文件出错时并不会将报错信息输出给客户端,防止泄露信息.
+		@$data[$area] += $online;
+	}
+
+	return $data;
+}
+
+/**
+ * 获取图片地址
+ */
+public function getPicture()
+{
+	return Yii::$app->params['ossUploadSite'] . $this->pic;
+}
+
+// log
+\Yii::$app->adminLogUtil->write("积分商品退款", "IntegralOrder:{$order->id} IntegralStock:{$stock->id}", "积分商城");
+
+// 验证是否为 运营管理
+$all = ChannelClassify::verifyType($user);
+
+
+
+//        $str = "世界上最大的开花植物是目前生长在美国加利福尼亚州寒拉迈德的巨型紫藤，枝干长153米、重达252吨，覆盖面积_________平方米，每年开花150万朵左右。";
+//        print_r(mb_strlen($str,'utf-8'));
+        set_time_limit(0); // 解除时间限制
+        $question = Question::find()->select('id, question')->all();
+        foreach ($question as $v) {
+            if (mb_strlen($v->question,'utf-8') > 60) {
+                $v->delete();
+                QuestionOption::deleteAll(['question_id' => $v->id]);
+            }
+        }
+		
+		set_time_limit(0); // 解除时间限制
+        $question = QuestionOption::find()->select('id, option, question_id')->all();
+        foreach ($question as $v) {
+            if (empty($v)) {
+                continue;
+            }
+            if (mb_strlen($v->option,'utf-8') > 10) {
+                QuestionOption::deleteAll(['question_id' => $v->question_id]);
+                Question::deleteAll(['id' => $v->question_id]);
+            }
+        }
+
+		
+use common\models\Question;
+use common\models\QuestionOption;
+
+
+
+        set_time_limit(0); // 解除时间限制
+        $question = Question::find()->select('id, question')->all();
+        $count = 0;
+        foreach ($question as $v) {
+            if (mb_strlen($v->question,'utf-8') <= 17) {
+                $count++;
+            }
+        }
+        print_r($count);exit;
+
+
+		
+		set_time_limit(0);
+        $array = Qu::find()->all();
+        foreach ($array as $v) {
+            $mod = new Question();
+            $mod->question = $v->qu;
+            $mod->type = 6;
+            $mod->difficulty = 1;
+            if (!$mod->save()) {
+                print_r("{$v->id}问题转化出错");exit;
+            }
+            $i = ['A','B','C','D'];
+            foreach ($i as $k) {
+                if (empty($v->$k)) {
+                    break;
+                }
+                $option = new QuestionOption();
+                $option->option = $v->$k;
+                $option->question_id = $mod->id;
+                $option->is_answer = 2;
+                if ($v->an == $k) {
+                    $option->is_answer = 1;
+                }
+                if (!$option->save()) {
+                    print_r("选项转化出错");exit;
+                }
+            }
+        }

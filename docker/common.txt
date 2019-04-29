@@ -1,0 +1,549 @@
+privileged被引入docker。
+使用该参数，container内的root拥有真正的root权限。
+否则，container内的root只是外部的一个普通用户权限。
+privileged启动的容器，可以看到很多host上的设备，并且可以执行mount。
+甚至允许你在docker容器中启动docker容器
+docker run -d --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www/html:/usr/share/nginx/html -v /data/nginx1142/nginx_conf:/etc/nginx/conf.d -v  /data/nginx1142/wwwlogs:/var/log/nginx/ --privileged=true nginx:1.14.2
+
+
+docker network create -d bridge lnmp7
+docker network ls
+docker network rm ID
+docker pull mysql:5.7
+docker run -d --name mysql57 --network lnmp7 -p 6668:3306 -v /data/mysql57:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=447728 mysql:5.7
+docker exec -it mysql57 /bin/bash
+mysql -u root -p
+select host,user from user;
+
+docker pull nginx:1.14.2
+docker run -d --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www/html:/usr/share/nginx/html -v /data/nginx1142/nginx_conf:/etc/nginx/conf.d -v  /data/nginx1142/wwwlogs:/var/log/nginx/ nginx:1.14.2
+
+docker run -it --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www/html:/usr/share/nginx/html -v /data/nginx1142/nginx_conf:/etc/nginx/conf.d nginx:1.14.2 /bin/bash
+docker run -d --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www/html:/usr/share/nginx/html nginx:1.14.2
+docker run -it --name nginx1142 --network lnmp7 -p 7777:80 -v /data/nginx1142/www/html:/usr/share/nginx/html nginx:1.14.2 /bin/bash
+docker run -d --name nginx1142 --network lnmp7 -p 7777:80 nginx:1.14.2
+docker run -dit --name nginx1142 --network lnmp7 -p 7777:80 nginx:1.14.2 /bin/bash
+docker exec -it nginx1142 /bin/bash
+docker pull php:7.2-fpm
+docker run -d --name phpfpm72 --network lnmp7 -p 7778:9000 -v /data/nginx1142/www/html:/usr/share/nginx/html php:7.2-fpm
+docker exec -it phpfpm72 /bin/bash
+nginx -g 'daemon off;'
+CMD ["nginx","-g","daemon off;"]
+
+echo -n "" > error.log 清空文件里的内容
+
+docker container cp nginx1142:/etc/nginx . // 复制容器里的配置文件到linux下
+docker port nginx1142 // 查看端口
+docker inspect nginx1142|grep IPAddress
+
+netstat -ntlp // 查看端口列表
+
+ctrl p + q
+ctrl d
+exit
+[ctrl+D]退出后不会终止容器运行
+docker exec -it [CONTAINER_NAME or CONTAINER_ID] /bin/bash
+
+
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s3
+
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="dhcp"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp0s3"
+UUID="31178fbf-0efa-453a-b611-75892b4ae6bc"
+DEVICE="enp0s3"
+ONBOOT="yes"
+
+
+
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp0s3"
+UUID="01bdf903-27c1-44b3-a5a2-8105ea495691"
+DEVICE="enp0s3"
+ONBOOT="yes"
+IPADDR=10.10.10.180
+NETMASK=255.255.255.0
+GATEWAY=10.10.10.1
+DNS=8.8.8.8
+NM_CONTROLLED=no
+
+
+修改 BOOTPROTO="static"
+添加
+IPADDR=10.10.10.20
+NETMASK=255.255.255.0
+GATEWAY=10.10.10.1
+DNS=8.8.8.8
+
+vim /etc/resolv.conf
+添加 nameserver 8.8.8.8
+
+
+service network restart
+
+route add 172.18.0.0 mask 255.255.255.0 10.10.10.180
+route print
+route delete 172.18.0.0
+
+// 让外部可以访问ip
+ip转发没有打开
+sysctl net.ipv4.ip_forward
+显示net.ipv4.ip_forward=0则表示未打开
+vim /etc/sysctl.conf
+net.ipv4.ip_forward = 1
+systemctl restart network
+sysctl net.ipv4.ip_forward
+
+docker network create -d bridge test1 网络桥
+docker network remove  bridge lnmp7
+
+docker run -d --name mysql57 --network lnmp7 -p 3306:3306 -v F:/windoc/data/mysql57/config:/etc/mysql/mysql.conf.d -v F:/windoc/data/mysql57/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=oneone mysql:5.7
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+
+WARNING: IPv4 forwarding is disabled. Networking will not work.
+echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
+service network restart
+
+
+sudo yum -y update
+docker 开始没启动，需要启动
+# 设置开机自启
+sudo systemctl enable docker.service
+// 查看docker进程
+ps -ef |grep docker
+
+root      3927     1  3 10:40 ?        00:00:00 /usr/bin/dockerd -H unix://
+root      3948  3927  1 10:40 ?        00:00:00 containerd --config /var/run/docker/containerd/containerd.toml --log-level info
+root      4121  3850  0 10:40 pts/0    00:00:00 grep --color=auto docker
+
+// 启动docker
+sudo systemctl start docker
+// 重启docker
+sudo systemctl  restart docker
+
+// docker 帮助命令
+sudo docker version // docker 版本信息
+sudo docker info // docker 版本详细信息
+
+// 修改镜像源
+vim /etc/docker/daemon.json
+{
+  "registry-mirrors": [ "https://registry.docker-cn.com"]
+}
+
+
+// 镜像命令
+	sudo docker images // 列出容器镜像
+	OPTIONS说明：
+	-a :列出本地所有的镜像（含中间映像层，默认情况下，过滤掉中间映像层）；
+	--digests :显示镜像的摘要信息；
+	-f :显示满足条件的镜像；
+	--format :指定返回值的模板文件；
+	--no-trunc :显示完整的镜像信息；
+	-q :只显示镜像ID。
+	sudo docker images nginx // 列出指定nginx镜像
+	sudo docker rmi 镜像名字/ID
+	sudo docker rmi -f 镜像名字/ID
+	sudo docker rmi -f 镜像名1:tag 镜像名2:tag // 一次性删除2个镜像
+	sudo docker rmi nginx // 删除指定nginx镜像
+	sudo docker rmi -f $(sudo docker images -qa)  // 一次性删除所有镜像
+	sudo docker search 镜像名字
+	sudo docker pull 镜像名字
+
+// 容器命令
+	// 新建并启动容器
+	docker run -itd --name lnmp_mysql --net lnmp -p 3306:3306 --mount src=mysql-vol,dst=/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql --character-set-server=utf8
+	参数说明：
+	-itd：在容器中打开一个伪终端进行交互操作，并在后台运行；
+	--name：为容器分配一个名字lnmp_mysql；
+	--net：为容器指定一个网络环境为lnmp网络；
+	-p：容器暴露端口映射，把宿主机的3306端口映射到容器的3306端口；
+	--mout：把数据卷mysql-vol挂载到容器的/var/lib/mysql目录，挂载也相当于数据持久化；
+	-e：设置一个变量MYSQL_ROOT_PASSWORD；
+	mysql：指定刚才下载的mysql镜像来启动容器；
+	sudo docker run
+		-v /test:/soft // 宿主机的/test目录挂载到容器的/soft目录
+		-v /test:soft // 容器目录不可以为相对路径 
+		// 宿主机目录如果不存在，则会自动生成
+		-v test1:/soft // 宿主机目录为相对路径时，在/var/lib/docker/volumes/下
+		-v /test2 // 如果只是-v指定一个目录，在/var/lib/docker/volumes/下随机生成的一个目录名
+		// 在容器内修改了目录的属主和属组 宿主机内的UID会与容器对应
+		// 容器销毁后，宿主机目录不管是随机还是挂载都不会消失
+		
+		// 挂载宿主机已存在目录后，在容器内对其进行操作，报“Permission denied”。
+		以特权方式启动容器
+		指定--privileged参数
+		如：
+		docker run -it --privileged -v /test:/soft centos /bin/bash
+
+	sudo docker run -it -v /宿主机绝对路径目录:/容器内目录 镜像名  
+		注：Docker 挂载主机目录Docker访问出现cannot open directory .: Permission denied
+		解决方法：在挂载目录后多加一个--privileged=true 参数即可
+		sudo docker run -it -v /宿主机绝对路径目录:/容器内目录 --privileged=true 镜像名
+	sudo docker run -it -v /宿主机绝对路径目录:/容器内目录: ro 镜像名 // 启动容器并映射宿主机数据卷只读
+	sudo docker run -it -v /myDataVolume:/dataVolumeContainer: ro centos // 启动容器并映射数据卷
+	sudo docker run -t -i ubuntu:15.10 /bin/bash // 以交互模式运行命令终端
+	OPTIONS说明：
+	-a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项；
+	-d: 后台运行容器，并返回容器ID；
+		注：
+			使用镜像centos：latest以后模式启动一个容器
+			sudo docker run -d centos
+				问题： 然后sudo docker ps -a 进行查看，会发现容器已经退出
+				原理： Docker容器后台运行，就必须有一个前台进程，容器运行的命令如果不是那些一直挂起的命令（比如运行top，tail）， 就是会自动退出的
+				解决方法：sudo docker run -d centos /bin/sh -c "while true; do echo hello zzyy; sleep 2; done"
+	-i: 以交互模式运行容器，通常与 -t 同时使用；
+	-P: 随机端口映射
+	-p: 端口映射，格式为：主机(宿主)端口:容器端口
+	-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；
+	--name="nginx-lb": 为容器指定一个名称；
+	--dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致；
+	--dns-search example.com: 指定容器DNS搜索域名，默认和宿主一致；
+	-h "mars": 指定容器的hostname；
+	-e username="ritchie": 设置环境变量；
+	--env-file=[]: 从指定文件读入环境变量；
+	--cpuset="0-2" or --cpuset="0,1,2": 绑定容器到指定CPU运行；
+	-m :设置容器使用内存最大值；
+	--net="bridge": 指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型；
+	--link=[]: 添加链接到另一个容器；
+	--expose=[]: 开放一个端口或一组端口；
+	
+	// 列出当前正在运行的容器
+	sudo docker ps // 列出正在运行的容器
+	OPTIONS说明：
+	-a :显示所有的容器，包括未运行的。
+	-f :根据条件过滤显示的内容。
+	--format :指定返回值的模板文件。
+	-l :显示最近创建的容器。
+	-n :列出最近创建的n个容器。
+	--no-trunc :不截断输出。
+	-q :静默模式，只显示容器编号。
+	-s :显示总的文件大小。
+	sudo docker ps -a // 列出所有容器（包括历史容器）
+	sudo docker ps -l // 列出最近一条容器信息
+	
+	// 退出容器
+	exit // 容器停止退出
+	ctrl + P + Q // 容器不停止退出
+	
+	// 启动容器
+	sudo docker start 容器ID/容器名
+	
+	// 重启容器
+	sudo docker restart 容器ID/容器名
+	
+	// 停止容器
+	sudo docker stop 容器ID/容器名
+	sudo docker stop a8de42beb9c5 // 停止容器a8de42beb9c5
+	
+	// 强制停止容器
+	sudo docker skill 容器ID/容器名
+	
+	// 删除已停止容器
+	sudo docker rm 555ab68e22e0 // 删除停止运行的555ab68e22e0容器
+	sudo docker rm -f $(sudo docker ps -qa) // 一次性删除所有容器
+	
+	// 查看容器日志
+	sudo docker logs -f -t --tail 容器ID
+	OPTIONS说明：
+	-t :加入时间戳
+	-f :跟随最新的日志打印
+	--tail 数字 :显示最后多少条
+	// 查看docker进程
+	sudo docker top 容器ID
+	// 查看容器内部细节
+	sudo docker inspect [OPTIONS] NAME|ID [NAME|ID...] // 获取容器/镜像的元数据（查看容器内部细节）
+	OPTIONS说明：
+	-f :指定返回值的模板文件。
+	-s :显示总的文件大小。
+	--type :为指定类型返回JSON。
+	// 进入正在运行的容器并以命令行交互
+	sudo docker exec -it 容器ID bashShell // 是在容器中打开新的终端，并且可以启动新的进程
+	sudo docker exec -t 容器ID ls -l /tmp
+	// 重新进入
+	sudo docker attach 容器ID // 直接进入容器启动命令的终端，不会启动新进程
+	// 从容器内拷贝文件到主机上
+	sudo docker cp 容器ID:/tmp/yum.log /root
+
+// sudo docker commit提交容器副本使之成为一个新的镜像
+sudo docker commit -m="提交的描述信息" -a="作者" 容器ID 要创建的目标镜像名:[标签名]
+
+sudo docker pull ubuntu:15.10 // 拉取镜像加版本号
+
+sudo docker search httpd // 搜索镜像 OFFICIAL ok为官方
+
+apt-get update // ubuntu的apt-get更新
+
+sudo docker tag 81c523c10164 wang/ubuntu:test // 编辑tag
+
+sudo docker top  // 查看容器进程
+
+// 默认docker0 网桥信息
+	ifconfig docker0
+	docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+			inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+			ether 02:42:fb:b9:53:e0  txqueuelen 0  (Ethernet)
+			RX packets 0  bytes 0 (0.0 B)
+			RX errors 0  dropped 0  overruns 0  frame 0
+			TX packets 0  bytes 0 (0.0 B)
+			TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+// 获取 docker 容器(container)的 ip 地址
+sudo docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker ps -aq)
+
+			
+ 
+// 内部网络
+sudo docker network ls
+sudo docker network create net1 // 创建
+sudo docker network create --subnet=172.18.0.0/16 mynetwork // 创建并分配网段/子网掩码16
+sudo docker network create --subnet=172.18.0.0/24 mynetwork // 创建并分配网段/子网掩码24
+sudo docker inspect net1 // 获取容器/镜像的元数据
+sudo docker network rm net1 // 删除
+
+// docker卷
+sudo docker volume create --name v1 // 创建docker卷v1
+sudo docker inspect v1 // 获取容器/镜像的元数据
+sudo docker volume rm v1 // 删除
+
+// 数据卷容器
+	// 容器间传递共享数据（--volumes-from）
+	sudo docker run -it --name doco2 --volues-from doc01 zzyy/centos
+	sudo docker run -it --name doco3 --volues-from doc01 zzyy/centos
+	sudo docker 
+
+// DockerFile
+dockerfile保留字指令
+1、FROM
+    FROM：基础镜像，当前新镜像是基于哪个镜像的 
+2、MAINTAINER 
+    MAINTAINER：镜像维护者的姓名和邮箱地址
+3、RUN
+    RUN：容器构建时需要运行的命令
+4、EXPOSE
+    EXPOSE：当前容器对外暴露的端口号
+5、WORKDIR
+    WORDIR:指定在容器创建后，终端默认登录进来工作目录，一个落脚点
+6、ENV
+    ENV：用来在构建镜像过程中设置环境变量。 
+    举例：ENV MY_PATH /usr/mytest
+    ENV这个环境变量可以在后续的任何RUN指令中使用，这就如同在命令前指定了环境变量前缀一样；也可以在其他指令中直接使用这些环境变量，比如WORKDIR $MY_PATH
+7、ADD 
+    ADD：将宿主机目录下的文件拷贝到镜像里面并且ADD命令会自动处理URL和解压tar压缩包
+8、COPY
+    COPY:类似ADD,拷贝文件和目录到镜像中，但是它只是拷贝，不会自动处理URL和解压tar压缩包。COPY将从构建上下文目录中<源路径>的文件/目录复制到新的一层的镜像内的<目标路径>位置。
+    它的使用方法有两种：COPY src test和COPY ["src","dest"] 
+9、VOLUME 
+    VOLUME：容器数据卷，用于数据保存和持久化工作 
+10、CMD
+    CMD：指定一个容器启动时要运行的命令。dockerfile中可以有多个CMD指令，但只有最后一个生效，CMD会被docker run之后的参数替换。 
+    CMD指令的格式和RUN类似，也是两种格式： 
+    a) shell格式：CMD <命令> 
+    b) exec格式：CMD ['可执行文件'，‘参数1’，‘参数2’....] 
+    c) 参数列表格式：CMD ['参数1'，‘参数2’...]，在指定了ENTRYPOINT指令后，用CMD指定具体的参数。 
+11、ENTRYPOINT
+    ENTRYPOINT：指定一个容器启动时要运行的命令。ENTRYPOIT的目的和CMD一样，都是在指定容器启动程序及参数。
+    区别：CMD和ENTRYPOINT都是指定一个容器启动时要运行的命令，但是 如果dockerfile中可以有多个CMD指令，只有最后一个生效 ，CMD会被docker run之后的参数替换 ；而有多个ENTRYPOINT指令，每个指令都生效，这就是CMD和ENTRYPOINT的区别。
+12、ONBUILD（触发器） 
+    当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后，父镜像的onbuild被触发。 
+
+
+vim Dockerfile
+#volume test
+FROM centos
+VOLUME ["/dataVolumeContainer1", "/dataVolumeContainer2"]
+CMD echo "finish, ......success"
+CMD /bin/bash
+
+sudo docker build -f /mydocker/Dockerfile -t wang/centos .
+OPTIONS说明：
+-t ：指定要创建的目标镜像名
+. ：Dockerfile 文件所在目录，可以指定Dockerfile 的绝对路径
+
+sudo docker pull nginx
+// 创建网络
+sudo docker network create -d bridge webserver-net
+sudo docker network create webserver-net // 这个报找不到命令
+// 创建nginx容器
+sudo docker pull nginx
+sudo docker create --name nginx --expose 80 -p 80:80 --expose 443 -p 443:443 -v /www/:/www/ -v /etc/nginx/conf.d/:/etc/nginx/conf.d/ --network webserver-net nginx nginx -g "daemon off;"
+sudo docker restart nginx
+sudo docker ps -a
+sudo docker create --name php --expose 9000 -p 9000:9000 -v /www/:/www/ --network webserver-net lizarel/phpstudy:php7fpmswoole
+sudo docker logs php
+sudo mkdir -p /www/logs/php
+sudo touch /www/logs/php/php.error.log
+sudo docker create --name redis --expose 6379 -p 6379:6379 --network webserver-net redis
+sudo docker exec -it php sh
+php -m
+sudo yum install lrzsz
+su root
+rz
+sudo docker exec -it nginx bash
+apt-get update
+
+sudo docker create --name nginx \
+--expose 80 -p 80:80 \
+--expose 443 -p 443:443 \
+-v /www:/www \
+-v /etc/nginx/conf.d:/etc/nginx/conf.d \
+--network webserver-net \
+nginx \
+nginx -g "daemon off;"
+// 创建php容器
+sudo docker create --name php \
+--expose 9000 -p 9000:9000 \
+-v /www:/www \
+--network webserver-net 
+// 创建redis容器
+sudo docker create --name redis  --expose 6379 -p 6379:6379 --network webserver-net redis
+
+
+
+
+sudo docker pull php:7.1.2-fpm
+sudo docker pull mysql:5.7
+sudo docker pull nginx:1.14.2
+sudo docker pull redis:5.0
+
+sudo docker network create -d bridge webserver-net
+
+# 创建php:7.1.2-fpm的容器并命名php7.1.2，将容器的9000端口映射到主机的9000端口。把主机的/home/lnmp/www/目录挂载到容器的/www目录（这个目录用于存放php脚本文件）
+[root@localhost lnmp]# sudo docker run -d -p 9000:9000 --name php7.1.2 -v /home/wang/lnmp/www/:/www php:7.1.2-fpm
+sudo docker run -d --network webserver-net -p 9000:9000 --name php7.1.2 -v /home/wang/lnmp/www/:/var/www/html/ php:7.1.2-fpm
+
+# 创建nginx:1.14的容器并命名nginx1.14.2，将容器的80端口映射到主机的80端口。把主机的/home/lnmp/app/nginx1.14.2/conf/目录挂载到容器的/etc/nginx/conf.d目录；/home/lnmp/www/目录挂载到容器的/www目录。
+[root@localhost lnmp]# sudo docker run -d -p 80:80 --name nginx1.14.2 -v /home/wang/lnmp/app/nginx1.14/conf/:/etc/nginx/conf.d -v /home/lnmp/www/:/usr/share/nginx/html nginx:1.14.2
+sudo docker run -d --network webserver-net -p 80:80 --name nginx1.14.2 -v /home/wang/lnmp/app/nginx1.14/conf/:/etc/nginx/conf.d -v /home/lnmp/www/:/usr/share/nginx/html nginx:1.14.2
+sudo docker run -d --network webserver-net -p 80:80 --name nginx1.14.2 -v /home/wang/nginx/conf.d:/etc/nginx/conf.d -v /home/wang/www:/www nginx:1.14.2
+sudo docker run -d --name nginx1.14.2 \
+--expose 80 -p 80:80 \
+--expose 443 -p 443:443 \
+-v /home/wang/www:/www \
+-v /home/wang/nginx/conf.d:/etc/nginx/conf.d \
+--network webserver-net \
+nginx:1.14.2 \
+nginx:1.14.2 -g "daemon off;"
+
+// nginx.conf
+worker_processes  1; #允许生成的进程数，默认为1
+events {
+    worker_connections  1024; #最大连接数，默认为512
+}
+
+http {
+    include       mime.types; #文件扩展名与文件类型映射表
+    default_type  application/octet-stream; #默认文件类型，默认为text/plain
+    sendfile        on; #允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。
+	
+    keepalive_timeout  65; #连接超时时间，默认为75s，可以在http，server，
+	fastcgi_connect_timeout 300;
+	fastcgi_send_timeout 300;
+	fastcgi_read_timeout 300;
+	fastcgi_buffer_size 128k;
+	fastcgi_buffers 4 128k;
+	fastcgi_busy_buffers_size 256k;
+	fastcgi_temp_file_write_size 256k;
+
+	gzip on;
+	gzip_min_length  1k;
+	gzip_buffers     4 32k;
+	gzip_http_version 1.1;
+	gzip_comp_level 2;
+	gzip_types       text/plain application/x-javascript text/css application/xml;
+	gzip_vary on;
+	gzip_disable "MSIE [1-6].";
+
+	server_names_hash_bucket_size 128;
+	client_max_body_size     100m; 
+	client_header_buffer_size 256k;
+	large_client_header_buffers 4 256k;
+  
+	server {
+		listen       80; #监听端口
+		server_name  localhost; #监听地址   
+		
+		charset utf-8;
+		
+		root   "/www/first";
+		
+        location / { #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。
+            index  index.html index.htm index.php l.php;
+            autoindex  off;
+        }
+		
+		if (!-e $request_filename) {
+			rewrite ^/(.*)  /index.php/$1 last;
+		}
+		
+		error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+		
+		location ~ \.php(.*)$  {
+            fastcgi_pass   172.17.0.2:9000; # 这里的ip是对应PHP版本的容器的ip地址，这个为容器之间的通信，下节会有介绍
+            fastcgi_index  index.php;
+            fastcgi_split_path_info  ^((?U).+\.php)(/?.+)$;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_param  PATH_INFO  $fastcgi_path_info;
+            fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+            include        fastcgi_params;
+        }
+	}
+
+	include vhosts.conf;
+}
+
+
+# 创建mysql:5.7的容器并命名mysql5.7，将容器的3306端口映射到主机的3306端口。把主机的/home/lnmp/data/mysql目录挂载到容器的/var目录。设置root的密码为123456。
+[root@localhost lnmp]# sudo docker run -d -p 3306:3306 --name mysql5.7 -v /home/wang/lnmp/data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7
+
+# 创建redis:3.2的容器并命名redis5.0，将容器的6379端口映射到主机的6379端口。把主机的/home/lnmp/data/redis目录挂载到容器的/data目录。设置redis的持久化保存。
+[root@localhost lnmp]# sudo docker run -d -p 6379:6379 --name redis5.0 -v /home/wang/lnmp/data/redis:/data redis:5.0 redis-server --appendonly yes
+
+
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo
+sudo

@@ -1,1 +1,2 @@
 docker run -d --name mysql57 --network lnmp7 -p 5432:3306 -v F:/windoc/data/mysql57/config:/etc/mysql/mysql.conf.d -v F:/windoc/data/mysql57/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=oneone mysql:5.7
+docker run -d --name lmysql57 -p 5400:3306 -v F:/windoc/data/lmysql57/config:/etc/mysql/mysql.conf.d -v F:/windoc/data/lmysql57/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=oneone mysql:5.7

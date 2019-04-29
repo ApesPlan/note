@@ -19,3 +19,5 @@ select host,user from user;
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.0.110' IDENTIFIED BY '447728' WITH GRANT OPTION;
 
 update user set Password=password('123456') where User='root'; // 重置密码
+
+source e:/joyway_yz_mall.sql
