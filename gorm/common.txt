@@ -27,3 +27,16 @@ type User struct {
   Name string
   Age  sql.NullInt64
 }
+
+type Order struct {
+	ID              uint       `gorm:"primary_key;column:id;type:varchar(11);not null" json:""`
+	OutTradeNo      string     `gorm:"column:out_trade_no;type:varchar(32);index:out_trade_no;not null"`
+	CustomizationId int        `gorm:"column:customization_id;size:11;index:item_id;not null"`
+	UserId          int        `gorm:"column:user_id;size:11;index:user_id;not null"`
+	Price           int        `gorm:"column:price;size:11;not null"` // decimal(11,2)
+	Number          int        `gorm:"column:number;size:11;not null"`
+	Remark          string     `gorm:"column:remark;type:varchar(255);not null"`
+	State           int        `gorm:"column:state;size:6;index:status;not null"`
+	CreatedAt       *time.Time `gorm:"column:created_at;size:11;index:created_at;not null"`
+	UpdatedAt       *time.Time `gorm:"column:updated_at;size:11;index:updated_at;not null"`
+}

@@ -1,0 +1,16 @@
+go build
+跨平台编译： env GOOS=linux GOARCH amd64 go build
+go install
+与build最大的区别是编译后会将输出文件打包成库放在pkg下
+go get
+用于获取go的第三方包，通常会默认从git repo上pull最新的版本
+  go get -u ... (从github上获取包并安装到本地 -u 表示重新安装)
+go fmt
+编排
+go test
+运行当前包目录下的tests
+go test -v 输出详情
+Go的test一般以xxx_test.go为文件名
+xxx的部分一般为xxx_test.go所要测试的代码文件名 main.go main_test.go
+Go并没有特别要求xxx的部分必须是要测试的文件名 
+

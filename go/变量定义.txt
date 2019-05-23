@@ -1,0 +1,10 @@
+var a int
+var s string
+fmt.Printf("%d %q\n", a, s) // %q表示如果是字符串为初值时为空串 ""
+
+var a, b int = 3, 4
+var s string = "abc"
+fmt.Println(a, b, s)
+
+a, b, c, s := 3, 4, true, "def"
+b = 5 //重新赋值

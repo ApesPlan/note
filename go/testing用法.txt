@@ -1,0 +1,43 @@
+package main
+import(
+  "testing"
+)
+func TestPrint(t *testing.T) {
+  res := Print1to20()
+  if res != 210 {
+    t.Errorf("Return value not valid")
+  }  
+}
+
+test case的入参为t *testing.T 或 b *testing.B
+t.Errorf为打印错误信息，并且当前test case会被跳过
+
+func TestPrint(t *testing.T) {
+  t.SkipNow()
+  res := Print1to20()
+  if res != 210 {
+    t.Errorf("Return value not valid")
+  }  
+}
+t.SkipNow()为跳过当前test,并且直接按PASS处理下一个test
+
+Go test不会保证多个TestXxx是顺序执行，但是通常会按顺序执行
+
+package main
+import(
+  "testing"
+  "fmt"
+)
+func TestPrint(t *testing.T) {
+  t.Run("a1", func(t *testing.T) {fmt.Println("a1")})
+  t.Run("a2", func(t *testing.T) {fmt.Println("a2")})
+  t.Run("a3", func(t *testing.T) {fmt.Println("a3")})
+}
+使用t.Run来执行subtests可以做到控制test输出以及test的顺序
+
+func TestMain(m *testing.M) {
+  fmt.Println("test main first")
+  m.Run() // 如果没有在TestMain中调用m.Run()则除了TestMain以外的其他的tests都不会被执行
+}
+使用TestMain作为初始化test，并且使用m.Run()来调用其他tests可以完成一些需要初始化操作的testing，比如数据库连接，文件打开，REST服务登录等
+如果没有在TestMain中调用m.Run()则除了TestMain以外的其他的tests都不会被执行

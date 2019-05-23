@@ -1,0 +1,11 @@
+benchmark函数一般会以Benchmark开头
+benchmark的case一般会跑b.N次，而且每次执行都会如此
+在执行过程中会根据实际case的执行时间是否稳定会增加b.N次以达到稳态
+
+func BenchmarkAll(b *testing.B) {
+  for n := 0; n < b.N; n ++ {
+    Print1to20()
+  }
+}
+
+go test -bench=.
