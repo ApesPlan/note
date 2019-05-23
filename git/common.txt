@@ -21,6 +21,7 @@ git branch // 显示所有本地分支
 git checkout 分支名/tag // 切换到指定分支或标签
 git checkout -d 分支名 // 删除本地分支
 git branch 分支名 // 创建新分支
+git checkout -b // 创建并切换新分支
 git merge --no-ff pack_dist_server // 合并pack_dist_server分支到当前分支
 git remote -v // 查看远程版本库的信息
 git remote add origin 仓库地址 // 关联远程仓库
@@ -42,3 +43,31 @@ git push
 git push --tags // 上传所有标签
 
 git reset --soft HEAD^ // 撤销commit
+
+git log --pretty=onelinee //日志一行显示
+// 当前提交
+git reset --hard HEAD^ // 回到上一次提交，删除了当前提交
+git reflog // 查看提交记录和版本号
+    8fc1d33 (HEAD -> master) HEAD@{0}: reset: moving to HEAD^
+    4d3e9b2 (origin/master) HEAD@{1}: commit: 第四次提交
+    8fc1d33 (HEAD -> master) HEAD@{2}: commit: 第三次提交
+    dc5763b HEAD@{3}: commit: 第二次提交
+    d5e46b5 HEAD@{4}: commit (initial): 第一次提交
+
+git reset --hard 4d3e9b2 // 回到第四次提交
+    HEAD is now at 4d3e9b2 第四次提交
+
+git log --pretty=oneline
+    4d3e9b28fc9c235410bfba3ab572dac0957366a3 (HEAD -> master, origin/master) 第四次提交
+    8fc1d335c007a4183e33dc1482f98a617fc710d9 第三次提交
+    dc5763be4ac74babc7405278f7c20e58e21f8af4 第二次提交
+    d5e46b5c7060488211251ec8a50768599b00200e 第一次提交
+
+git reset --hard HEAD~3 // 从当前提交（第四次提交）回退了3次 到了第一次提交
+    HEAD is now at d5e46b5 第一次提交
+
+git reset --hard dc5763be4ac74babc7405278f7c20e58e21f8af4 // 回退到指定版本 第二次提交
+    HEAD is now at dc5763b 第二次提交
+
+git diff activity_618 master app/Data/OrderMoney.php // 以master分支为基础对比activity_618分支的增减
+git diff activity_618 master --stat   //  以master分支为基础 显示出所有有差异的文件列表
