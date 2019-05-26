@@ -1,0 +1,19 @@
+go get -u -v github.com/nsf/gocode // 自动补全	 
+go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs // 自动补全未导入的包	 
+go get -u -v github.com/ramya-rao-a/go-outline // 当前文件中按符号搜索	https://github.com/golang/tools
+go get -u -v github.com/acroca/go-symbols // 当前workspace中按符号搜索	 
+go get -u -v golang.org/x/tools/cmd/guru // 查找所有引用组件	 
+go get -u -v golang.org/x/tools/cmd/gorename // 重命名符号	 
+go get -u -v github.com/fatih/gomodifytags // 修改结构上的标签	 
+go get -u -v github.com/haya14busa/goplay/cmd/goplay // for running current file in the Go playground	 
+go get -u -v github.com/josharian/impl // for generating stubs for interfaces	 
+go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct // for filling a struct literal with default values	 
+go get -u -v github.com/rogpeppe/godef // 转到定义2	 
+go get -u -v golang.org/x/tools/cmd/godoc // 鼠标悬停显示文档注释2	 
+go get -u -v sourcegraph.com/sqs/goreturns // 格式化代码2	 
+go get -u -v github.com/golang/lint/golint // for linting	https://github.com/golang/lint
+go get -u -v github.com/cweill/gotests/... // 生成单元测试	 
+go get -u -v github.com/derekparker/delve/cmd/dlv // 调试	 
+go get -u -v github.com/zmb3/gogetdoc // 转到定义2/鼠标悬停显示注释2	 
+go get -u -v golang.org/x/tools/cmd/goimports // 格式化代码2	 
+

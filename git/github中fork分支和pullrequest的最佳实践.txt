@@ -1,0 +1,12 @@
+我们需要在界面上，点击右上角的“Fork”，复制一个仓库到自己的github账号下。
+然后，在自己账户下把远程仓库复制到本地：
+git clone https://github.com/yangwen0228/ensime-server.git
+git remote add upstream https://github.com/ensime/ensime-server.git
+git remote -v
+
+origin  https://github.com/yangwen0228/ensime-server.git (fetch)
+origin  https://github.com/yangwen0228/ensime-server.git (push)
+upstream    https://github.com/ensime/ensime-server.git (fetch)
+upstream    https://github.com/ensime/ensime-server.git (push)
+
+git pull --rebase upstream master

@@ -1,0 +1,2 @@
+return 0, fmt.Errorf("adfafda： %s", 变量)
+return 值, nil

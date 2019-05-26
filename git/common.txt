@@ -25,6 +25,8 @@ git checkout -b // 创建并切换新分支
 git merge --no-ff pack_dist_server // 合并pack_dist_server分支到当前分支
 git remote -v // 查看远程版本库的信息
 git remote add origin 仓库地址 // 关联远程仓库
+git push origin --delete xxx # 删除github上的xxx分支
+git branch -D xxx # 删除本地xxx分支
 git push --tags // 上传所有标签
 
 docker image 查看已经打包好tag的镜像
