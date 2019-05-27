@@ -1,0 +1,2 @@
+strconv.Itoa() // int转字符
+var c int = int(math.Sqrt(float64(a*a + b*b)))
