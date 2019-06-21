@@ -1,3 +1,4 @@
+${workspaceRoot}:就是你打开vscode读取的项目目录
 文件家名称 .vscode
 打开新的文件会覆盖窗口中的,怎么改  "workbench.editor.enablePreview": false
 settings.json

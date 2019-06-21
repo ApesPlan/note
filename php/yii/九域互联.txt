@@ -1,0 +1,437 @@
+// 模拟管理员
+	return UserinfoBase::findOne(1);
+	// pdo
+	$model = ChannelRateChangeLog::find()->where('channel_id = :channel_id', [':channel_id' => $channelId])->orderBy(['add_time' => SORT_DESC])->one();
+	// like
+	['like', 'name', '%tester', false]  // 半like %
+	
+	// 判断是不是ajax请求
+	if (Yii::$app->request->isAjax) { 
+		// request is ajax request 
+	} 
+	else { 
+		// not ajax request 
+		// for example redirect 
+	} 
+	
+	//批量插入
+	return Yii::$app->db->createCommand()
+            ->update(self::tableName(), ['status' => self::NOTENABLE], ['user_id' => $userId, 'status' => self::ENABLE])
+            ->execute();
+	
+	$status = self::ENABLE;
+	return Yii::$app->db->createCommand()
+		->update(self::tableName(), ['status' => self::NOTENABLE], "user_id = {$userId} AND status = {$status} AND id != {$addressId}")
+		->execute();
+
+	//跑脚本
+	php yii data/user-data 
+
+	Yii::$app->response->format = yii\web\Response::FORMAT_JSON;
+	
+	// 将返回数据拼装为key为id name为value的一维数组
+	$cate =  \yii\helpers\ArrayHelper::map(\common\models\Category::find()->all(), 'id', 'name'); 
+
+	// 重置数据表
+	TRUNCATE live_integral_statistics; 
+
+	// switch
+	switch (count($cate))
+	{
+		case 1:
+		
+			break;
+		case 2:
+		
+			break;
+		case 3:
+		
+			break;
+		default:
+			break;
+	}
+		
+	// 二维数组转一维数组
+	$getUserIdArray = array_column($getUserIdTwoArray, 'user_id');
+	// 一位数组转字符串
+	$getUserId = implode(',', $getUserIdArray);
+	
+	// 查看sql
+	$rankingResult = Yii::$app->db->createCommand($sql, $params)->getRawSql();
+	
+	// 打印代码
+	print_r($gradeOddsCount);
+	echo '<br>';
+	print_r($gradeMoneyCount);
+	echo '<br>';
+	print_r($initialValue);
+	echo '<br>';
+	print_r($nowRate);
+	echo '<br>';
+	exit;
+	
+	var_dump($orderNo);
+	echo "<br>";
+	var_dump($userId);
+	echo "<br>";
+	var_dump($typeId);
+	echo "<br>";
+	var_dump($garde);
+	echo "<br>";
+	var_dump($addGrade);
+	echo "<br>";
+	var_dump($gradeDartCount);
+	echo "<br>";
+	var_dump(bcsub($gradeDartCount,bcsub($gradeDartCount,1)));
+	echo "<br>";exit;
+	
+	//进行加锁
+	$sql = "select * from ag_three_bonus_pool for update";
+	$poolLock = Yii::$app->db->createCommand($sql)->queryOne();
+	$poolInfo = new ThreeBonusPool();
+	ThreeBonusPool::populateRecord($poolInfo, $poolLock);
+	
+	(int)$poolInfo->pool;
+	 // 累计奖池
+    $data = $poolInfo->poolChange($winInfo);
+	/**
+     * 累计奖池
+     * @param $winInfo
+     * @param $betMoney
+     * @return mixed
+     * @throws Exception
+     */
+    public function poolChange($winInfo)
+    {
+        if (!empty($winInfo['gameBean'])) {
+            // 累计奖池
+            $this->pool = (int)bcsub(bcsub(bcadd($this->pool, $winInfo['betBean']), $winInfo['rewardBean']), $winInfo['gameBean']);
+            unset($winInfo['gameBean']);
+        } else {
+            // 累计奖池
+            $this->pool = (int)bcsub(bcadd($this->pool, $winInfo['betBean']), $winInfo['rewardBean']);
+        }
+
+        if (!$this->save()) {
+            throw new Exception("累计增加奖池记录处理失败");
+        }
+
+        return $winInfo;
+    }
+	
+	// 统计一维数组+二维数组的个数	
+	set_time_limit(0); // 解除时间限制
+	header("Content-Type:text/html; charset=utf-8");
+	$array = array("PHP"=>array("PHP中文网","中文网","百度"),
+		"asp"=>array("ASP 经验技巧宝典")
+	);//声明一个二维数组
+	echo count($array,COUNT_RECURSIVE);//递归统计数组元素的个数 6
+
+	
+	// 方法调用
+	$successId = self::getRate(40, 60); // 40%的中奖机率
+	if ($successId == 2) { // 中奖
+	
+	} else { // 不中奖
+	
+	}
+	
+	/**
+     * 概率算法核心层
+     * @param $proArr
+     * @return int|string
+     */
+    public static function getRand($proArr) {
+        $result = '';
+        //概率数组的总概率精度
+        $proSum = array_sum($proArr);
+        //概率数组循环
+        foreach ($proArr as $key => $proCur) {
+            $randNum = mt_rand(1, $proSum);
+            if ($randNum <= $proCur) {
+                $result = $key;
+                break;
+            } else {
+                $proSum -= $proCur;
+            }
+        }
+        unset ($proArr);
+        return $result;
+    }
+
+    /**
+     * 概率算法应用层
+     * @param $sueccess
+     * @param $fail
+     * @return int|string
+     */
+    public static function getRate($sueccess, $fail) {
+        $prize = [
+            '0' => ['id' => 1, 'prize' => '不中', 'v' => $fail],
+            '1' => ['id' => 2, 'prize' => '中', 'v' => $sueccess],
+        ];
+        $arr = [];
+        foreach ($prize as $k => $v) {
+            $arr[$v['id']] = $v['v'];
+        }
+
+        return self::getRand($arr);
+    }
+			
+			
+	// 测试代码		
+	// set_time_limit(0);
+	for ($i = 1; $i < 100000; $i ++) {
+		// 生成订单号
+		$orderNo = ThreeGuess::getOrderNumber($user->user_id);  // 生成新的订单号
+	// sleep(1);
+		// 扣钱
+		$data = ThreeGuess::getGameBegin($user->user_id, $orderNo, 45, 9);
+	}
+	exit;
+	
+	// github wiki
+	## Request
+	``` message
+	```
+
+	## Response
+	``` javascript
+	{
+		"code": 0,
+		"data": {
+			"issueNo": "20180829158466",       // 游戏期号
+			"status": 1,                 // 游戏状态，0：投注中；1：开奖中；2：开奖结束
+			"startTime": 1535644800,      // 游戏开始时间
+			"endTime": 1535724000,       // 游戏结束时间
+			"curTime": 1535944984       // 请求时间
+		}
+	}
+	```
+	## Request
+	```message
+	issueNo（游戏期号）
+	typeId（下注类型）
+	money（下注金额）
+	```
+
+	## Response
+	``` javascript
+	{
+		"code": 0,
+		"data": {
+			"balance": 9900
+		}
+	}
+	```
+	
+	// view
+	<?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'order_no',
+            [
+                'label' => '商品名称',
+                'value' => function ($model) {
+                    return $model->detail->goods_name;
+                }
+            ],
+            [
+                'label' => '兑换消耗',
+                'value' => function ($model) {
+                    return $model->detail->goods_price;
+                }
+            ],
+            [
+                'label' => '用户昵称',
+                'attribute' => 'username',
+                'format'=>'raw',
+                'value' => function ($model) {
+                    $url = "/userinfo-base/view?id=" . $model->user->id;
+                    return Html::a($model->user->name  ?? '无用户名', $url, ['title' => '用户名']);
+                }
+            ],
+            [
+                'label' => '用户手机号',
+                'attribute' => 'phone',
+                'value' => function ($model) {
+                    return $model->user->phone;
+                }
+            ],
+            [
+                'label' => '商品类型',
+                'value' => function ($model) {
+                    return Goods::$typeText[$model->detail->type];
+                }
+            ],
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    return ExchangeOrder::$statusText[$model->status];
+                },
+                'filter' => Html::dropDownList(
+                    'ExchangeOrderSearch[status]',
+                    $searchModel->status,
+                    ExchangeOrder::$statusText,
+                    ['class' => 'form-control', 'prompt'=>'请选择状态']
+                ),
+            ],
+            'add_time:datetime',
+
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
+        ],
+    ]); ?>
+	
+	// searchModel
+	public $username;
+    public $phone;
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['id', 'user_id', 'status', 'pay_type', 'price', 'add_time', 'update_time', 'delivery_time'], 'integer'],
+            [['order_no', 'remark', 'username', 'phone'], 'safe'],
+        ];
+    }
+	
+	public function search($params)
+    {
+        $query = ExchangeOrder::find();
+        $query->alias('o');
+        $query->joinWith(['user user']);  // orderDetail =》public function getOrderDetail()
+		
+		//ExchangeOrder 需要对应有
+		//public function getUser()
+		//{
+		//	return $this->hasOne(UserinfoBase::className(), ['user_id' => 'user_id']);
+		//}
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'o.id' => $this->id,
+            'o.user_id' => $this->user_id,
+            'o.status' => $this->status,
+            'o.pay_type' => $this->pay_type,
+            'o.price' => $this->price,
+            'o.add_time' => $this->add_time,
+            'o.update_time' => $this->update_time,
+            'o.express_name' => $this->express_name,
+            'o.delivery_time' => $this->delivery_time,
+            'user.phone' => trim($this->phone),
+        ]);
+
+        $query->andFilterWhere(['like', 'order_no', $this->order_no])
+            ->andFilterWhere(['like', 'remark', $this->remark])
+            ->andFilterWhere(['like', 'express_no', $this->express_no])
+            ->andFilterWhere(['like', 'express_remark', $this->express_remark])
+            ->andFilterWhere(['like', 'refund_remark', $this->refund_remark])
+            ->andFilterWhere(['like', 'user.name', $this->username]);
+
+        $query->orderBy(['add_time' => SORT_DESC]);
+
+        return $dataProvider;
+    }
+	
+	
+	
+	
+	
+	// 返奖，奖励从小到大
+	// 3个雌雄剑 2
+	// 免费游戏雌雄剑 2
+	// 3个丈八矛 3
+	// 免费游戏2个雌雄剑 4
+	// 4个雌雄剑 5
+	// 3个青龙刀 5
+	// 免费游戏丈八矛 5
+	// 免费游戏3个雌雄剑（无额外奖励） 6
+	// 3个孙权   7
+	// 4个丈八矛 10
+	// 3个刘备   10
+	// 免费游戏青龙刀 10
+	// 免费游戏2个丈八矛 10
+	// 4个青龙刀 15
+	// 3个曹操   15
+	// 免费游戏3个丈八矛（无额外奖励） 15
+	// 全盘兵器 15
+	// 5个雌雄剑 20
+	// 4个孙权   20
+	// 3个的卢马 20
+	// 免费游戏孙权 20
+	// 免费游戏2个青龙刀 20
+	// 免费游戏3个雌雄剑（额外奖20倍）26
+	// 4个刘备   30
+	// 免费游戏3个青龙刀（无额外奖励） 30
+	// 免费游戏3个丈八矛（额外奖20倍） 35
+	// 5个丈八矛 40
+	// 4个曹操   40
+	// 免费游戏2个孙权 40
+	// 3个赤兔马 50
+	// 免费游戏刘备 50
+	// 免费游戏3个青龙刀（额外奖20倍） 50
+	// 全盘人物 50
+	// 全盘雌雄剑 50
+	// 5个青龙刀 60
+	// 免费游戏3个孙权（无额外奖励） 60
+	// 免费游戏曹操 70
+	// 4个的卢马 80
+	// 免费游戏3个孙权（额外奖20倍） 80
+	// 3个桃园结义 90
+	// 5个孙权   100
+	// 免费游戏的卢马 100
+	// 免费游戏2个刘备 100
+	// 全盘丈八矛 100
+	// 免费游戏2个曹操 140
+	// 免费游戏3个刘备（无额外奖励） 150
+	// 全盘青龙刀 150
+	// 5个刘备   160
+	// 免费游戏3个刘备（额外奖20倍） 170
+	// 5个曹操   200
+	// 4个赤兔马 200
+	// 免费游戏赤兔马 200
+	// 免费游戏2个的卢马 200
+	// 免费游戏3个曹操（无额外奖励） 210
+	// 免费游戏3个曹操（额外奖20倍） 230
+	// 全盘孙权 250
+	// 免费游戏3个的卢马（无额外奖励）300
+	// 免费游戏3个的卢马（额外奖20倍）320
+	// 5个的卢马 400
+	// 4个桃园结义 400
+	// 免费游戏2个赤兔马 400
+	// 全盘刘备 400
+	// 全盘曹操 500
+	// 免费游戏4个雌雄剑（额外奖500倍） 508
+	// 免费游戏4个丈八矛（额外奖500倍） 520
+	// 免费游戏4个青龙刀（额外奖500倍） 540
+	// 免费游戏4个孙权（额外奖500倍） 580
+	// 免费游戏3个赤兔马（无额外奖励） 600
+	// 免费游戏3个赤兔马（额外奖20倍） 620
+	// 免费游戏4个刘备（额外奖500倍）700
+	// 免费游戏4个曹操（额外奖500倍） 780
+	// 免费游戏4个的卢马（额外奖500倍） 900
+	// 5个赤兔马 1000
+	// 全盘的卢马 1000
+	// 免费游戏4个赤兔马（额外奖500倍） 1300
+	// 5个桃园结义 2000
+	// 全盘赤兔马 2500
+	// 全盘桃园结义 5000

@@ -1,0 +1,105 @@
+rune 相当于go的char
+utf8.RuneCountInString获取字符数量
+使用len获取字节长度
+使用[]byte获取字节
+字符串操作
+Fields Split Join
+Contains Index
+ToLower ToUpper
+Trim TrimRight TrimLeft
+
+// Fields 以连续的空白字符为分隔符，将 s 切分成多个子串，结果中不包含空白字符本身
+// 空白字符有：\t, \n, \v, \f, \r, ' ', U+0085 (NEL), U+00A0 (NBSP)
+// 如果 s 中只包含空白字符，则返回一个空列表
+func Fields(s string) []string
+
+func main() {
+    s := "Hello, 世界! Hello!"
+    ss := strings.Fields(s)
+    fmt.Printf("%q\n", ss) // ["Hello," "世界!" "Hello!"]
+}
+
+s := strings.Split("", "")
+fmt.Println(s, len(s))          [] 0 //返回空数组 
+
+s = strings.Split("abc,abc", "")
+fmt.Println(s, len(s))          [a b c , a b c] 7 //返回7个数组元素 
+
+s = strings.Split("", ",")
+fmt.Println(s, len(s))          [] 1 //返回一个包含空字符元素的数组, 数组长度是1 
+
+s = strings.Split("abc,abc", ",")
+fmt.Println(s, len(s))          [abc abc] 2 
+
+s = strings.Split("abc,abc", "|")
+fmt.Println(s, len(s))          [abc,abc] 1 
+
+fmt.Println(len(""))    0 
+fmt.Println(len([]string{""}))  1 
+
+str := ""
+fmt.Println(str[0]) // panic: runtime error: index out of range
+
+
+strings.Join([]int{1,2,3},"+") //error 必须显式的进行类型转换
+strings.Join方法比普通的"str"+"str2"这种形式的字符串拼接效率更高，这是因为string本身就是一个常量，那拼接成一个新字符串，就必须要销毁原string对象，然后使当前引用指向新的字符串对象，这样做的开销是非常大的，而strings.Join则不用。
+
+
+
+s := "Yes我爱慕课网!" // UTF-8
+
+for _, b := range []byte(s) {
+    fmt.Printf("%X ", b)
+}
+for i, ch := range s { // ch is a rune 
+    fmt.Printf("(%d %X) ", i, ch)
+}
+
+fmt.Println("Rune count:",
+    utf8.RuneCountInString(s))
+
+bytes := []byte(s)
+for len(bytes) > 0 {
+    ch, size := utf8.DecodeRune(bytes)
+    bytes = bytes[size:]
+    fmt.Printf("%c ", ch)
+}
+
+for i, ch := range []rune(s) {
+    fmt.Printf("(%d %c) ", i, ch)
+}
+
+// 寻找最长子串
+func lengthOfNonRepeatingSubStr(s string) int {
+	lastOccurred := make(map[rune]int)
+	start := 0
+	maxLength := 0
+
+	for i, ch := range []rune(s) {
+		if lastI, ok := lastOccurred[ch]; ok && lastI >= start {
+			start = lastI + 1
+		}
+		if i-start+1 > maxLength {
+			maxLength = i - start + 1
+		}
+		lastOccurred[ch] = i
+	}
+
+	return maxLength
+}
+
+fmt.Println(
+		lengthOfNonRepeatingSubStr("pwwkew"))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr(""))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr("b"))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr("abcdef"))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr("这里是慕课网"))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr("一二三二一"))
+	fmt.Println(
+		lengthOfNonRepeatingSubStr(
+			"黑化肥挥发发灰会花飞灰化肥挥发发黑会飞花"))

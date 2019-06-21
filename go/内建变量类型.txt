@@ -1,5 +1,7 @@
 bool
 string
+int // 至少32位
+uint // 至少32位
 (u)int8
 (u)int16
 (u)int32

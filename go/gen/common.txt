@@ -1,0 +1,18 @@
+gen --connstr "root:root@tcp(127.0.0.1:3306)/cherry_ad?&parseTime=True" --package model --database cherry_ad --table payment_log --json --gorm --guregu --rest
+
+sqlType     = goopt.String([]string{"--sqltype"}, "mysql", "sql database type such as mysql, postgres, etc.")
+sqlConnStr  = goopt.String([]string{"-c", "--connstr"}, "nil", "database connection string")
+sqlDatabase = goopt.String([]string{"-d", "--database"}, "nil", "Database to for connection")
+sqlTable    = goopt.String([]string{"-t", "--table"}, "", "Table to build struct from")
+
+packageName = goopt.String([]string{"--package"}, "", "name to set for package")
+
+jsonAnnotation = goopt.Flag([]string{"--json"}, []string{"--no-json"}, "Add json annotations (default)", "Disable json annotations")
+gormAnnotation = goopt.Flag([]string{"--gorm"}, []string{}, "Add gorm annotations (tags)", "")
+gureguTypes    = goopt.Flag([]string{"--guregu"}, []string{}, "Add guregu null types", "")
+
+rest = goopt.Flag([]string{"--rest"}, []string{}, "Enable generating RESTful api", "")
+
+verbose = goopt.Flag([]string{"-v", "--verbose"}, []string{}, "Enable verbose output", "")
+
+gen [-v] --connstr "user:password@/dbname" --package pkgName --database databaseName --table tableName [--json] [--gorm] [--guregu]

@@ -1,0 +1,27 @@
+mysqlURL := "root:447728@/custom_admin?charset=utf8&parseTime=True&loc=Local"
+DB, err := gorm.Open("mysql", mysqlURL)
+defer DB.Close()
+// debug需要设置 set DEBUG=true
+bug := os.Getenv("DEBUG")
+fmt.Printf("%q", bug)
+if err == nil {
+    if os.Getenv("DEBUG") != "" {
+        fmt.Printf("%q", bug)
+        DB.LogMode(true)
+    }
+} else {
+    fmt.Printf("mysql connect error %v", err)
+}
+
+typeName := make([]*transport.Type, 0)
+if err := DB.Find(&typeName).Error; err != nil {
+    fmt.Println(err)
+}
+
+fmt.Println(typeName)
+
+// "true""true"
+// ?[35m(F:/go_path/src/123/main.go:29)?[0m
+// ?[33m[2019-06-21 15:37:20]?[0m  ?[36;1m[2.00ms]?[0m  SELECT * FROM `transport_type`
+// ?[36;31m[4 rows affected or returned ]?[0m
+// [0xc00014ab20 0xc00014ac20 0xc00014ad00 0xc00014ae00]
