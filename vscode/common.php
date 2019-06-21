@@ -1,4 +1,6 @@
 ${workspaceRoot}:就是你打开vscode读取的项目目录
+"program"中的"${fileDirname}"是以当前选中文件作为启动点
+更建议使用"program"的"${workspaceRoot}", 以包名作为启动点的方式进行配置
 文件家名称 .vscode
 打开新的文件会覆盖窗口中的,怎么改  "workbench.editor.enablePreview": false
 settings.json
