@@ -16,7 +16,7 @@ public static function boot()
     $model->display_where = json_encode($model->display_where);
 
     });
- }
+}
 
 
 

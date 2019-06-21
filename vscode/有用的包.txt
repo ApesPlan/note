@@ -30,7 +30,7 @@ go-symbols.exe 	// 从go源码树中提取JSON形式的包符号的工具
 gotour.exe 	    // go语言指南网页版
 guru.exe 	    // go语言源代码有关工具，如代码高亮等
 
-gen.exe
+gen.exe // 自动生成结构体通过数据表
 gin.exe // 热加载
 gocode-gomod.exe
 godef-gomod.exe

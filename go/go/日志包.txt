@@ -1,0 +1,23 @@
+package glog
+
+import (
+	"fmt"
+	"runtime"
+	"strconv"
+	"time"
+)
+
+// ThrowErrorMessage 返回错误信息
+func ThrowErrorMessage(err error) string {
+	// 错误信息
+	errorInfo := fmt.Sprintf("%v", err)
+	// 日志记录时间
+	createdTime := time.Now().Format("2006-01-02 15:04:05")
+	// 错误的文件和行号
+	_, file, line, ok := runtime.Caller(1)
+	if ok {
+		return "[" + createdTime +"] [error] [" + errorInfo +"] [" + file +":" + strconv.Itoa(line) +"]"
+	}
+
+	return "[" + createdTime +"] [error] [" + errorInfo +"]"
+}

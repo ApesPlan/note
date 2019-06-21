@@ -1,3 +1,4 @@
+// 例子
 gen --connstr "root:root@tcp(127.0.0.1:3306)/cherry_ad?&parseTime=True" --package model --database cherry_ad --table payment_log --json --gorm --guregu --rest
 
 sqlType     = goopt.String([]string{"--sqltype"}, "mysql", "sql database type such as mysql, postgres, etc.")
@@ -15,4 +16,5 @@ rest = goopt.Flag([]string{"--rest"}, []string{}, "Enable generating RESTful api
 
 verbose = goopt.Flag([]string{"-v", "--verbose"}, []string{}, "Enable verbose output", "")
 
+// 格式
 gen [-v] --connstr "user:password@/dbname" --package pkgName --database databaseName --table tableName [--json] [--gorm] [--guregu]

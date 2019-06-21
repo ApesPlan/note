@@ -1,0 +1,2 @@
+go mod init XXX
+GO111MODULE on 开启gomod go get下载时也是下载到gopath/pkg/mod下
