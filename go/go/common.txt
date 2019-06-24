@@ -1,1 +1,20 @@
 go build -o 路径+文件.exe（输出） 路径+文件名（输入）
+
+值接收者是go语言特有
+值/指针接收者均可接收值/指针，主要以接收者的形参为准
+
+如何扩充系统类型或者别人的类型
+定义别名
+使用组合
+
+linux gopath
+~/go
+sdk 建议放在/opt
+在/etc/profile文件下添加三条语句
+export GOROOT=/opt/go
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=$HOME/goprojects/
+
+echo $GOPATH //打印gopath
+
+不要通过共享内存来通信，要通过通信来共享内存

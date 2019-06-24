@@ -1,0 +1,13 @@
+仅在defer调用中使用
+获取panic的值
+如果无法处理，可重新panic
+
+func tryRecover() {
+    defer func() { // 如果有recover 抛出的panic就会被recover捕获
+        r := recover()
+        if err, ok := r.(error); ok {
+            fmt
+        }
+    }()
+    panic(error.New(""))
+}

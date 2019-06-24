@@ -1,0 +1,23 @@
+// 通过定义别名来拓展类型
+package queue
+
+type Queue []int
+
+func (q *Queue) Push(v int) {
+    *q = append(*q, v)
+}
+
+func (q *Queue) Pop() int {
+    head := (*q)[0]
+    *q = (*q)[1:]
+    return head
+}
+
+func (q *Queue) IsEmpty() bool {
+    return len(*q) == 0
+}
+
+q := queue.Queue{1}
+q.Push(2)
+q.Pop()
+q.IsEmpty()

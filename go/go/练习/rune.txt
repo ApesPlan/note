@@ -1,0 +1,16 @@
+rune 相当于go 的char
+使用utf8.RuneCountInString获得字符数量
+len 获取字节长度
+[]byte获得字节
+
+s := "123啊ad"
+bytes := []byte(s)
+for len(bytes) > 0 {
+    ch, size := utf8.DecodeRune(bytes) // 3个字节
+    bytes = bytes[size:]
+    fmt.Printf("%c", ch)
+}
+
+for i, ch := range []rune(s) { // 4个字节
+    fmt.Printf("%d %c", i , ch)
+}

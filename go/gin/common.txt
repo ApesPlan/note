@@ -6,3 +6,57 @@ r := gin.New()
 代替
 // 默认启动方式，包含 Logger、Recovery 中间件
 r := gin.Default()
+
+gin.SetMode(gin.DebugMode) //全局设置环境，此为开发环境，线上环境为gin.ReleaseMode
+
+// 获得当前的路径
+os.Getwd()
+// gorm默认的结构体映射是复数形式，比如你的博客表为blog，对应的结构体名就会是blogs，同时若表名为多个单词，对应的model结构体名字必须是驼峰式，首字母也必须大写
+// 禁用表名复数
+db.SingularTable(true)
+
+// 获取路由参数
+/user/:name/*action
+name := c.Param("name")
+action := c.Param("action")
+c.FullPath() == "/user/:name/*action" // true
+
+/welcome?firstname=Jane&lastname=Doe
+firstname := c.DefaultQuery("firstname", "Guest")
+lastname := c.Query("lastname") // shortcut for c.Request.URL.Query().Get("lastname")
+
+// POST
+message := c.PostForm("message")
+nick := c.DefaultPostForm("nick", "anonymous")
+
+// POST /post?id=1234&page=1 HTTP/1.1
+// Content-Type: application/x-www-form-urlencoded
+// name=manu&message=this_is_great
+
+id := c.Query("id")
+page := c.DefaultQuery("page", "0")
+name := c.PostForm("name")
+message := c.PostForm("message")
+
+// POST /post?ids[a]=1234&ids[b]=hello HTTP/1.1
+// Content-Type: application/x-www-form-urlencoded
+// names[first]=thinkerou&names[second]=tianou
+
+ids := c.QueryMap("ids")
+names := c.PostFormMap("names")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

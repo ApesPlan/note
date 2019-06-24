@@ -14,3 +14,4 @@ Go的test一般以xxx_test.go为文件名
 xxx的部分一般为xxx_test.go所要测试的代码文件名 main.go main_test.go
 Go并没有特别要求xxx的部分必须是要测试的文件名 
 
+go run -race main.go 查看冲突

@@ -1,0 +1,2 @@
+re := regexp.MustCompile(`([a-zA-Z0-9]+)@([a-zA-Z0-9]+)(\.[a-zA-Z0-9.]+)`)
+match := re.FindAllStringSubmatch(字符串, -1) // 匹配的是多位数组0 1 2 3
