@@ -1,0 +1,76 @@
+docker network create -d bridge ceph
+docker network ls
+docker network rm ID
+
+docker run -itd --name mymon --network ceph -e MON_NAME=ceph_mon -e MON_IP=172.19.0.2 -v /data/ceph_mon:/etc/ceph ceph/mon
+
+
+
+
+# 1. 创建Ceph专用网络 
+docker network create --driver bridge --subnet 172.20.0.0/16 ceph-network
+docker network inspect ceph-network
+# 2. 删除旧的ceph相关容器
+docker rm -f $(docker ps -a | grep ceph | awk '{print $1}')
+# 3. 清理旧的ceph相关目录文件，加入有的话
+rm -rf /www/ceph /var/lib/ceph/  /www/osd/
+# 4. 创建相关目录及修改权限，用于挂载volume
+mkdir -p /www/ceph /var/lib/ceph/osd /www/osd/
+chown -R 64045:64045 /var/lib/ceph/osd/
+chown -R 64045:64045 /www/osd/
+# 5. 创建monitor节点
+// 172.19.0.1
+// docker run -d --name monnode --network ceph --ip 172.19.0.2 -e MON_NAME=monnode -e MON_IP=172.19.0.2 -e CEPH_PUBLIC_NETWORK=172.19.0.0/24 -v /data/ceph_node/ceph_mon/config:/etc/ceph -v /data/ceph_node/ceph_mon/data:/var/lib/ceph -v /etc/localtime:/etc/localtime:ro ceph/daemon mon
+docker run -itd --name monnode --network ceph-network --ip 172.20.0.10 -e MON_NAME=monnode -e MON_IP=172.20.0.10 -v /www/ceph:/etc/ceph ceph/mon
+# 6. 在monitor节点上标识3个osd节点
+docker exec monnode ceph osd create
+docker exec monnode ceph osd create
+docker exec monnode ceph osd create
+# 7. 创建OSD节点
+docker run -itd --name osdnode0 --network ceph-network -e CLUSTER=ceph -e WEIGHT=1.0 -e MON_NAME=monnode -e MON_IP=172.20.0.10 -v /www/ceph:/etc/ceph -v /www/osd/0:/var/lib/ceph/osd/ceph-0 ceph/osd 
+docker run -itd --name osdnode1 --network ceph-network -e CLUSTER=ceph -e WEIGHT=1.0 -e MON_NAME=monnode -e MON_IP=172.20.0.10 -v /www/ceph:/etc/ceph -v /www/osd/1:/var/lib/ceph/osd/ceph-1 ceph/osd
+docker run -itd --name osdnode2 --network ceph-network -e CLUSTER=ceph -e WEIGHT=1.0 -e MON_NAME=monnode -e MON_IP=172.20.0.10 -v /www/ceph:/etc/ceph -v /www/osd/2:/var/lib/ceph/osd/ceph-2 ceph/osd
+# 8. 增加monitor节点，组件成集群
+docker run -itd --name monnode_1 --network ceph-network --ip 172.20.0.11 -e MON_NAME=monnode_1 -e MON_IP=172.20.0.11 -v /www/ceph:/etc/ceph ceph/mon
+docker run -itd --name monnode_2 --network ceph-network --ip 172.20.0.12 -e MON_NAME=monnode_2 -e MON_IP=172.20.0.12 -v /www/ceph:/etc/ceph ceph/mon
+# 9. 创建gateway节点
+docker run -itd --name gwnode --network ceph-network --ip 172.20.0.9 -p 9080:80 -e RGW_NAME=gwnode -v /www/ceph:/etc/ceph ceph/radosgw
+# 10. 查看ceph集群状态
+sleep 10 && docker exec monnode ceph -s
+docker exec monnode ceph -s
+
+
+
+
+
+
+
+
+[global]
+fsid = e0261ad4-8670-48c9-946b-21f9141ac447
+mon initial members = monnode
+mon host = 172.19.0.2
+
+auth cluster required = none
+auth service required = none
+auth client required = none
+
+public network = 172.19.0.0/24
+cluster network = 172.19.0.0/24
+osd journal size = 100
+osd_memory_target = 3052765184
+osd_memory_base = 1552596992
+osd_memory_cache_min = 2302681088
+
+osd pool default size = 3
+osd pool default min size = 2
+osd crush update on start  = false
+
+[mon]
+    mon initial members = monnode
+    mon host = 172.19.0.2
+[mon.monnode]
+    host = monnode
+    mon addr = 172.19.0.2:8000
+[client]
+    rbd default format = 2

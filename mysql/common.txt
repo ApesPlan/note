@@ -1,5 +1,7 @@
 // 进入数据库
 mysql -h  localhost -uroot -p447728
+// 退出
+exit;
 // 查看数据库列表
 show databases;
 // 使用某数据库
@@ -24,3 +26,12 @@ use 库名;
 source e:/joyway_yz_mall.sql
 // cmd 非mysql中 wang1数据库名
 >MySQLdump -h localhost -u root -p wang1 >d:\mydb.sql
+
+// 创建表
+create database test default character set utf8;
+create table tbl_test (`user` varchar(64) not null, `age` int(11) not null) default charset utf8;
+show create table tbl_test;
+insert into tbl_test (user, age) values ('xiaoming', 18);
+
+
+

@@ -1,0 +1,16 @@
+// 赞赞的nginx,php,redis
+sudo docker create --name nginx \
+--expose 80 -p 80:80 \
+--expose 443 -p 443:443 \
+-v /www:/www \
+-v /etc/nginx/conf.d:/etc/nginx/conf.d \
+--network webserver-net \
+nginx \
+nginx -g "daemon off;"
+// 创建php容器
+sudo docker create --name php \
+--expose 9000 -p 9000:9000 \
+-v /www:/www \
+--network webserver-net 
+// 创建redis容器
+sudo docker create --name redis  --expose 6379 -p 6379:6379 --network webserver-net redis

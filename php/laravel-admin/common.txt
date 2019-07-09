@@ -1,0 +1,54 @@
+https://laravelacademy.org/laravel-docs-5_5 // laravel5.5文档
+composer create-project  --prefer-dist  laravel/laravel=5.5.*  laravel5.5 // 安装laravel5.5
+http://laravel-admin.org/docs/zh/installation // laravel-admin文档
+composer require encore/laravel-admin // 安装laravel-admin
+// 发布资源 在该命令会生成配置文件config/admin.php，可以在里面修改安装的地址、数据库连接、以及表名，建议都是用默认配置不修改
+php artisan vendor:publish --provider="Encore\Admin\AdminServiceProvider"
+// 完成安装 数据库可以在.env里配置
+php artisan admin:install
+// 配置好wnmp后 在浏览器打开 http://localhost/admin/ ,使用用户名 admin 和密码 admin登录.
+
+$router->resource('example', ExampleController::class);
+php artisan make:model Data\ActivityAlertStyle -m
+数据表格最后一列默认是操作列，包含编辑按钮与删除按钮。如果需要自定义操作列，则可以把默认的操作列禁用，再进行自定义。
+$grid->disableActions();
+
+laravel-admin form中的数据，在提交后，保存前，获取并进行编辑
+
+在模型中添加如下方法：
+
+public static function boot()
+{
+    parent::boot();
+
+    static::saving(function ($model) {
+
+    $model->display_where = json_encode($model->display_where);
+
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

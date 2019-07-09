@@ -1,0 +1,3 @@
+php artisan make:model Admin\Models\Movies  在app目录下的Admin\Models\生成Movies.php
+php artisan admin:form EditBid --title=`编辑出价`
+php artisan admin:make RechargeController --model=App\Model\Recharge // 生成controller

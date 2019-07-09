@@ -1,0 +1,117 @@
+准备好mysql5.7的配置文件mysqld.cnf
+
+# Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+#
+# The MySQL  Server configuration file.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+#log-error      = /var/log/mysql/error.log
+# By default we only accept connections from localhost
+#bind-address   = 127.0.0.1
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+sql_mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+
+// mysql_init 准备好的mysql数据卷和config
+cd /data
+mkdir mysql57_xxx 
+cp -r /data/mysql_init/* /data/mysql57_xxx/
+docker network create -d bridge lnmp7
+docker network ls
+docker network rm ID
+docker run -d --name mysql57_mastar --network net1 -p 8001:3306 -v /data/mysql57_master/config:/etc/mysql/mysql.conf.d -v /data/mysql57_master/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=447728 mysql:5.7
+docker exec -it mysql57_mastar /bin/bash
+mysql -h  localhost -uroot -p447728
+use mysql;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '447728' WITH GRANT OPTION; // 设置远程连接并设置访问密码
+flush privileges;
+查看修改是否成功
+select host,user from user;
+单独ip
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.0.110' IDENTIFIED BY '447728' WITH GRANT OPTION;
+
+update user set Password=password('123456') where User='root'; // 重置密码
+
+
+ctrl p + q
+ctrl d
+exit
+[ctrl+D]退出后不会终止容器运行
+
+
+// 主从数据库
+配置文件mysqld.cnf添加
+
+[mysqld]
+server-id=1   #任意自然数n，只要保证两台MySQL主机不重复就可以了。
+log-bin=mysql-bin   #开启二进制日志
+
+// 重启
+docker restart mysql57_mastar
+docker restart mysql57_slave
+
+
+docker inspect mysql57_mastar // 查看网络连接
+docker exec -it mysql57_mastar /bin/bash
+
+// 查看 master_log_file master_log_pos
+show master status;
+docker exec -it mysql57_slave /bin/bash
+// 配置主从
+change master to master_host='172.18.0.2', master_user='root', master_password='447728', master_log_file='mysql-bin.000001', master_port=3306, master_log_pos=154;
+slave start;
+show slave status\G;
+mysql -h  localhost -uroot -p447728
+
+// 表示主从成功
+Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+// 如果不成功
+stop slave;#先停止复制线程
+
+//  查看docker的端口使用情况
+netstat -antup | grep docker
+
+change master to 
+master_host='172.17.0.1',     --master的ip  不能为127.0.0.1
+master_user='root',           --master的帐号密码
+master_password='447728',
+master_log_file='mysql-bin.000001', --master 查询的file名  注意上面！
+master_port=3306,                   --master 端口 坑！为容器端口 不是主机端口
+master_log_pos=154;                 --日志文件位置  注意上面！
+
+
+如在配置主从同步前master中已有数据，则需提前进行数据同步操作
+登录master，执行锁表操作
+mysql -u root -p1234 -h 127.0.0.1 -P 3307
+FLUSH TABLES WITH READ LOCK;
+
+将master中需要同步的db的数据dump出来
+mysqldump -u root -p -h 127.0.0.1 -P 3307  mytest > mytest.dump 
+
+将数据导入slave
+mysql -u root -p -h 127.0.0.1 -P 3308 mytest < mytest.dump
+
+按前文所述步骤开启主从同步，然后解锁master
+UNLOCK TABLES;

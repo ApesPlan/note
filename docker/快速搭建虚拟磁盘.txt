@@ -1,0 +1,41 @@
+1. virtrulbox先关机，打开设置》存储》创建硬盘》默认vri》动态分配
+2. 重启虚拟机
+     查看现有系统的磁盘空间
+        sudo fdisk -l
+     可看到新加的虚拟硬盘，一般名为：Disk /dev/sdb
+3. 给新加的硬盘分区
+        fdisk /dev/sdb
+     键入m,可看到帮助信息
+        command (m for help):m           
+     增加新分区
+        command (m for help):n  
+     选择基本分区，输入：p
+     建一个分区
+        Partition number(1-4):1 
+     两回车
+        First cylinder (1-15908,default 1):Enter
+     写入并退出
+        command (m for help):w
+4. 格式化磁盘分区
+     用ext4格式对/dev/sdb1进入格式化
+        // sudo mkfs.ext4 /dev/sdb1
+        mkfs.xfs /dev/sdb1 // 用于ceph
+fdisk -l // 就会有 /dev/sdb1了
+
+5. 挂载分区
+     创建新的挂载点
+        sudo mkdir /work
+     将新磁盘分区挂载到/work目录下
+        sudo mount -t ext4 /dev/sdb1 /work
+        eg mount -o defaults,noatime,nodiratime,noexec,nodev,nobarrier  /dev/sdb1 /data/ceph
+     查看挂载
+        df -h
+     可以看到新加的硬盘：/dev/sdb1
+6. 开机自动挂载
+     修改文件
+            sudo vim /etc/fstab
+     在最后一行加入：
+            /dev/sdb1 /work ext4 errors=remount-ro 0 1
+     完成!
+
+mkfs.xfs自动挂载     /dev/sdb1    /data/ceph      xfs     defaults      0 0

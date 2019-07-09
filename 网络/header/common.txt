@@ -1,0 +1,12 @@
+//指定允许其他域名访问
+'Access-Control-Allow-Origin:*'
+'Access-Control-Allow-Origin:http://172.20.0.206'//一般用法（*，指定域，动态设置），3是因为*不允许携带认证头和cookies
+//是否允许后续请求携带认证信息（cookies）,该值只能是true,否则不返回
+'Access-Control-Allow-Credentials:true'
+//表明在1800秒内，不需要再发送预检验请求，可以缓存该结果
+'Access-Control-Max-Age: 1800' 
+//表明它允许GET、PUT、DELETE的外域请求
+'Access-Control-Allow-Methods:GET,POST,PUT,POST'
+//表明它允许跨域请求包含content-type头
+'Access-Control-Allow-Headers:x-requested-with,content-type'
+'Access-Control-Allow-Headers:Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With'

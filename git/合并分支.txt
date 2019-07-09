@@ -1,0 +1,4 @@
+git branch
+git checkout master
+git merge --no-ff pack_dist_server
+git push

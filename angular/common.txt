@@ -1,0 +1,22 @@
+安装angular脚手架 cnpm install -g @angular/cli
+cd到工作目录 ng new XXX，选择yes 和 less
+目录下载后，它还要npm下载包，此时就可以退出了，然后进入目录，cnpm install
+ng new XXX --skip-install 不会npm install
+ng serve (--open/-o) 运行项目
+ng v 查看版本
+// --flat 把这个文件放进了 src/app 中，而不是单独的目录中。
+// --module=app 告诉 CLI 把它注册到 AppModule 的 imports 数组中。
+ng generate module app-routing --flat --module=app
+
+当创建一个新组件时 ng g component xx 会自动生成一个 *.spec.ts 的测试文件
+
+TSLint：Typescript语法检查
+Prettier：代码格式化
+Angular 7 Snippets：Angular语法填充（标签）
+Angular Files：生成Angular的文件模板（Component、Module、Pipe等等）
+Angular Follow Selector：文件跳转（Component跳转到html、scss文件）
+Angular Language Service：引用填充和跳转到定义（html中进行引用补全）
+Debugger for Chrome：调试Angular代码
+
+// 创建组件
+ng generate component xxx

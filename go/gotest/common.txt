@@ -1,0 +1,16 @@
+go tool cover // 代码覆盖率 可以查看命令
+go tool cover -html=c.out //在网页中显示
+
+go test helloworld_test.go
+go test -v helloworld_test.go
+go test -v -run TestA select_test.go
+
+// Benchmark 当前xxx_test.go文件
+go test -v  -bench .
+// Benchmark 指定方法
+go test -run Benchmark_Add -v -bench .
+
+// 当前文件夹下生成cpu.out
+go test -bench . -cpuprofile cpu.out
+// 出现交互式命令行
+go tool pprof cpu.out

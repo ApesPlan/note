@@ -1,0 +1,100 @@
+sudo docker pull php:7.1.2-fpm
+sudo docker pull mysql:5.7
+sudo docker pull nginx:1.14.2
+sudo docker pull redis:5.0
+
+sudo docker network create -d bridge webserver-net
+
+# 创建php:7.1.2-fpm的容器并命名php7.1.2，将容器的9000端口映射到主机的9000端口。把主机的/home/lnmp/www/目录挂载到容器的/www目录（这个目录用于存放php脚本文件）
+[root@localhost lnmp]# sudo docker run -d -p 9000:9000 --name php7.1.2 -v /home/wang/lnmp/www/:/www php:7.1.2-fpm
+sudo docker run -d --network webserver-net -p 9000:9000 --name php7.1.2 -v /home/wang/lnmp/www/:/var/www/html/ php:7.1.2-fpm
+
+# 创建nginx:1.14的容器并命名nginx1.14.2，将容器的80端口映射到主机的80端口。把主机的/home/lnmp/app/nginx1.14.2/conf/目录挂载到容器的/etc/nginx/conf.d目录；/home/lnmp/www/目录挂载到容器的/www目录。
+[root@localhost lnmp]# sudo docker run -d -p 80:80 --name nginx1.14.2 -v /home/wang/lnmp/app/nginx1.14/conf/:/etc/nginx/conf.d -v /home/lnmp/www/:/usr/share/nginx/html nginx:1.14.2
+sudo docker run -d --network webserver-net -p 80:80 --name nginx1.14.2 -v /home/wang/lnmp/app/nginx1.14/conf/:/etc/nginx/conf.d -v /home/lnmp/www/:/usr/share/nginx/html nginx:1.14.2
+sudo docker run -d --network webserver-net -p 80:80 --name nginx1.14.2 -v /home/wang/nginx/conf.d:/etc/nginx/conf.d -v /home/wang/www:/www nginx:1.14.2
+sudo docker run -d --name nginx1.14.2 \
+--expose 80 -p 80:80 \
+--expose 443 -p 443:443 \
+-v /home/wang/www:/www \
+-v /home/wang/nginx/conf.d:/etc/nginx/conf.d \
+--network webserver-net \
+nginx:1.14.2 \
+nginx:1.14.2 -g "daemon off;"
+
+// nginx.conf
+worker_processes  1; #允许生成的进程数，默认为1
+events {
+    worker_connections  1024; #最大连接数，默认为512
+}
+
+http {
+    include       mime.types; #文件扩展名与文件类型映射表
+    default_type  application/octet-stream; #默认文件类型，默认为text/plain
+    sendfile        on; #允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。
+	
+    keepalive_timeout  65; #连接超时时间，默认为75s，可以在http，server，
+	fastcgi_connect_timeout 300;
+	fastcgi_send_timeout 300;
+	fastcgi_read_timeout 300;
+	fastcgi_buffer_size 128k;
+	fastcgi_buffers 4 128k;
+	fastcgi_busy_buffers_size 256k;
+	fastcgi_temp_file_write_size 256k;
+
+	gzip on;
+	gzip_min_length  1k;
+	gzip_buffers     4 32k;
+	gzip_http_version 1.1;
+	gzip_comp_level 2;
+	gzip_types       text/plain application/x-javascript text/css application/xml;
+	gzip_vary on;
+	gzip_disable "MSIE [1-6].";
+
+	server_names_hash_bucket_size 128;
+	client_max_body_size     100m; 
+	client_header_buffer_size 256k;
+	large_client_header_buffers 4 256k;
+  
+	server {
+		listen       80; #监听端口
+		server_name  localhost; #监听地址   
+		
+		charset utf-8;
+		
+		root   "/www/first";
+		
+        location / { #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。
+            index  index.html index.htm index.php l.php;
+            autoindex  off;
+        }
+		
+		if (!-e $request_filename) {
+			rewrite ^/(.*)  /index.php/$1 last;
+		}
+		
+		error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+		
+		location ~ \.php(.*)$  {
+            fastcgi_pass   172.17.0.2:9000; # 这里的ip是对应PHP版本的容器的ip地址，这个为容器之间的通信，下节会有介绍
+            fastcgi_index  index.php;
+            fastcgi_split_path_info  ^((?U).+\.php)(/?.+)$;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_param  PATH_INFO  $fastcgi_path_info;
+            fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+            include        fastcgi_params;
+        }
+	}
+
+	include vhosts.conf;
+}
+
+
+# 创建mysql:5.7的容器并命名mysql5.7，将容器的3306端口映射到主机的3306端口。把主机的/home/lnmp/data/mysql目录挂载到容器的/var目录。设置root的密码为123456。
+[root@localhost lnmp]# sudo docker run -d -p 3306:3306 --name mysql5.7 -v /home/wang/lnmp/data/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7
+
+# 创建redis:3.2的容器并命名redis5.0，将容器的6379端口映射到主机的6379端口。把主机的/home/lnmp/data/redis目录挂载到容器的/data目录。设置redis的持久化保存。
+[root@localhost lnmp]# sudo docker run -d -p 6379:6379 --name redis5.0 -v /home/wang/lnmp/data/redis:/data redis:5.0 redis-server --appendonly yes

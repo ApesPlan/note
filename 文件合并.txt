@@ -1,0 +1,4 @@
+cat `ls | sort -n` > /tmp/a
+sha1sum /tmp/a
+
+sha1sum另一个文件对比sha1值

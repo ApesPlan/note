@@ -54,3 +54,29 @@ koroFileHeader // 自动注释
 在光标处自动生成一个注释模板，下方有栗子
 支持用户高度自定义注释选项
 快捷键：window：ctrl+alt+t,mac：ctrl+cmd+t
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/main.go",
+            "env": {},
+            "args": []
+        },
+        {
+            "name": "testRouter",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${workspaceRoot}/test",
+            "args": [
+                "-test.run",
+                "TestRouter"
+            ]
+        }
+    ]
+}

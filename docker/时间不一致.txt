@@ -1,0 +1,3 @@
+
+创建容器的时候指定启动参数，挂载localtime文件到容器内，保证两者所采用的时区是一致
+docker run --name <name> -v /etc/localtime:/etc/localtime:ro  .... 

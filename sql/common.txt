@@ -1,0 +1,16 @@
+mysql -uroot -h127.0.0.1 -P3306 -p
+show master status
+
+// 在从节点上关联数据库主从节点
+CHANGE MASTER TO MASTER_HOST='192.168.2.244(ifconfig虚拟机的ip)', MASTER_USER='reader', MASTER_PASSWORD='reader', MASTER_LOG_FILE='binlog.000002(show master status File值)', MASTER_LOG_POS=0;
+start slave; // 同步日志
+show slave status\G; // 查看状态
+参考 Slave_IO_Running: Yes Slave_SQL_Running: Yes
+
+show tables; // 查看表
+delete from tbl_user_file; // 可以在不删除表的情况下删除所有的行。这意味着表的结构、属性和索引都是完整的
+alter table tbl_user_file drop index `idx_user_file` // 删除索引
+
+replace into tbl_user_token (`user_name`,`user_token`) values (?,?)
+
+SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id ORDER BY time DESC

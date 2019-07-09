@@ -1,0 +1,5 @@
+netstat -antup | grep redis
+redis-cli
+auth testupload
+keys *
+quit
