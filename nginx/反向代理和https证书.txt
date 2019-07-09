@@ -1,0 +1,26 @@
+upstream user_cherry_cn_9211{
+    server 127.0.0.1:9211;
+}
+server{
+    listen    80;
+    server_name t.user.cherry.cn;
+    location / {
+        proxy_pass      http://user_cherry_cn_9211;
+    }
+
+}
+server
+{
+    listen  443;
+    server_name  t.user.cherry.cn;
+    ssl on;
+    ssl_certificate /data/config/nginx_sites/cert/user.cherry.cn.cert.pem;
+    ssl_certificate_key /data/config/nginx_sites/cert/user.cherry.cn.cert.key;
+    ssl_session_timeout 5m;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    location / {
+        proxy_pass      http://user_cherry_cn_9211;
+    }
+}
