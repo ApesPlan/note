@@ -5,3 +5,11 @@ LESS 中的变量为完全的 ‘常量’ ，所以只能定义一次
 输出:
 
 #header { color: #6c94be; }
+
+cnpm install -g less
+cnpm install -g less-plugin-clean-css // 压缩 css文件 --clean-css
+
+lessc styles.less > wang.css
+lessc --clean-css styles.less > wang.css
+
+
