@@ -1,3 +1,5 @@
 用注释写文档
 在测试中加入Example
 使用 go doc/ godoc 查看/生成文档
+
+godoc -http :6060

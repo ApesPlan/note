@@ -1,0 +1,8 @@
+// 下载编译好这个包，就可以不用翻墙下载go包 
+    go get -v github.com/gpmgo/gopm 
+    eg: gopm get g -v -u golang.org/x/tools/cmd/goimports
+
+// 编译
+go build -o 路径+文件.exe（输出） 路径+文件名（输入）
+go build src/golang.org/x/tools/cmd/goimports // 编译并生成可执行文件到当前文件下
+go install ... 编译并生成可执行文件到bin

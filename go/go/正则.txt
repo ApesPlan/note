@@ -1,2 +1,39 @@
+// 浏览器自动验证正则
+    /(01|06|03)[A-F0-9]{8}/.test("0280001D7A") false
+    /(01|06|03)[A-F0-9]{8}/.test("0180001D7A") true
+
+// MustCompile 会匹配所有能匹配的值以切片的形式输出
 re := regexp.MustCompile(`([a-zA-Z0-9]+)@([a-zA-Z0-9]+)(\.[a-zA-Z0-9.]+)`)
-match := re.FindAllStringSubmatch(字符串, -1) // 匹配的是多位数组0 1 2 3
+match := re.FindAllStringSubmatch(字符串, -1) // 匹配的是多位切片0 1 2 3 只包括子串
+
+// “Perl 类”取值如下：
+
+    \d             数字 (相当于 [0-9])
+    \D             非数字 (相当于 [^0-9])
+    \s             空白 (相当于 [\t\n\f\r ])
+    \S             非空白 (相当于[^\t\n\f\r ])
+    \w             单词字符 (相当于 [0-9A-Za-z_])
+    \W             非单词字符 (相当于 [^0-9A-Za-z_])
+
+// 将正则表达式编译成一个正则对象（使用 PERL 语法）。
+    // 该正则对象会采用“leftmost-first”模式。选择第一个匹配结果。
+// 如果正则表达式语法错误，则返回错误信息。
+    func Compile(expr string) (*Regexp, error)
+
+
+// 判断在 b（s、r）中能否找到 pattern 所匹配的字符串
+func Match(pattern string, b []byte) (matched bool, err error)
+func MatchString(pattern string, s string) (matched bool, err error)
+func MatchReader(pattern string, r io.RuneReader) (matched bool, err error)
+// 将 s 中的正则表达式元字符转义成普通字符。
+func QuoteMeta(s string) string
+
+pat := `(((abc.)def.)ghi)`
+src := `abc-def-ghi abc+def+ghi`
+
+// MatchString
+    fmt.Println(regexp.MatchString(pat, src))
+    // true <nil>
+// QuoteMeta // 将参数中的正则表达式元字符转义成普通字符
+    fmt.Println(regexp.QuoteMeta(pat))
+    // \(\(\(abc\.\)def\.\)ghi\)

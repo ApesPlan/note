@@ -1,35 +1,4 @@
-package main
-import(
-  "io/ioutil"
-  "fmt"
-)
-func main() {
-  const filename = "abc.txt"
-  contents, err := ioutil.ReadFile(filename)
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    fmt.Printf("%s\n", contests)
-  }
-}
 
-func main() {
-  const filename = "abc.txt"
-  if contents, err := ioutil.ReadFile(filename); err != nil {
-    fmt.Println(err)
-  } else {
-    fmt.Printf("%s\n", contests)
-  }
-}
-
-func main() {
-  const filename = "abc.txt"
-  if contents, err := ioutil.ReadFile(filename); err == nil {
-    fmt.Printf("%s\n", contests)
-  } else {
-    fmt.Println(err)
-  }
-}
 
 func printFile(filename string) {
   file, err := os.Open(filename)
@@ -42,16 +11,6 @@ func printFile(filename string) {
   }
 }
 
-func tryDefer() {
-	for i := 0; i < 100; i++ {
-		defer fmt.Println(i)
-		if i == 30 {
-			// Uncomment panic to see
-			// how it works with defer
-			// panic("printed too many")
-		}
-	}
-}
 
 func writeFile(filename string) {
 	file, err := os.OpenFile(filename,

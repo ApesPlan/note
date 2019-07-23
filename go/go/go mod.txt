@@ -1,2 +1,5 @@
+// 初始项目go mod，给项目生成go.mod
 go mod init XXX
-GO111MODULE on 开启gomod go get下载时也是下载到gopath/pkg/mod下
+
+// GO111MODULE on 开启gomod go get下载时也是下载到gopath/pkg/mod下
+    默认值为auto，如果当前目录里有go.mod文件，就使用go modules，否则使用旧的GOPATH和vendor机制

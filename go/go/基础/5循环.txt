@@ -1,0 +1,20 @@
+// 一般循环
+sum := 0
+for i := 1; i <= 100; i++ {
+  sum += i
+}
+// 死循环
+for {
+
+}
+
+// 循环读取文件
+    file, err := os.Open(filename)
+    if err != nil {
+        panic(err)
+    }
+    scanner := bufio.NewScanner(file)
+    // 一行一行的读
+    for scanner.Scan() {
+        fmt.Println(scanner.Text())
+    }

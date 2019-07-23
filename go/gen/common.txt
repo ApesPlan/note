@@ -1,6 +1,7 @@
 // 例子
 gen --connstr "root:root@tcp(127.0.0.1:3306)/cherry_ad?&parseTime=True" --package model --database cherry_ad --table payment_log --json --gorm --guregu --rest
-
+// 非api 默认在model下
+gen --connstr "root:root@tcp(127.0.0.1:3306)/cherry_custom?&parseTime=True" --table user_open_access_token --json --gorm
 sqlType     = goopt.String([]string{"--sqltype"}, "mysql", "sql database type such as mysql, postgres, etc.")
 sqlConnStr  = goopt.String([]string{"-c", "--connstr"}, "nil", "database connection string")
 sqlDatabase = goopt.String([]string{"-d", "--database"}, "nil", "Database to for connection")

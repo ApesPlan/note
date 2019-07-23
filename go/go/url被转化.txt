@@ -1,3 +1,4 @@
-content = strings.Replace(content, "\\u003c", "<", -1)
-content = strings.Replace(content, "\\u003e", ">", -1)
-content = strings.Replace(content, "\\u0026", "&", -1)
+// 如果路由中的&被转换成了\u0026
+    content = strings.Replace(content, "\\u003c", "<", -1)
+    content = strings.Replace(content, "\\u003e", ">", -1)
+    content = strings.Replace(content, "\\u0026", "&", -1)

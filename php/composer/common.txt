@@ -23,3 +23,9 @@ composer install
 // 解除镜像并恢复到 packagist 官方源
 composer config -g --unset repos.packagist
 
+// 只是删除了依赖关系，不会自动加载，但其依赖包还在vender文件夹里，可手动删除
+    composer remove xxx/xxx
+// 下载包
+    composer require xxx/xxx
+// 更新包
+composer update

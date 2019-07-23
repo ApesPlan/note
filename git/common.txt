@@ -1,4 +1,13 @@
 ssh-keygen -t rsa -C "735761545@qq.com" // 三次回车即生成ssh-key,然后配置好
+git config --list // 查看config
+git config --global user.name "wangchonglin"
+git config --global user.email 735761545@qq.com
+
+git config --global http.proxy 'socks5://127.0.0.1:1080'
+git config --global https.proxy 'socks5://127.0.0.1:1080'
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+
 git init // 初始化本地版本库
 git status // 查看本地版本库状态
 git add . // 跟踪所有改动过的文件

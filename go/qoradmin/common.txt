@@ -1,6 +1,0 @@
-BuildPath = ./
-ResourcesPath=./../../backend/resources/
-ProjectName=name:custom.cherry.cn
-Database=root:oneone@tcp(127.0.0.1:3306)/cherry_custom
-EnvMode=debug
-BaseURL=http://l.user.cherry2.cn/

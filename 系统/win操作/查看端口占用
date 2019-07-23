@@ -1,0 +1,5 @@
+// cmd 找到pid
+netstat -ano    // 6692
+// 找到对应程序
+tasklist|findstr "6692"
+任务管理器》详细信息》查看pid》结束任务

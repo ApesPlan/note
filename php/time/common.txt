@@ -7,7 +7,8 @@ $date = date("Y-m"); //当月 日期
 $today = date('Y-m-d'); //今天 日期
 $subtractDay = ($endTime - $startTime) / 86400; // 天数
 date("Y-m-d H:i:s",time()) // 今天时间
-
+$thisMonth = date('Y-m', strtotime($mod->time)) . "-01"; // $mod->time 2019-08
+$nextMonth = date('Y-m', strtotime("{$mod->time} +1 month")) . "-01";
 
 // 时间戳
 $start_time = strtotime(date('Y-m-01')); // 当月1号的时间戳

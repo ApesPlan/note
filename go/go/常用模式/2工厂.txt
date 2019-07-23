@@ -1,0 +1,33 @@
+工厂模式来解决 golang中没有struct构造函数的问题
+
+// 正常实例化结构体
+var stu = model.Student{
+    Name :"tom",
+    Score : 78.9,
+}
+
+// 定义一个结构体
+type student struct{
+	Name string
+	score float64
+}
+// 因为student结构体首字母是小写，因此是只能在model使用
+// 我们通过工厂模式来解决r
+func NewStudent(n string, s float64) *student {
+	return &student{
+		Name : n,
+		score : s,
+	}
+}
+
+// 如果score字段首字母小写，则，在其它包不可以直接方法，我们可以提供一个方法
+func (s *student) GetScore() float64{
+	return s.score //ok
+}
+
+// 使用
+    //定student结构体是首字母小写，我们可以通过工厂模式来解决
+    var stu = model.NewStudent("tom~", 98.8)
+
+    fmt.Println(*stu) //&{....}
+    fmt.Println("name=", stu.Name, " score=", stu.GetScore())

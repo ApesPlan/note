@@ -2,6 +2,14 @@ Error response from daemon: pull access denied for ceph/mon, repository does not
 docker login
 apesplan
 
+容器
+UTS 主机名和域名
+IPC 信号量、消息队列和共享内存
+PID 进程编号
+NETwork 网络设备、网络栈、端口等
+Mount 挂载点（文件系统）
+User 用户和用户组
+
 privileged被引入docker。
 使用该参数，container内的root拥有真正的root权限。
 否则，container内的root只是外部的一个普通用户权限。

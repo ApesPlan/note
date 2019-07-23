@@ -14,3 +14,8 @@ alter table tbl_user_file drop index `idx_user_file` // 删除索引
 replace into tbl_user_token (`user_name`,`user_token`) values (?,?)
 
 SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id ORDER BY time DESC
+
+1.使用SQL匹配模式，不能使用操作符=或!=, 而是使用操作符LIKE或NOT LIKE;
+2.使用SQL匹配模式，MYSQL提供了2种通配。%表示任意数量的任意字符（其中包括0个） _ 表示的任意单个字符
+3.使用SQL匹配模式，如果匹配格式中不包含以上2种通配符中的任意一个。其查询的效果等同于=或!=
+4.使用SQL匹配模式，默认情况下是不区分大小写的

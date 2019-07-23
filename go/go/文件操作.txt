@@ -1,0 +1,76 @@
+f, err := os.Create(filename) 
+f.WriteString("xxxx\r\n")
+f.Write([]byte("xxx"))
+f.Seek(offset, 1)
+f, err := os.OpenFile(path, os.O_APPEND, 6)
+f, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir) //返回一个可读目录的文件指针
+f.Readdir(欲打开的目录项个数，-1表示所有) ([]FileInfo, error)
+f, err := os.Open(filename)
+contents, err := ioutil.ReadFile(filename)
+scanner := bufio.NewSanner(f)
+scanner.Scan()
+f := bufio.NewReader(f)
+f.ReadBytes('\n')
+io.EOF
+defer f.Close()
+
+// 常量，在使用时才知道对应的类型 float32 float64
+	const filename = "D:/a.txt"
+// 不存在文件会重新创建，存在则覆盖所有内容
+	fp, err := os.Create(filename) 
+defer fp.Close()
+// 写入文件
+	// Seek
+	// io.Seekstart = 0
+	// io.SeekCurrent = 1
+	// io.SeekEnd = 2
+	// offset 负数向左偏移 正数向右偏移
+		fp.Seek(offset, 1)
+	// string
+	n, err := fp.WriteString("xxxx\r\n")
+	// []byte
+	fp.Write([]byte("xxx"))
+
+// os.OpenFile
+	// os.O_RDONLY 只读
+	// os.O_WRONLY 只写
+	// os.O_RDWR 可读写
+	// os.O_APPEND 追加
+	// 0 没有任何权限
+	// 1 执行
+	// 2 写
+	// 3 写+执行
+	// 4 读
+	// 5 读+执行
+	// 6 读+写
+	// 7 读+写+执行
+	f, err := os.OpenFile(path, os.O_APPEND, 6)
+	defer f.Close()
+
+// 整个读取
+	"io/ioutil"
+	const filename = "abc.txt"
+	contents, err := ioutil.ReadFile(filename)
+// 逐行读取
+	file, err := os.Open(filename) // os.Open只有读权限
+	scanner := bufio.NewSanner(file)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}  
+// 无缓存读
+file, err := os.Open(filename) // os.Open只有读权限
+	b := make([]byte, 1024)
+	// 返回值为个数和错误信息
+	fb.Read(b) // 会展示1024个字节，如果没有占满1024，就会以0占位
+// 缓存读,一行一行的
+	// 创建切片缓存区
+	f := bufio.NewReader(file)
+	for {
+		buf, err := f.ReadBytes('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+		}
+		fmt.Println(string(buf))
+	}

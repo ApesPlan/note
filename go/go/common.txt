@@ -1,20 +1,57 @@
-go build -o 路径+文件.exe（输出） 路径+文件名（输入）
+// 编译到到指定文件
+    go build -o 路径+文件.exe（输出） 路径+文件名（输入）
+    go build src/golang.org/x/tools/cmd/goimports // 编译并生成可执行文件到当前文件下
+    go install ... 编译并生成可执行文件到bin
+    
+go get -v github.com/gpmgo/gopm // 下载编译好这个包，就可以不用翻墙下载go包
+eg: gopm get g -v -u golang.org/x/tools/cmd/goimports
 
-值接收者是go语言特有
-值/指针接收者均可接收值/指针，主要以接收者的形参为准
 
-如何扩充系统类型或者别人的类型
-定义别名
-使用组合
+// 值接收者是go语言特有
+// 值/指针接收者均可接收值/指针，主要以接收者的形参为准
 
-linux gopath
-~/go
-sdk 建议放在/opt
-在/etc/profile文件下添加三条语句
-export GOROOT=/opt/go
-export PATH=$GOROOT/bin:$PATH
-export GOPATH=$HOME/goprojects/
+// 如何扩充系统类型或者别人的类型
+    定义别名
+    使用组合
 
-echo $GOPATH //打印gopath
+// linux 安装go
+// linux gopath
+    ~/go
+    sdk 建议放在/opt
+    在/etc/profile文件下添加三条语句
+    export GOROOT=/opt/go
+    export PATH=$GOROOT/bin:$PATH
+    export GOPATH=$HOME/goprojects/
 
-不要通过共享内存来通信，要通过通信来共享内存
+//打印gopath
+    echo $GOPATH 
+
+// 不要通过共享内存来通信，要通过通信来共享内存
+
+// 切片常用操作
+    // 初始化
+        s := make([]int, 10, 32)
+    // 复制
+        copy(s1, s2) // s2 覆盖 s1 中相同键的值[2,3,4,5,0,0,0,0,0]
+    // 删除中间值
+        s := append(s[:3], s[4:]...)
+    // pop
+    front := s[0]
+        s1 := s[1:]
+    tail := s[len(s) - 1]
+        s1 := s[:len(s) - 1]
+
+// map 常用操作
+    // 初始化
+        make(map[string]int)
+    // 获取元素：m[key]
+    // key不存在时，获取value类型的初始值
+    // 用value, ok := m[key]来判断是否存在key
+    // 删除
+        delete(m, "name")
+
+    map 的range不保证顺序变量，如需顺序需要手动对key排序
+    len获取元素个数
+    map使用的hash表，必须相同才相等
+    除了slice，map，function的内建类型都可以作为key
+    Struct类型不包含上述字段，也可以作为key 

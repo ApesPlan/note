@@ -1,0 +1,29 @@
+// 常量必须要定义类型，使用时确定类型
+    const (
+        filename = "abc.txt"
+        a, b     = 3, 4
+    )
+var c int
+// math.Sqrt() 有类型要求，常量数值可做各种类型使用 但是ab是常量，此时就是该类型
+    c = int(math.Sqrt(a*a + b*b)) // 这里不用转成float64
+fmt.Println(filename, c)
+
+// 常量做枚举类型
+// 自增量 iota = 0
+    const (
+        cpp = iota
+        _
+        python
+        golang
+        javascript
+    )
+
+// (b, kb, mb, gb, tb, pb)
+    const (
+        b = 1 << (10 * iota)
+        kb
+        mb
+        gb
+        tb
+        pb
+    )

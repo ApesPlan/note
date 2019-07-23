@@ -1,0 +1,42 @@
+// 创建 映射
+    make(map[key]value)
+// 零值
+    m2 := make(map[string]int) // m2 == empty map
+    var m3 map[string]int // m3 == nil
+// 获取 映射
+    m[key]
+// key不存在时，获取value类型的初始值
+
+// 用value, ok := m[key]来判断是否存在key
+
+// 删除 m的映射
+    delete(m, "name")
+
+// map 的range不保证顺序变量，如需顺序需要手动对key排序
+
+// len获取元素个数
+
+// map使用的hash表，必须相同才相等
+// 除了slice，map，function的内建类型都可以作为key
+// Struct类型不包含上述字段，也可以作为key
+
+// 定义并初始化map
+    m := map[string]string {
+        "name": "ccmouse",
+        "course": "golang",
+    }
+
+for k, v := range m {
+    fmt.Println(k, v)
+}
+
+name, ok := m["name"]
+fmt.Println(name, ok) // // ccmouse true
+
+delete(m, "name")
+name, ok := m["name"] 
+fmt.Println(name, ok) // false
+
+// map嵌套
+    map[k]v
+    map[k]map[k]v

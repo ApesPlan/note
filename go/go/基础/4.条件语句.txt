@@ -1,0 +1,33 @@
+// 条件语句
+if contents, err := ioutil.ReadFile(filename); err != nil {
+    fmt.Println(err)
+} else {
+    fmt.Printf("%s\n", contents)
+}
+
+// switch 带有值
+switch op {
+    case "+":
+        result = a + b
+    case "-":
+        result = a - b
+    default:
+        panic("adfadf" + op)
+}    
+
+// switch 没有带值，相当于if
+    switch { // switch后可以没有表达式
+        case score < 0 || score > 100:
+            panic(fmt.Sprintf(
+                "Wrong score: %d", score))
+        case score < 60:
+            g = "F"
+// fallthrough 贯穿
+    fallthrough
+        case score < 80:
+            g = "C"
+        case score < 90:
+            g = "B"
+        case score <= 100:
+            g = "A"
+    }

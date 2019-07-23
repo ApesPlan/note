@@ -1,6 +1,6 @@
-仅在defer调用中使用
-获取panic的值
-如果无法处理，可重新panic
+// 仅在defer调用中使用
+// 获取panic的值
+// 如果无法处理，可重新panic
 
 func tryRecover() {
     defer func() { // 如果有recover 抛出的panic就会被recover捕获
@@ -9,5 +9,32 @@ func tryRecover() {
             fmt
         }
     }()
-    panic(error.New(""))
+    panic(error.New("")) // 抛出的panic就会被recover捕获 程序继续进行
+}
+
+// 打印结果
+// 33333
+// Recover from r :  Panic 1!
+// 22222
+// 333 Helloworld
+func main(){
+    defer_call()
+    fmt.Println("333 Helloworld")
+}
+func defer_call() {
+    defer func(){
+        fmt.Println("22222")
+    }()
+
+    defer func() {
+        if r := recover(); r!= nil {
+            fmt.Println("Recover from r : ",r)
+        }
+    }()
+
+    defer func(){
+        fmt.Println("33333")
+    }()
+
+    panic("Panic 1!")
 }

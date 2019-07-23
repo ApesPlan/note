@@ -1,0 +1,10 @@
+// go 仅支持封装，不支持继承和多态
+
+// 结构体
+type UserCredential struct {
+  Username string `json:"user_name"`
+}
+
+// nil指针也可以调用结构体的方法
+
+// 值/指针接收者均可接收值/指针，主要以接收者的形参为准

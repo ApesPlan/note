@@ -1,0 +1,24 @@
+// 单例模式可以保证系统中一个类只有一个实例而且该实例易于外界访问，从而方便对实例个数的控制并节约系统资源
+
+// 例子
+    import(
+        "sync"
+    )
+    
+    type singleton struct{
+    }
+    
+    varinstance *singleton
+    varonce sync.Once
+    
+    func GetInstance() *singleton{
+        once.Do(func(){
+            instance = &singleton{}
+        })
+        return instance
+    }
+
+// 为什么不使用 init()函数声明单例？这样更简单高效 
+    如果想要实现懒初始化(Lazy initialization)则需要考虑同步问题
+
+// sync.Once 会保证又一次调用成功之后再返回，也就是说如果多人同时调用Do函数，则只有一个人调用成功之后，其他人才会返回。

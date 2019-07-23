@@ -1,0 +1,14 @@
+$tomorrowDate = date('Y-m-d', strtotime("+1 day"));
+$threeMonthAgeDate = date('Y-m', strtotime("-2 month")) . "-01";
+$data = DB::connection("mysql2")
+    ->table('visit_record as v')
+    ->leftJoin('order as o', 'o.id', '=', 'v.order_id')
+    ->selectRaw("DATE_FORMAT(v.created_at,'%Y-%m-%d') as time, SUM(o.price) as money")
+    ->where("v.order_id", "=",  $orderId)
+    ->where("v.is_paid", "=",  1)
+    ->where("v.created_at", ">=",  $threeMonthAgeDate)
+    ->where("v.created_at", "<",  $tomorrowDate)
+    ->groupBy(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m-%d')"))
+    ->orderByRaw("DATE_FORMAT(v.created_at,'%Y-%m-%d') DESC")
+    ->get()
+    ->toArray();

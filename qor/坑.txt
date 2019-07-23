@@ -1,0 +1,37 @@
+Error 1054 Unknown column 'basics.provider' in 'where clause'
+F:/go_path/src/github.com/qor/auth/providers/password/handlers.go:28
+authInfo    auth_identity.Basic
+替换为
+authInfo    auth_identity.AuthIdentity
+
+全局样式
+https://doc.getqor.com/admin/theming_and_customization.html
+例如，假设您将站点名称设置为Qor Demo，
+{qor view paths}/assets/javascripts/qor_demo.js 
+{qor view paths}/assets/stylesheets/qor_demo.css
+
+自动隐藏左边栏
+qor\admin\views
+删除layout.tmpl31行mdl-layout--fixed-drawer
+
+// 导出csv 中文乱码
+csv.New 的时候 第一个参数是inteface 传自定义的Writer就可以了
+fileName := fmt.Sprintf("/downloads/item.%v.csv", time.Now().UnixNano())
+// 为cvs文件添加bom头
+bomUtf8 := []byte{0xEF, 0xBB, 0xBF}
+f, err := os.Create(filepath.Join("public", fileName))
+defer f.Close()
+f.Write(bomUtf8)
+if err != nil {
+    qorJob.AddLog(err.Error())
+}
+if err := ItemFields.Export(
+    csv.New(f),
+    context,
+    func(progress exchange.Progress) error {
+        qorJob.AddLog(fmt.Sprintf("%v/%v Exporting item %v", progress.Current, progress.Total, progress.Value.(*item.Item).ID))
+        return nil
+    },
+); err != nil {
+    qorJob.AddLog(err.Error())
+}

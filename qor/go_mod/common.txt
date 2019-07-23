@@ -1,0 +1,2 @@
+go mod init xxx
+go get -u -v github.com/jinzhu/gorm
