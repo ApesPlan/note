@@ -16,7 +16,9 @@ RotingKey：路由键，发送消息时，需要附带一条路由键，交换�
 Consumer：消费者，负责处理消息。
 
 
-
+docker run -d --hostname rabbitmq_node --name rabbit \
+-p 5672:5672 -p 15672:15672 -p 25672:25672 \
+-v /data/rabbitmq_node:/var/lib/rabbitmq rabbitmq:management
 
 
 

@@ -1,0 +1,6 @@
+// win上设置go环境变量 必须cmd到项目根目录才生效
+    set CGO_ENABLED=0
+    set GOOS=linux
+    set GOARCH=amd64
+// 查看go环境变量
+    go env

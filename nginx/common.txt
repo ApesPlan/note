@@ -1,0 +1,8 @@
+// 一般nginx的位置
+    cd /etc/nginx/conf.d
+// 重启 nginx
+    nginx -t
+    nginx -s reload
+
+查找目录：find /（查找范围） -name '查找关键字' -type d
+查找文件：find /（查找范围） -name 查找关键字 -print

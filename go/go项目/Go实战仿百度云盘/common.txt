@@ -1,0 +1,2 @@
+go run service/upload/main.go
+go run service/transfer/main.go

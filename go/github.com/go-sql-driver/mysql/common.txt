@@ -1,0 +1,110 @@
+1.下载安装
+    go get github.com/Go-SQL-Driver/MySQL // 下载
+    go install github.com/Go-SQL-Driver/MySQL // 安装
+
+2.导入包
+　　import (
+    　　"database/sql"
+    　　_"github.com/Go-SQL-Driver/MySQL"
+　　)
+
+3.链接数据库
+    Open函数：
+　　db, err := sql.Open("mysql", "用户名:密码@tcp(IP:端口)/数据库?charset=utf8")
+　　例如：db, err := sql.Open("mysql", "root:111111@tcp(127.0.0.1:3306)/test?charset=utf8")
+
+4.增删改查
+下面例子中的表结构：
+　　CREATE TABLE `userinfo` (
+  　　　　`uid` int(10) NOT NULL AUTO_INCREMENT,
+  　　　　`username` varchar(64) DEFAULT NULL,
+  　　　　`departname` varchar(64) DEFAULT NULL,
+  　　　　`created` date DEFAULT NULL,
+  　　　　PRIMARY KEY (`uid`)
+　　　) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+func checkErr(err error){
+    if err != nil {
+        panic(err)
+    }
+}
+
+增加
+有两种方法：
+    1.直接使用Exec函数添加
+        res, err := db.Exec("INSERT INTO userinfo (username, departname, created) VALUES (?, ?, ?)","lily","销售","2016-06-21")
+    2.首先使用Prepare获得stmt，然后调用Exec添加
+    　　stmt, err := db.Prepare("INSERT userinfo SET username=?,departname=?,created=?")
+    　　res, err := stmt.Exec("zhja", "研发", "2016-06-17")
+    另一个经常用到的功能，获得刚刚添加数据的自增ID
+    　　id, err := res.LastInsertId()
+    RowsAffected 返回的是插入的条数
+    astInsertId,err := res.RowsAffected() 
+
+删除
+    删除和上面的增加语法一样，只是把其中的INSERT语句改为DELETE语句
+    //db.Exec("DELETE FROM userinfo WHERE uid=?", 1)
+
+    //stmt, err := db.Prepare("DELETE FROM userinfo WHERE uid=?")
+    //stmt.Exec(2)
+修改
+    修改和上面的增加语法一样，只是把其中的INSERT语句改为UPDATE语句
+
+查询
+查询单条数据，QueryRow 函数
+　　var username, departname, created string
+　　err := db.QueryRow("SELECT username,departname,created FROM userinfo WHERE uid=?", 3).Scan(&username, &departname, &created)
+
+查询多条数据，并遍历
+　　Query 获取数据，for xxx.Next() 遍历数据
+    rows, err := db.Query("SELECT username,departname,created FROM userinfo WHERE username=?", "zhja")
+        checkErr(err)
+        for rows.Next() {
+            var username, departname, created string
+            if err := rows.Scan(&username, &departname, &created); err == nil {
+                fmt.Println(err)
+            }
+            fmt.Println(username)
+            fmt.Println(departname)
+            fmt.Println(created)
+        }
+
+5.事务
+    在操作数据库之前执行，db.Begin()
+    例：tx, err := db.Begin()
+    保存到数据库：err := tx.Commit()
+    回滚：err := tx.Rollback()
+    注意设置事务以后操作数据库就不是db了，而是tx
+
+
+// ParseRows 查询多条数据
+func ParseRows(rows *sql.Rows) []map[string]interface{} {
+	columns, _ := rows.Columns() // // Get column names
+	scanArgs := make([]interface{}, len(columns))
+	values := make([]interface{}, len(columns))
+	for j := range values {
+		scanArgs[j] = &values[j]
+	}
+
+	record := make(map[string]interface{})
+	records := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		//将行数据保存到record字典
+		err := rows.Scan(scanArgs...)
+		checkErr(err)
+
+		for i, col := range values {
+			if col != nil {
+				record[columns[i]] = col
+			}
+		}
+		records = append(records, record)
+	}
+	return records
+}
+
+
+
+
+
+

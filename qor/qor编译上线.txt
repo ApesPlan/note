@@ -1,0 +1,18 @@
+// 查看go环境变量
+    go env
+// win上设置go环境变量 必须cmd到项目根目录才生效
+    set CGO_ENABLED=0
+    set GOOS=linux
+    set GOARCH=amd64
+// 编译
+    go build -tags 'bindatafs' -a
+// 上传二进制文件到服务器
+    scp -r ./xxx root@ip:/xxx/xxx/
+    // 删除之前的
+        rm -rf xxx
+    // 设置权限
+        chmod -R 744 xxx
+    // 测试允许效果
+        go run -tags 'bindatafs' main.go 
+// 以守护进程允许xxx
+nohup /xxx/xxx/xxx > log.txt &

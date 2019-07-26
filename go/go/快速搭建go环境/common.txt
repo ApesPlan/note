@@ -1,3 +1,38 @@
+// 查看当前系统环境变量 linux
+    env
+
+// linux安装go环境
+    提前装好git
+    yum install git
+// 下载go sdk
+    wget -c https://studygolang.com/dl/golang/go1.12.7.linux-amd64.tar.gz
+    // 解压到/usr/local/ 会是/usr/local/go/解压的所有文件 // 不用剪切会自己生成go     mv ./go1.12.7.linux-amd64.tar.gz /usr/local/go
+        tar -C /usr/local/ -zxvf go1.12.7.linux-amd64.tar.gz
+   
+    // 创建新文件并打开 用于配置go环境变量
+    [root@localhostsoft]# vim /etc/profile.d/go.sh
+        输入内容 export PATH=$PATH:/usr/local/go/bin
+    保存退出:wq
+
+    // 立即生效环境变量
+        [root@localhostsoft]#source /etc/profile.d/go.sh
+    在shell的任何位置输入 go 命令了
+
+// linux开启go mod模式
+    vim /etc/profile 
+    最后一行添加 export GO111MODULE=on 或 export GO111MODULE=off 或 export GO111MODULE=auto
+    执行 source /etc/profile
+
+// 设置代理 加快go的下载 也可访问被墙的包
+    export GOPROXY=https://goproxy.io // 常用
+    export GOPROXY=https://gocenter.io
+    export GOPROXY=https://mirrors.aliyun.com/goproxy/
+// 删除环境变量
+    unset GOPROXY
+// 下载telnet
+    yum install telnet
+    // telnet 192.168.43.6 1080
+
 // 下载编译好这个包，就可以不用翻墙下载go包 
     go get -v github.com/gpmgo/gopm 
     eg: gopm get g -v -u golang.org/x/tools/cmd/goimports

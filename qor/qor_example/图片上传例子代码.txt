@@ -1,0 +1,87 @@
+// 最终数据格式
+    {
+        "FileName":"a6efce1b9d16fdfa97d6a678b68f8c5495ee7be9.jpg",
+        "Url":"//apesplan.oss-cn-beijing.aliyuncs.com/system/products/1/image/a6efce1b9d16fdfa97d6a678b68f8c5495ee7be9.20190722122724086713.jpg"
+    }
+
+// 路由
+    "admin.custom.cherry.cn/app/product"
+
+    // product
+    Application.Use(product.New(&product.Config{}))
+	
+	
+// model	
+    package product
+
+    import (
+        "github.com/qor/media/oss"
+    )
+    
+    // Product product
+    type Product struct {
+        ID	int
+        Image oss.OSS `media_library:"url:/admin_custom/{{column}}.{{extension}};"`
+    }
+
+    // TableName product
+    func (Product) TableName() string {
+        return "product"
+    }
+
+	
+// handler	
+    package product
+
+    import (
+
+        "admin.custom.cherry.cn/config/application"
+        "admin.custom.cherry.cn/models/custom/product"
+
+        "github.com/qor/admin"
+    )
+
+    // New new product app
+    func New(config *Config) *App {
+        return &App{Config: config}
+    }
+
+    // App product app
+    type App struct {
+        Config *Config
+    }
+
+    // Config product config struct
+    type Config struct {
+    }
+
+    // ConfigureApplication configure application
+    func (app App) ConfigureApplication(application *application.Application) {
+        app.ConfigureAdmin(application.Admin)
+    }
+
+    // ConfigureAdmin configure admin interface
+    func (App) ConfigureAdmin(Admin *admin.Admin) {
+        // Zone Management栏目
+        Admin.AddMenu(&admin.Menu{IconName: "Product Management", Name: "Product Management", Priority: 1})
+        // Zone Management下Zone菜单
+        productFields := Admin.AddResource(&product.Product{}, &admin.Config{
+            Name:       "Product",
+            Menu:       []string{"Product Management"},
+            Priority:   1,
+        })
+        
+
+        // 列表页
+        productFields.IndexAttrs("ID", "Image")
+        // 详情页
+        productFields.EditAttrs(
+            &admin.Section{
+                Title: "Basic Information",
+                Rows: [][]string{
+                    {"ID"},
+                    {"image"},
+                },
+            },
+        )
+    }

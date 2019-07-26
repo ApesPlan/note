@@ -1,4 +1,5 @@
 mysql -uroot -h127.0.0.1 -P3306 -p
+mysql -uroot -p
 show master status
 
 // 在从节点上关联数据库主从节点
