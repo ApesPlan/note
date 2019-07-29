@@ -23,7 +23,7 @@ type Product struct {
 
 func main() {
 	// 数据库连接
-	mysqlURL := "root:447728@/admin_custom_cherry_cn?charset=utf8&parseTime=True&loc=Local"
+	mysqlURL := "root:447728@/qor_test?charset=utf8&parseTime=True&loc=Local"
 	DB, _ := gorm.Open("mysql", mysqlURL)
 	DB.AutoMigrate(&User{}, &Product{})
 
