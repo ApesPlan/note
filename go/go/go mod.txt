@@ -1,5 +1,31 @@
+GO111MODULE可以设置为三个字符串值之一：off，on或auto（默认值）
+    on 则go命令需要使用模块，go 会忽略 $GOPATH 和 vendor 文件夹，只根据go.mod下载依赖。
+    auto 或未设置，则go命令根据当前目录启用或禁用模块支持。仅当当前目录位于$GOPATH/src之外并且其本身包含go.mod文件或位于包含go.mod文件的目录下时，才启用模块支持。
+    off 则go命令从不使用新模块支持。它查找vendor 目录和GOPATH以查找依赖关系。
+
+go.mod文件可以通过require，replace和exclude语句使用的精确软件包集。
+    require语句指定的依赖项模块
+    replace语句可以替换依赖项模块
+    exclude语句可以忽略依赖项模块
+
+在国内访问 golang.org/x 的各个包都需要翻墙，
+你可以在go.mod中使用replace替换成github上对应的库。
+// 不知道版本用last代替
+replace (
+    golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac => github.com/golang/crypto v0.0.0-20180820150726-614d502a4dac
+    golang.org/x/net v0.0.0-20180821023952-922f4815f713 => github.com/golang/net v0.0.0-20180826012351-8a410e7b638d
+    golang.org/x/text v0.3.0 => github.com/golang/text v0.3.0
+)
+
+go mod tidy
+    添加缺失的模块以及移除不需要的模块。
+go mod verify
+    检查当前模块的依赖是否全部下载下来，是否下载下来被修改过。如果所有的模块都没有被修改过，那么执行这条命令之后，会打印all modules verified。  
+
 // 初始项目go mod，给项目生成go.mod
 go mod init XXX
 
 // GO111MODULE on 开启gomod go get下载时也是下载到gopath/pkg/mod下
     默认值为auto，如果当前目录里有go.mod文件，就使用go modules，否则使用旧的GOPATH和vendor机制
+
+go clean -modcache 清除缓存
