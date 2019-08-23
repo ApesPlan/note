@@ -1,0 +1,31 @@
+protected function grid()
+{
+    $grid = new Grid(new Ad);
+    $grid->model()->orderBy('id', 'desc');
+    // 禁止删除
+    $grid->actions(function ($actions) {
+        $actions->append(new AdStatistics($actions->getKey())); // 统计按钮
+        $actions->disableDelete();
+        $actions->disableView();
+    });
+    // 禁用行选择checkbox
+    $grid->disableRowSelector();
+    // 禁用导出数据按钮
+    $grid->disableExport();
+
+    $grid->id('ID')->sortable();
+    $grid->valid('状态')->display(function ($valid) {
+        return $valid ? '生效中' : '已失效';
+    });
+    $grid->name('名称');
+    $grid->website_id('站点')->display(function($websiteId) {
+        return Website::find($websiteId)->name;
+    });
+    $grid->price('价格');
+    $grid->charge_type_id('付费方式')->hide();
+    $grid->column('time_interval', '时段')->display(function () {
+        return $this->start_date.' / '.$this->end_date;
+    });
+
+    return $grid;
+}

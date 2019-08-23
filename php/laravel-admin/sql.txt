@@ -1,0 +1,43 @@
+// $money = 0;
+if (self::getIsAuctionBool($adId)) {
+    $sql = "SELECT SUM(o.price) as money " 
+    . "FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = ". VisitRecord::EN_PAY
+    . " AND v.ad_id = " . $adId
+    . $where;
+    $result = DB::connection("mysql2")->select($sql);
+} else {
+    $sql = "SELECT v.price as money " 
+    . "FROM `order` as v WHERE v.ad_id = " . $adId
+    . $where;
+    $result = DB::connection("mysql2")->select($sql);
+}
+$modArray = $result[0];
+$money = $modArray->money ?? 0;
+return $money;turn $result;
+}
+
+$data = DB::connection("mysql2")
+        ->table('visit_record as v')
+        ->leftJoin('order as o', 'o.id', '=', 'v.order_id')
+        ->selectRaw("DATE_FORMAT(v.created_at,'%Y-%m-%d') as time, SUM(o.price) as money")
+        ->where("v.ad_id", "=",  $adId)
+        ->where("v.is_paid", "=",  VisitRecord::EN_PAY)
+        ->where("v.created_at", ">=",  $threeMonthAgeDate)
+        ->where("v.created_at", "<",  $tomorrowDate)
+        ->groupBy(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m-%d')"))
+        ->orderByRaw("DATE_FORMAT(v.created_at,'%Y-%m-%d') DESC")
+        ->get();
+      
+foreach($data as $k => $mod) {
+    $today = $mod->time;
+    $tomorrow = date('Y-m-d', strtotime("{$mod->time} +1 day"));
+    $where = " AND v.created_at >= \"{$today}\" AND v.created_at < \"{$tomorrow}\" ";
+    $mod->uv = VisitRecord::getUv($where, $adId);
+    $mod->pv = VisitRecord::getPv($where, $adId);
+    $mod->ip = VisitRecord::getIp($where, $adId);
+    $array[$k]['time']  = $mod->time;
+    $array[$k]['uv']    = $mod->uv;
+    $array[$k]['pv']    = $mod->pv;
+    $array[$k]['ip']    = $mod->ip;
+    $array[$k]['money'] = $mod->money;
+}

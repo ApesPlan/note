@@ -48,7 +48,7 @@ docker-compose up
 git checkout master
 git merge --no-ff pack_dist_server
 git tag
-git tag release-v0.0.4
+git tag release-v0.0.17
 git push --tag
 git push
 git push --tags // 上传所有标签
