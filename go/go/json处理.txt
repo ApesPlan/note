@@ -1,3 +1,12 @@
+"encoding/json"
+
+json对象
+// json数组
+    b := []int{}
+    aa := "[17, 19]"
+    json.Unmarshal([]byte(aa), &b)
+    fmt.Println(b)
+
 // 将JSON数据解析成结构体 json.Unmarshal(xxx)
 // 将结构体解析成JSON数据 json.Marshal(xxx)
 

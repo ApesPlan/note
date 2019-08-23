@@ -14,8 +14,21 @@ f.ReadBytes('\n')
 io.EOF
 defer f.Close()
 
+fileName := "1.txt"
+fileNameGUID := guid.GUID()
+fileNameExt := filepath.Ext(fileName)
+pathDir := fmt.Sprintf("./app/views/qor/img/%v", time.Now().Format("20060102"))
+if !Exists(pathDir) {
+	fmt.Println(pathDir)
+	os.MkdirAll(pathDir, os.ModePerm)
+}
+
+newFile, _ := os.OpenFile(pathDir + "/" + fileNameGUID + fileNameExt, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+defer newFile.Close()
+
+
 // 常量，在使用时才知道对应的类型 float32 float64
-	const filename = "D:/a.txt"
+	const filename = "./a.txt" // 不能创建目录
 // 不存在文件会重新创建，存在则覆盖所有内容
 	fp, err := os.Create(filename) 
 defer fp.Close()
@@ -32,6 +45,16 @@ defer fp.Close()
 	fp.Write([]byte("xxx"))
 
 // os.OpenFile
+
+	O_RDONLY int = syscall.O_RDONLY // 只读模式打开文件
+    O_WRONLY int = syscall.O_WRONLY // 只写模式打开文件
+    O_RDWR   int = syscall.O_RDWR   // 读写模式打开文件
+    O_APPEND int = syscall.O_APPEND // 写操作时将数据附加到文件尾部
+    O_CREATE int = syscall.O_CREAT  // 如果不存在将创建一个新文件
+    O_EXCL   int = syscall.O_EXCL   // 和O_CREATE配合使用，文件必须不存在
+    O_SYNC   int = syscall.O_SYNC   // 打开文件用于同步I/O
+    O_TRUNC  int = syscall.O_TRUNC  // 如果可能，打开时清空文件
+
 	// os.O_RDONLY 只读
 	// os.O_WRONLY 只写
 	// os.O_RDWR 可读写
