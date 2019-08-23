@@ -13,7 +13,14 @@
 php artisan admin:install
 // 配置好wnmp后 在浏览器打开 http://localhost/admin/ ,使用用户名 admin 和密码 admin登录.
 
+配置后台路由app/Admin/routes.php
 $router->resource('example', ExampleController::class);
+app/Admin/bootstrap.php 是laravel-admin的启动文件, 使用方法请参考文件里面的注释.
+
+静态文件
+后台所需的前端静态文件在/public/vendor/laravel-admin目录下.
+
+
 php artisan make:model Data\ActivityAlertStyle -m
 数据表格最后一列默认是操作列，包含编辑按钮与删除按钮。如果需要自定义操作列，则可以把默认的操作列禁用，再进行自定义。
 $grid->disableActions();

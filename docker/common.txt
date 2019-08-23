@@ -2,6 +2,21 @@ Error response from daemon: pull access denied for ceph/mon, repository does not
 docker login
 apesplan
 
+
+error pulling image configuration: Get https://production.cloudflare.docker.com/registry-v2/docker/registry/v2/blobs/sha256/be/be63d15101cb68aea1841b45201b08a1a486c1a60a029bbf0ddb284ab646b0b7/data?verify=1565670401-W2hrTQ%2B%2BHGHmo%2FCtyf%2BsfsIcjks%3D: dial tcp 104.18.121.25:443: i/o timeout
+
+#编辑文件
+vim /etc/docker/daemon.json
+// 修改镜像源 自己的https://sgjfpurd.mirror.aliyuncs.com
+{
+  "registry-mirrors": [ "https://registry.docker-cn.com"]
+}
+#使生效
+sudo systemctl daemon-reload
+#重启docker服务
+sudo systemctl restart docker
+
+
 容器
 UTS 主机名和域名
 IPC 信号量、消息队列和共享内存
