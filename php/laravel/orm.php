@@ -17,6 +17,14 @@ try {
 
 DB::commit();
 
+新增
+$student=new Student();
+//设定数据
+$student->vip_name='xiaoming';
+$student->vip_type='出行';
+$student->vip_fenshu=900;
+if (!$student->save()) { }
+
 public static function getWins(User $user)
 {
     $data = LotteryWin::leftJoin('lottery_award', 'lottery_win.lottery_award_id', '=', 'lottery_award.id')
