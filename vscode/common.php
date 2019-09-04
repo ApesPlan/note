@@ -1,7 +1,7 @@
 ${workspaceRoot}:就是你打开vscode读取的项目目录
 "program"中的"${fileDirname}"是以当前选中文件作为启动点
 更建议使用"program"的"${workspaceRoot}", 以包名作为启动点的方式进行配置
-文件家名称 .vscode
+文件夹名称 .vscode
 打开新的文件会覆盖窗口中的,怎么改  "workbench.editor.enablePreview": false
 settings.json
 // 系统配置1
@@ -16,9 +16,20 @@ settings.json
     "git.autofetch": true,
     "editor.tabSize": 2,
     "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe"
+
+    //下面的的不知的啥意思
+    "[go]": {
+        "editor.defaultFormatter": "ms-vscode.Go"
+    },
+    "window.zoomLevel": 0,
+    "go.formatTool": "goimports",
+    // 头部注释插件
+    "fileheader.configObj": {
+        "autoAdd": false, // 默认开启
+    },
 }
 
-// 项目配置
+// 项目配置 .vscode中的
 {
     "go.useLanguageServer": true,
     "go.languageServerExperimentalFeatures": {
@@ -80,3 +91,4 @@ koroFileHeader // 自动注释
         }
     ]
 }
+${workspaceRoot}:就是你打开vscode读取的项目目录

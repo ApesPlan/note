@@ -1,56 +1,98 @@
-SELECT DATE_FORMAT(v.created_at,'%Y-%m') as time, v.ad_id, COUNT(v.order_id) as uv, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE DATE_FORMAT(v.created_at,'%Y-%m-%d') > '2019-05-1' AND DATE_FORMAT(v.created_at,'%Y-%m-%d') < '2019-07-1' AND v.is_paid = 1 GROUP BY time, v.ad_id ORDER BY time DESC
-SELECT DATE_FORMAT(v.created_at,'%Y/%m') as time, v.ad_id, COUNT(v.order_id), SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE DATE_FORMAT(v.created_at,'%Y/%m/%d') > '2019/05/01' AND DATE_FORMAT(v.created_at,'%Y/%m/%d') < '2019/07/01' AND v.is_paid = 1 GROUP BY time, v.ad_id ORDER BY time DESC 
+注意 
+    1.日期形式还有 '%Y-%m-%d'
+    2.条件参数中日期注意 '2019-03-01 00:00:00' 会有结果出入
+    3.AND v.created_at BETWEEN '2019-03-01' AND '2019-05-01'; 没搞清楚
+//获取2019-07日期形式的sql
+    SELECT DATE_FORMAT(v.created_at,'%Y-%m') as time, v.ad_id, COUNT(v.order_id) as uv, SUM(o.price) as money 
+    FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+    WHERE DATE_FORMAT(v.created_at,'%Y-%m-%d') > '2019-05-1' 
+    AND DATE_FORMAT(v.created_at,'%Y-%m-%d') < '2019-07-1' 
+    AND v.is_paid = 1 
+    GROUP BY time, v.ad_id 
+    ORDER BY time DESC
 
-$result = DB::connection("mysql2")
-    ->table('visit_record as v')
-    ->leftJoin('order as o', 'o.id', '=', 'v.order_id')
-    ->selectRaw("DATE_FORMAT(v.created_at,'%Y-%m') as time, v.ad_id, COUNT(v.order_id) as uv, SUM(o.price) as money")
-    ->whereBetween(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m-%d')"), [$oneMonthAgeDate, $firstDate])
-    ->groupBy(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m'), v.ad_id"))
-    ->orderByRaw("time DESC")
-    ->get();
+//获取2019/07日期形式的sql
+    SELECT DATE_FORMAT(v.created_at,'%Y/%m') as time, v.ad_id, COUNT(v.order_id), SUM(o.price) as money 
+    FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+    WHERE DATE_FORMAT(v.created_at,'%Y/%m/%d') > '2019/05/01' 
+    AND DATE_FORMAT(v.created_at,'%Y/%m/%d') < '2019/07/01' 
+    AND v.is_paid = 1 
+    GROUP BY time, v.ad_id 
+    ORDER BY time DESC 
 
+// 注意 '2019-03-01 00:00:00'
+SELECT o.out_trade_no, SUM(o.price) 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.created_at > '2019-03-01 00:00:00' 
+AND v.created_at <= '2019-04-01 00:00:00' 
+AND v.is_paid = 1 
+GROUP BY o.out_trade_no;
 
-// 订单
-SELECT o.out_trade_no, SUM(o.price) FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.created_at > '2019-03-01 00:00:00' AND v.created_at <= '2019-04-01 00:00:00' AND v.is_paid = 1 GROUP BY o.out_trade_no;
-// 经销商
-SELECT o.user_id, SUM(o.price) FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.created_at > '2019-03-01 00:00:00' AND v.created_at <= '2019-04-01 00:00:00' AND v.is_paid = 1 GROUP BY o.user_id;
-// 广告位
-SELECT o.ad_id, SUM(o.price) FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.created_at > '2019-03-01 00:00:00' AND v.created_at <= '2019-04-01 00:00:00' AND v.is_paid = 1 GROUP BY o.user_id;
+SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.order_id = 1 
+GROUP BY time 
+ORDER BY time DESC 
 
-
-SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id GROUP BY time ORDER BY time DESC 
-
-// 经销商
-SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE o.user_id = 1 GROUP BY time ORDER BY time DESC 
-// 广告位
-SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.ad_id = 1 GROUP BY time ORDER BY time DESC 
-// 订单
-SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.order_id = 1 GROUP BY time ORDER BY time DESC 
-
-
-
-SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE DATE_FORMAT(v.created_at,'%Y/%m/%d') > '2019/03/01' AND DATE_FORMAT(v.created_at,'%Y/%m/%d') < '2019/05/01' GROUP BY time ORDER BY time DESC 
-
-
+// 不用time 用 DATE_FORMAT(v.created_at,'%Y/%m/%d')
+SELECT DATE_FORMAT(v.created_at,'%Y/%m/%d') as time, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE DATE_FORMAT(v.created_at,'%Y/%m/%d') > '2019/03/01' 
+AND DATE_FORMAT(v.created_at,'%Y/%m/%d') < '2019/05/01' 
+GROUP BY time 
+ORDER BY time DESC 
 
 COUNT(DISTINCT v.visitor) as uv, COUNT(DISTINCT v.ip) as ip,
 
+SELECT SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01';
 
-SELECT SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01';
-
-SELECT v.ad_id, COUNT(v.id) as pv, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01' GROUP BY v.ad_id ORDER BY v.ad_id;
+SELECT v.ad_id, COUNT(v.id) as pv, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01' 
+GROUP BY v.ad_id 
+ORDER BY v.ad_id;
 
 // 310
-SELECT COUNT(DISTINCT v.ip) as ip, COUNT(DISTINCT v.visitor) as uv, v.ad_id, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01' GROUP BY v.ad_id ORDER BY v.ad_id;
+SELECT COUNT(DISTINCT v.ip) as ip, COUNT(DISTINCT v.visitor) as uv, v.ad_id, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01' 
+GROUP BY v.ad_id 
+ORDER BY v.ad_id;
 
 // 310
-SELECT v.ad_id, o.price FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01';
-SELECT SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01'; 
- // 330
- SELECT SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at BETWEEN '2019-03-01' AND '2019-05-01'; 
+SELECT v.ad_id, o.price 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01';
+
+SELECT SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01'; 
+
+// 330
+SELECT SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at BETWEEN '2019-03-01' AND '2019-05-01'; 
  
 // 完成
-SELECT v.ad_id, COUNT(DISTINCT v.visitor) as uv, COUNT(v.id) as pv, COUNT(DISTINCT v.ip) as ip, SUM(o.price) as money FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id WHERE v.is_paid = 1 AND v.created_at > '2019-03-01' AND v.created_at < '2019-05-01' GROUP BY v.ad_id ORDER BY v.ad_id;
+SELECT v.ad_id, COUNT(DISTINCT v.visitor) as uv, COUNT(v.id) as pv, COUNT(DISTINCT v.ip) as ip, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE v.is_paid = 1 
+AND v.created_at > '2019-03-01' 
+AND v.created_at < '2019-05-01' 
+GROUP BY v.ad_id 
+ORDER BY v.ad_id;
  
  
