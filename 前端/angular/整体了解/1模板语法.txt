@@ -1,0 +1,42 @@
+五个常用特性：
+
+*ngFor
+*ngIf
+插值表达式 {{}}
+属性绑定 []
+事件绑定 ()
+
+*ngFor 是一个 "结构型指令"。结构型指令会通过添加、删除和操纵它们的宿主元素等方式塑造或重塑 DOM 的结构。任何带有 * 的指令都是结构型指令。
+    <div *ngFor="let product of products"></div>
+*ngIf 由于该商品的 description 属性为空，因此不会创建 p 元素（包括静态文本 “Description”）
+    <p *ngIf="product.description">
+        Description: {{ product.description }}
+    </p>
+
+插值语法 {{}}
+    <div *ngFor="let product of products">
+    <h3>
+        {{ product.name }}
+    </h3>
+    </div>
+
+属性绑定语法 [] 把该链接的 title 设置成该商品的名字
+    <a [title]="product.name + ' details'">
+        {{ product.name }}
+    </a>
+插值表达式 {{}} 允许你把属性值渲染为文本；而属性绑定语法 [] 则允许你在模板表达式中使用属性值。
+
+
+事件绑定是通过把事件名称包裹在圆括号 () 中完成的
+<button (click)="share()"> Share </button>
+
+
+
+
+
+
+
+
+
+
+

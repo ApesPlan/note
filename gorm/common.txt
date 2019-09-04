@@ -10,6 +10,10 @@ db.LogMode(false)
 // 调试单个操作，显示此操作的详细日志 
 db.Debug().Where(“name = ?”, “jinzhu”).First(&User{})
 
+db.AutoMigrate(&User{})
+自动的表结构迁移，只会创建表，补充缺少的列，缺少的索引。
+但并不会更改已经存在的列类型，也不会删除不再用的列，这样设计的目的是为了保护已存在的数据。可以同时针对多个表进行迁移设置。
+
 type后的定义将会直接作用到create table语句中，你还可以设置 type:"int(11) unsigned auto_increment;"，且type有最高优先级
 size只作用于类型为string或array或slice的字段，为string类型时判断size在0到65532之间时自动设置为varchar，大于65532时设置为longtext，否则自动设置为varbinary或longblob类型
 
