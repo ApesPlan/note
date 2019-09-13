@@ -1,0 +1,71 @@
+
+
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s3
+
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="dhcp"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp0s3"
+UUID="31178fbf-0efa-453a-b611-75892b4ae6bc"
+DEVICE="enp0s3"
+ONBOOT="yes"
+
+
+
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp0s3"
+UUID="01bdf903-27c1-44b3-a5a2-8105ea495691"
+DEVICE="enp0s3"
+ONBOOT="yes"
+IPADDR=10.10.10.180
+NETMASK=255.255.255.0
+GATEWAY=10.10.10.1
+DNS=8.8.8.8
+NM_CONTROLLED=no
+
+
+修改 BOOTPROTO="static"
+添加
+IPADDR=10.10.10.20
+NETMASK=255.255.255.0
+GATEWAY=10.10.10.1
+DNS=8.8.8.8
+
+vim /etc/resolv.conf
+添加 nameserver 8.8.8.8
+
+
+service network restart
+
+route add 172.18.0.0 mask 255.255.255.0 10.10.10.180
+route print
+route delete 172.18.0.0
+
+// 让外部可以访问ip
+ip转发没有打开
+sysctl net.ipv4.ip_forward
+显示net.ipv4.ip_forward=0则表示未打开
+vim /etc/sysctl.conf
+net.ipv4.ip_forward = 1
+systemctl restart network
+sysctl net.ipv4.ip_forward

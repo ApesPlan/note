@@ -1,0 +1,79 @@
+Angular 的 HTTP 客户端（ HttpClient ）是一种内置的方式，可以从外部 API 中获取数据，并以流的形式提供给你的应用。
+Angular 的 HttpClientModule 中注册了在整个应用中使用 HttpClient 服务的单个实例所需的服务提供商。
+你可以在服务中注入 HttpClient 服务来获取数据并与外部 API 和资源进行交互。
+打开 app.module.ts。
+    该文件包含可供整个应用使用的导入对象和功能。
+
+从 @angular/common/http 包中导入 HttpClientModule。
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { RouterModule } from '@angular/router';
+    import { HttpClientModule } from '@angular/common/http';
+
+把 HttpClientModule 添加到应用模块（@NgModule）的 imports 数组中。
+这会在全局注册 Angular 的 HttpClient 提供商。
+    app.module.ts
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { RouterModule } from '@angular/router';
+    import { HttpClientModule } from '@angular/common/http';
+    import { ReactiveFormsModule } from '@angular/forms';
+
+    import { AppComponent } from './app.component';
+    import { TopBarComponent } from './top-bar/top-bar.component';
+    import { ProductListComponent } from './product-list/product-list.component';
+    import { ProductAlertsComponent } from './product-alerts/product-alerts.component';
+    import { ProductDetailsComponent } from './product-details/product-details.component';
+
+    @NgModule({
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        RouterModule.forRoot([
+        { path: '', component: ProductListComponent },
+        { path: 'products/:productId', component: ProductDetailsComponent },
+        { path: 'cart', component: CartComponent },
+        ])
+    ],
+    declarations: [
+        AppComponent,
+        TopBarComponent,
+        ProductListComponent,
+        ProductAlertsComponent,
+        ProductDetailsComponent,
+        CartComponent,
+    ],
+    bootstrap: [
+        AppComponent
+    ]
+    })
+    export class AppModule { }
+
+启用 HttpClient
+    从 @angular/common/http 包中导入 HttpClient。
+    src/app/cart.service.ts
+    import { Injectable } from '@angular/core';
+    import { HttpClient } from '@angular/common/http';
+    把 HttpClient 注入到 CartService 组件类的构造函数中：
+    export class CartService {
+    items = [];
+
+    constructor(
+        private http: HttpClient
+    ) {}
+    }
+
+定义 get() 方法
+该方法使用 HttpClient#get() 方法检索数据
+getShippingPrices() {
+    return this.http.get('/assets/shipping.json');
+}
+
+利用 async 管道修改配送组件的模板，以显示配送类型和价格
+<h3>Shipping Prices</h3>
+
+<div class="shipping-item" *ngFor="let shipping of shippingCosts | async">
+  <span>{{ shipping.type }}</span>
+  <span>{{ shipping.price | currency }}</span>
+</div>

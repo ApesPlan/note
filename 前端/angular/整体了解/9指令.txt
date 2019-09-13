@@ -1,0 +1,26 @@
+Angular 的模板是动态的。
+当 Angular 渲染它们的时候，会根据指令给出的指示对 DOM 进行转换。 
+指令就是一个带有 @Directive() 装饰器的类。
+
+组件从技术角度上说就是一个指令，但是由于组件对 Angular 应用来说非常独特、非常重要，
+因此 Angular 专门定义了 @Component() 装饰器，它使用一些面向模板的特性扩展了 @Directive() 装饰器。
+
+除组件外，还有两种指令：结构型指令和属性型指令。 
+Angular 本身定义了一系列这两种类型的指令，你也可以使用 @Directive() 装饰器来定义自己的指令。
+
+像组件一样，指令的元数据把它所装饰的指令类和一个 selector 关联起来，selector 用来把该指令插入到 HTML 中。 
+在模板中，指令通常作为属性出现在元素标签上，可能仅仅作为名字出现，也可能作为赋值目标或绑定目标出现。
+
+结构型指令
+    结构型指令通过添加、移除或替换 DOM 元素来修改布局。 这个范例模板使用了两个内置的结构型指令来为要渲染的视图添加程序逻辑：
+        <li *ngFor="let hero of heroes"></li>
+        <app-hero-detail *ngIf="selectedHero"></app-hero-detail>
+    *ngFor 是一个迭代器，它要求 Angular 为 heroes 列表中的每个英雄渲染出一个 <li>。
+    *ngIf 是个条件语句，只有当选中的英雄存在时，它才会包含 HeroDetail 组件。
+属性型指令
+    属性型指令会修改现有元素的外观或行为。 在模板中，它们看起来就像普通的 HTML 属性一样，因此得名“属性型指令”。
+
+    ngModel 指令就是属性型指令的一个例子，它实现了双向数据绑定。 
+    ngModel 修改现有元素（一般是 <input>）的行为：设置其显示属性值，并响应 change 事件。
+        <input [(ngModel)]="hero.name">
+    Angular 还有很多预定义指令既不修改布局结构（比如 ngSwitch），也不修改 DOM 元素和组件的样子（比如 ngStyle 和 ngClass）。

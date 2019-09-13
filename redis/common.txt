@@ -1,5 +1,5 @@
 netstat -antup | grep redis
-redis-cli
-auth testupload
-keys *
+redis-cli // 连接redis
+auth testupload // 输入密码
+keys * // 查看键值 一般先选库
 quit

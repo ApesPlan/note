@@ -1,0 +1,11 @@
+SELECT DATE_FORMAT(v.created_at,'%Y-%m') as time, v.ad_id, COUNT(v.order_id) as uv, SUM(o.price) as money 
+FROM visit_record as v LEFT JOIN `order` as o ON o.id = v.order_id 
+WHERE DATE_FORMAT(v.created_at,'%Y-%m-%d') > '2019-05-1' 
+AND DATE_FORMAT(v.created_at,'%Y-%m-%d') < '2019-07-1' 
+AND v.is_paid = 1 
+GROUP BY time, v.ad_id 
+ORDER BY time DESC
+
+->whereBetween('votes', [1, 100])
+->limit(5)
+->orderBy('name', 'desc')

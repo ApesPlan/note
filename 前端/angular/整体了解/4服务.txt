@@ -1,0 +1,58 @@
+服务 从服务器获取数据、验证用户输入或直接往控制台中写日志等工作
+通过把各种处理任务定义到可注入的服务类中，你可以让它被任何组件使用。
+通过在不同的环境中注入同一种服务的不同提供商，你还可以让你的应用更具适应性。
+服务是 Angular 应用的重要组成部分。
+在 Angular 中，服务是一个类的实例，它可以借助 Angular 的依赖注入系统来让应用中的任何一个部件都能使用它。
+服务可以让你在应用的各个部件之间共享数据。
+
+右键单击 app 文件夹，选择 Angular Generator，然后选择 Service。把新的服务命名为 cart。
+在 Angular 中，要把一个类定义为服务，就要用 @Injectable() 装饰器来提供元数据，以便让 Angular 可以把它作为依赖注入到组件中。
+同样，也要使用 @Injectable() 装饰器来表明一个组件或其它类（比如另一个服务、管道或 NgModule）拥有一个依赖。
+  注入器是主要的机制。Angular 会在启动过程中为你创建全应用级注入器以及所需的其它注入器。你不用自己创建注入器。
+  该注入器会创建依赖、维护一个容器来管理这些依赖，并尽可能复用它们。
+  提供商是一个对象，用来告诉注入器应该如何获取或创建依赖。
+src/app/cart.service.ts
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+如果生成的 @Injectable() 装饰器中没有包含 { providedIn: 'root' } 语句，那就插入它
+export class CartService {
+
+  constructor() {}
+
+}
+
+
+src/app/product-details/product-details.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { products } from '../products';
+import { CartService } from '../cart.service';
+
+export class ProductDetailsComponent implements OnInit {
+  constructor(
+    private route: ActivatedRoute,
+    private cartService: CartService
+  ) { }
+}
+
+export class ProductDetailsComponent implements OnInit {
+  addToCart(product) {
+    window.alert('Your product has been added to the cart!');
+    this.cartService.addToCart(product);
+  }
+}
+
+src/app/product-details/product-details.component.html
+<h2>Product Details</h2>
+
+<div *ngIf="product">
+  <h3>{{ product.name }}</h3>
+  <h4>{{ product.price | currency }}</h4>
+  <p>{{ product.description }}</p>
+
+  <button (click)="addToCart(product)">Buy</button>
+</div>
