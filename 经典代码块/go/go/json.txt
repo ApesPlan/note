@@ -1,0 +1,42 @@
+
+json对象
+// json数组
+    b := []int{}
+    aa := "[17, 19]"
+    json.Unmarshal([]byte(aa), &b)
+    fmt.Println(b)
+
+// 将JSON数据解析成结构体 json.Unmarshal(xxx)
+// 将结构体解析成JSON数据 json.Marshal(xxx)
+
+// Marshal
+    //与json数据对应的结构体
+    type Server struct {
+    ServerName string `json:"serverName1"`
+    ServerIP string `json:"serverIP2"`
+    }
+    // 数组对应slice
+    type ServerSlice struct {
+    Servers []Server `json:"servers3"`
+    }
+
+    func main()  {
+    var s ServerSlice
+    s.Servers = append(s.Servers,Server{ServerName:"TianJin", ServerIP:"127.0.0.1"})
+    s.Servers = append(s.Servers,Server{ServerName:"BeiJing", ServerIP:"127.0.0.1"})
+    if data, err := json.Marshal(s); err == nil {
+        fmt.Printf("%s\n", data)
+    }
+    }
+    ---output---
+    {"Servers":[{"ServerName":"TianJin","ServerIP":"127.0.0.1"}, {"ServerName":"BeiJing","ServerIP":"127.0.0.1"}]}
+
+// Unmarshal
+    data:= `{"Servers":[{"ServerName":"TianJin","ServerIP":"127.0.0.1"}, {"ServerName":"BeiJing","ServerIP":"127.0.0.1"}]}`
+    str:=[]byte(data)
+
+    //1.Unmarshal的第一个参数是json字符串，第二个参数是接受json解析的数据结构。
+    //第二个参数必须是指针，否则无法接收解析的数据，如stu仍为空对象StuRead{}
+    //2.可以直接stu:=new(StuRead),此时的stu自身就是指针
+    stuUnmarshal := ServerSlice{}
+    err = json.Unmarshal(str,&stuUnmarshal)

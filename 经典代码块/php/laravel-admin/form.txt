@@ -1,0 +1,12 @@
+
+laravel-admin直接控制form中的展示
+$states = [
+    'on'  => ['value' => 1, 'text' => '无货开', 'color' => 'success'],
+    'off' => ['value' => 0, 'text' => '无货关', 'color' => 'danger'],
+];
+
+if (!empty(request()->route()->parameters()['configure']) && request()->route()->parameters()['configure'] == 6) {
+    $form->switch('value', "假期无货开关")->states($states);
+} else {
+    $form->textarea('value', '值');
+}
