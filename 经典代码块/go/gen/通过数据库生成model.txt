@@ -1,0 +1,29 @@
+默认回生成到根目录/model/下
+gen --connstr "root:root@tcp(127.0.0.1:3306)/share_surname_wang?&parseTime=True"  --table help_doc --json --gorm
+
+package model
+
+import (
+	"database/sql"
+	"time"
+
+	"github.com/guregu/null"
+)
+
+var (
+	_ = time.Second
+	_ = sql.LevelDefault
+	_ = null.Bool{}
+)
+
+type HelpDoc struct {
+	ID     int    `gorm:"column:id;primary_key" json:"id"`
+	Title  string `gorm:"column:title" json:"title"`
+	Answer string `gorm:"column:answer" json:"answer"`
+	Valid  int    `gorm:"column:valid" json:"valid"`
+}
+
+// TableName sets the insert table name for this struct type
+func (h *HelpDoc) TableName() string {
+	return "help_doc"
+}

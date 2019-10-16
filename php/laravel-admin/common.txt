@@ -9,6 +9,7 @@
 // 发布资源 在该命令会生成配置文件config/admin.php，可以在里面修改安装的地址、数据库连接、以及表名
 // 数据库 建议都是用默认配置不修改
     php artisan vendor:publish --provider="Encore\Admin\AdminServiceProvider"
+    // 如果不成功，可以将vendor\encore\laravel-admin\assets 下所有的文件考入到public/vender/laravel-admin中
 // 完成安装 数据库可以在.env里配置
 php artisan admin:install
 // 配置好wnmp后 在浏览器打开 http://localhost/admin/ ,使用用户名 admin 和密码 admin登录.

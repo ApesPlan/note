@@ -4,3 +4,5 @@
     $student->vip_type='出行';
     $student->vip_fenshu=900;
     if (!$student->save()) { }
+
+    ->orderBy('xxx', 'desc')
