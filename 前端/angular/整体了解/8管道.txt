@@ -1,0 +1,14 @@
+Angular 的管道可以让你在模板中声明显示值的转换逻辑。 
+带有 @Pipe 装饰器的类中会定义一个转换函数，用来把输入值转换成供视图显示用的输出值。
+
+Angular 自带了很多管道，比如 date 管道和 currency 管道
+
+要在 HTML 模板中指定值的转换方式，请使用 管道操作符 (|)。
+
+你可以把管道串联起来，把一个管道函数的输出送给另一个管道函数进行转换。 管道还能接收一些参数，来控制它该如何进行转换
+    <!-- Default format: output 'Jun 15, 2015'-->
+    <p>Today is {{today | date}}</p>
+    <!-- fullDate format: output 'Monday, June 15, 2015'-->
+    <p>The date is {{today | date:'fullDate'}}</p>
+    <!-- shortTime format: output '9:43 AM'-->
+    <p>The time is {{today | date:'shortTime'}}</p>

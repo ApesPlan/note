@@ -1,0 +1,23 @@
+//  @Component 装饰器。这表明它下面的类是一个组件。它提供了有关该组件的元数据，包括它的模板、样式和选择器。
+    import { Component, OnInit } from '@angular/core';
+    export class ProductAlertsComponent implements OnInit {
+        @Input() product;
+        constructor() { }
+        ngOnInit() {
+        }
+    } 
+// @Input 装饰器指出其属性值是从组件的父组件（在本例中就是商品列表组件）中传入的。
+    import { Input } from '@angular/core'; 
+import { Output, EventEmitter } from '@angular/core';
+    export class ProductAlertsComponent {
+    @Input() product; //导入
+    // 在组件类中，用 @Output 装饰器和一个事件发射器（EventEmitter）实例定义一个名为 notify 的属性。
+    // 这可以让商品提醒组件在 notify 属性发生变化时发出事件。
+    @Output() notify = new EventEmitter(); //导出
+}
+
+使用 JavaScript 的导入语句从 Angular 库中导入 Angular 模块。 
+比如，下列代码从 platform-browser 库中导入了 BrowserModule 这个 NgModule。
+    import { BrowserModule } from '@angular/platform-browser';
+应用的根模块需要来自 BrowserModule 中的素材。要访问这些素材，就要把它加入 @NgModule 元数据的 imports 中，代码如下：
+    imports:      [ BrowserModule ],

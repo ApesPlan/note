@@ -1,0 +1,27 @@
+要使用 npm 命令全局安装 Angular CLI 
+    npm install -g @angular/cli
+会安装必要的 Angular npm 包和其他依赖包
+    ng new xxx 
+ng new xxx --skip-install  // 先跳过npm安装
+ng new xxx --skip-install --style css --routing false
+使用 CLI 命令 ng serve 和 --open 选项来启动服务器。
+ng serve 命令会启动开发服务器、监视文件，并在这些文件发生更改时重建应用。
+ng serve
+--open（或者只用 -o 缩写）选项会自动打开你的浏览器，并访问 http://localhost:4200/。
+ng serve --open
+
+安装软件包到生产环境
+npm i --save xxx
+npm i -S xxx
+安装软件包到开发环境
+npm i --save-dev xxx
+
+~代表前两个版本号一致，最后的号取最高
+^代表前一个版本号一致，倒数两个的号最高
+不写就固定
+
+
+ng build
+ng build --prod 编辑到生产环境
+
+模块 组件

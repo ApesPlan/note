@@ -1,0 +1,44 @@
+在 app.module.ts 中，添加路由
+src/app/app.module.ts
+@NgModule({
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
+      { path: 'products/:productId', component: ProductDetailsComponent },
+    ])
+  ],
+
+<div *ngFor="let product of products; index as productId">
+  <h3>
+    <a [title]="product.name + ' details'" [routerLink]="['/products', productId]">
+      {{ product.name }}
+    </a>
+  </h3>
+<!-- 在这种情况下，路由（URL）包含一个固定的区段（ /products ），但其最后一个区段是变量，要插入当前商品的 id 属性。 -->
+<!-- 例如，id 为 1 的商品的 URL 类似于 https://getting-started-myfork.stackblitz.io/products/1。 -->
+</div>
+
+从 @angular/router 包导入 ActivatedRoute，从 ../products 文件导入 products 数组。
+import { Component, OnInit } from '@angular/core';
+// ActivatedRoute 专门用于由 Angular 路由器加载的每个路由组件。它包含关于该路由，路由参数以及与该路由关联的其它数据的信息。
+    import { ActivatedRoute } from '@angular/router';
+import { products } from '../products';
+
+定义 product 属性，并把 ActivatedRoute 注入到构造函数中。
+export class ProductDetailsComponent implements OnInit {
+  product;
+
+  constructor(
+    private route: ActivatedRoute,
+  ) { }
+
+}
+
+在 ngOnInit() 方法中，订阅（subscribe）路由参数并根据其 productId 获取商品信息。
+ngOnInit() {
+  this.route.paramMap.subscribe(params => {
+    this.product = products[+params.get('productId')];
+  });
+}

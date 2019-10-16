@@ -1,0 +1,8 @@
+$result = DB::connection("mysql2")
+    ->table('visit_record as v')
+    ->leftJoin('order as o', 'o.id', '=', 'v.order_id')
+    ->selectRaw("DATE_FORMAT(v.created_at,'%Y-%m') as time, v.ad_id, COUNT(v.order_id) as uv, SUM(o.price) as money")
+    ->whereBetween(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m-%d')"), [$oneMonthAgeDate, $firstDate])
+    ->groupBy(DB::raw("DATE_FORMAT(v.created_at,'%Y-%m'), v.ad_id"))
+    ->orderByRaw("time DESC")
+    ->get();

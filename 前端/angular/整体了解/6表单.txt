@@ -1,0 +1,67 @@
+Angular 中的表单
+Angular 中的表单采用了基于 HTML 表单的标准功能，并添加了一个编排层，以帮助你创建自定义表单控件，并提供了出色的验证体验。
+Angular 响应式表单有两个部分，组件中那些用于存储和管理表单的对象，以及表单在模板中的可视化。
+Angular 的 FormBuilder 服务为生成控件提供了方便的方法。
+从 @angular/forms 包中导入 FormBuilder 服务。
+
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+
+FormBuilder 服务是由 ReactiveFormsModule 提供的，它已经在之前修改过的 AppModule 定义过（在 app.module.ts ）。
+
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+
+import { CartService } from '../cart.service';
+
+@Component({
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.css']
+})
+export class CartComponent {
+  items;
+  checkoutForm;
+
+  constructor(
+    private cartService: CartService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.items = this.cartService.getItems();
+    // 提示用户输入姓名和地址。
+    // 这样你接下来就可以收集到这些信息了。可以使用 FormBuilder#group() 方法，用一个包含 name 和 address 字段的表单模型赋值给 checkoutForm 属性。
+    this.checkoutForm = this.formBuilder.group({
+      name: '',
+      address: ''
+    });
+  }
+  // 定义一个 onSubmit() 方法来处理表单 表单重置
+  onSubmit(customerData) {
+    // Process checkout data here
+    console.warn('Your order has been submitted', customerData);
+
+    this.items = this.cartService.clearCart();
+    this.checkoutForm.reset();
+  }
+}
+
+在 form 标签上，使用 ngSubmit 事件绑定来监听表单提交，并使用 checkoutForm 值调用 onSubmit() 方法
+使用 formControlName 属性绑定来把 checkoutForm 表单控件中的 name 和 address 绑定到它们的输入字段。
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">
+    
+    <div>
+        <label>Name</label>
+        <input type="text" formControlName="name">
+    </div>
+    
+    <div>
+        <label>Address</label>
+        <input type="text" formControlName="address">
+    </div>
+    
+    <button class="button" type="submit">Purchase</button>
+    
+    </form>
+
+
+

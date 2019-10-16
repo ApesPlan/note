@@ -1,0 +1,12 @@
+{
+  "rules": [
+    {
+      "action": "disallow", // 所有页面都不允许被索引
+      "page": "*"
+    }
+  ]
+}
+
+// 注：sitemap 的索引提示是默认开启的，
+如需要关闭 sitemap 的索引提示，可在小程序项目配置文件 project.config.json 的 setting 中配置字段 checkSiteMap 为 false
+
