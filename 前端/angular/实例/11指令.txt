@@ -1,0 +1,21 @@
+组件：带有模板的指令
+结构型指令：改变宿主文档结构
+ngIf ngFor ngSwitch
+属性型指令：改变宿主行为
+ngClass ngStyle ngModel
+
+<section *ngIf="showSection">
+
+<li *ngFor="let item of list">
+
+<div [ngSwitch]="conditionExpression">
+    <ng-template [ngSwitchCase]="case1Exp"></ng-template>
+    <ng-template ngSwitchCase="case2LiteralString"></ng-template>
+    <ng-template ngSwitchDefault></ng-template>
+</div>
+
+<div [ngClass]="{'active': isActive, 'disabled': isDisabled}">
+
+<div [ngStyle]="{'property': 'value'}">
+
+<input [(ngModel)]="userName">

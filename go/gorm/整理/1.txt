@@ -1,0 +1,140 @@
+// Customization struct
+type Customization struct {
+	ID                   uint
+	Name                 string
+	Valid                int
+	IsPrivate            int
+	InList               int
+	Code                 string
+	UserID               int
+	Item                 item.Item // One-To-One (属于 本表的ItemId做外键)
+	ItemID               int
+	Screenshot           string
+	Designer             string
+	DescriptionOfDesign  string
+	DefaultCtrs          string
+	Price                float64
+	PriceOff			 float64
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	DesignList    		 design.List        // One-To-One(拥有一个 design_list表的CustomizationId作外键)
+	CustomizationDetails []Detail           // One-To-Many(拥有多个customization_detail表的CustomizationId作外键)
+	CustomizationInfo    Info               // One-To-One(拥有一个 customization_info表的CustomizationId作外键)
+	Component            []design.Component // One-To-Many(拥有多个design_component表的CustomizationId作外键)
+}
+
+// TypeSwitch ...
+type TypeSwitch int
+
+const (
+	// TypeSwitchBlack 黑轴
+	TypeSwitchBlack TypeSwitch = iota
+	// TypeSwitchBlue 蓝轴
+	TypeSwitchBlue
+	// TypeSwitchBrown 茶轴
+	TypeSwitchBrown
+	// TypeSwitchRed 红轴
+	TypeSwitchRed
+	// TypeSwitchWhite 银轴
+	TypeSwitchWhite
+	// TypeSwitchYellow 黄轴
+	TypeSwitchYellow
+)
+
+
+// TypePropertyCtrType ..
+type TypeCtrType int
+
+const (
+	TypeCtrCapColor        TypeCtrType = iota + 1 //xxx
+	TypeCtrCapImage                               //按键   单个按键的颜色和图案
+	TypeCtrBoardImage                             //按键   上盖的颜色和图案
+	TypeCtrSwitchColor                            //按键   单个按键的键轴
+	TypeCtrItemSwitchColor                        //键盘 整把键盘的轴,如果与单个按键不同,以单个按键为主
+	TypeCtrItemOnlyCaps                           //键盘 只包含键帽
+	TypeCtrItemPreset                             //键盘 预设
+)
+
+type TypeOrderState int
+
+const (
+	TypeOrderStateBusinessGetError       TypeOrderState = -2 //弃用
+	TypeOrderStateOrderCanceled                         = -1
+	TypeOrderStateOrderCreated                          = 0
+	TypeOrderStateOrderPayed                            = 1
+	TypeOrderStateObjectSended                          = 2
+)
+
+
+
+        tx := db.DB.Begin()
+// tx.Save
+        if err := tx.Save(&adminModel).Error; err != nil {
+// tx.Rollback()
+            tx.Rollback()
+            return err
+        }
+        adminIdentity := &auth_identity.AuthIdentity{}
+// tx.Model Where Update
+        if err := tx.Model(&adminIdentity).Where("user_id = ?", adminModel.ID).Update(map[string]interface{}{"uid": adminModel.Email, "encrypted_password": adminModel.Password}).Error; err != nil {
+            tx.Rollback()
+            return err
+        }
+// tx.Commit()
+        tx.Commit()
+        return err
+
+        tx := db.DB.Begin()
+// tx.Create
+        if err := tx.Create(adminModel).Error; err != nil {
+            tx.Rollback()
+            return err
+        }
+        now := time.Now()
+        authIdentity := &auth_identity.AuthIdentity{}
+        authIdentity.Provider = "password"
+        authIdentity.UID = adminModel.Email
+        authIdentity.EncryptedPassword = adminModel.Password
+        authIdentity.UserID = fmt.Sprint(adminModel.ID)
+        authIdentity.ConfirmedAt = &now
+        if err := tx.Create(authIdentity).Error; err != nil {
+            tx.Rollback()
+            return err
+        }
+        tx.Commit()
+        return err
+
+
+        ossURL := &customization.Info{}
+// db.DB.Where First
+        if err := db.DB.Where("customization_id = ?", ossModel.ID).First(ossURL).Error; err != nil {
+            return "#"
+        }
+        ossURL.IndexImage
+
+
+        itemValue := &item.Item{}
+// db.DB.Select Where First
+        if err := db.DB.Select("name").Where("id = ?", designFieldsFormatObj.ItemID).First(itemValue).Error; err != nil {
+            return ""
+        }
+        itemValue.Name
+
+
+        orderPayment := &order.Payment{}
+// db.DB.Select Where Order First
+        if err := db.DB.Where("order_id = ?", orderFormatObj.ID).Order("id desc").First(orderPayment).Error; err != nil {
+            return ""
+        }
+        orderPayment.Money
+
+
+// db.Model AddUniqueIndex
+        if err := db.Model(&Translation{}).AddUniqueIndex("idx_translations_key_with_locale", "locale", "key").Error; err != nil {
+            fmt.Printf("Failed to create unique index for translations key & locale, got: %v\n", err.Error())
+        }
+        return &Backend{DB: db}
+
+
+// db.DB.Where Delete
+        db.DB.Where(Translation{Key: t.Key, Locale: t.Locale}).Delete(&Translation{}).Error

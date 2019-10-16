@@ -1,0 +1,31 @@
+ngfor 
+变量应用范围
+    <ul>
+        <li *ngFor="let menu of menus">
+            <a href="#">{{ menu.title }}</a>
+        </li>
+    </ul>
+索引的获取
+    <ul>
+        <li *ngFor="let menu of menus; let i = index">
+            <a href="#">{{ menu.title }}</a>
+        </li>
+    </ul>
+第一个和最后一个
+    <ul>
+        <li *ngFor="let menu of menus; let first = first; let last = last">
+            <a href="#">{{ menu.title }}</a>
+        </li>
+    </ul>
+奇偶
+    <ul>
+        <li *ngFor="let menu of menus; let odd = odd; let even = even">
+            <a href="#">{{ menu.title }}</a>
+        </li>
+    </ul>
+性能 trackBy后面接一个函数或者表达式 提升索引性能 
+    <ul>
+        <li *ngFor="let menu of menus; trackBy: menu ? menu.id : null ">
+            <a href="#">{{ menu.title }}</a>
+        </li>
+    </ul>

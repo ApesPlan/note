@@ -1,0 +1,12 @@
+当数据改变时更新视图（dom） 脏值检测
+触发条件
+浏览器事件（click, mouseover, keyup）
+setTimeout() setInterval()
+HTTP请求
+如何进行检测
+检查两个状态值：当前状态和新状态
+
+
+有绑定的属性不能在 AfterViewChecked, AfterViewInit修改
+
+通过OnPush策略 检测有input属性的组件

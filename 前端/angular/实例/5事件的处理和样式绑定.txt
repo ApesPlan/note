@@ -1,0 +1,22 @@
+[class.样式类名]=“判断表达式” 是在应用单个class时的常用技巧
+使用方括号[]时数据绑定，如果带方括号，等号后面就是一个对象或表达式
+
+()用于事件绑定，等号后可以接表达式也可以式一个定义在类中的函数
+<a 
+    href="#"
+    [class.active]="selectedIndex === i"
+    (click)="selectedIndex = i"
+>
+    {{ menu.title }}
+</a>
+
+
+样式绑定的几种方式
+    <div [class.className]="条件表达式"></div>
+    class.className对于单个样式的条件绑定最为合适
+
+    <div [ngClass]="{'One': true, 'Two': true, 'Three': false}"></div>
+    ngClass是自由度和拓展性最强的样式绑定方式
+
+    <div [ngStyle]="{'color': someColor, 'font-size': fontSize}"></div>
+    ngStyle由于是嵌入式样式，它会覆盖掉其它样式，使用时要谨慎

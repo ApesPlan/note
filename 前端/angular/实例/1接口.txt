@@ -1,0 +1,41 @@
+interface TopMenu {
+  title: string;
+  // link: string;
+  // readonly link: string; // readonly 初始化之后就不能赋值了 this.menus[0].link = x // 只读
+  link?: string; // 可选
+}
+
+menus: TopMenu[] = [
+    {
+      title: '热门',
+      link: ''
+    },
+    {
+      title: '男装',
+      link: ''
+    },
+]
+
+// 字典类型
+// interface Dict {
+//   [key:string]: string;
+// }
+
+// dict: Dict = {
+//   a: '1',
+//   b: '2'
+// }
+
+// constructor() {
+//   console.log(this.dict['a']);
+//   console.log(this.dict.a);
+// }
+
+定义函数
+interface TopMenu {
+    (x: number, y: number): number;
+}
+
+add: AddFuc = (x, y) => { // 可简写add: AddFuc = (x, y) => x + y;
+    return x + y;
+}

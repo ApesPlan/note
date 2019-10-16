@@ -1,0 +1,35 @@
+Where 
+    非&结构体 
+    &结构体 
+    Where("is_private = ?", false)
+Find
+    &结构体
+Model
+    &结构体
+Count
+    &Xxx
+First
+    &结构体
+Update
+    非&结构体
+
+
+
+查询集合
+    fd := model.Xxx{
+        Valid: true,
+    }
+    fds := []*model.Xxx{}
+    model.DB.Where(fd).Where("is_private = ?", false).Find(&fds)
+
+    fds
+
+// 计算个数
+    count := 0
+    or := &md.Order{
+        XxxID: cum.ID,
+    }
+    md.DB.Model(or).Where("state >= ?", 1).Where(*or).Count(&count)
+    if count == 0 {
+        return
+    }

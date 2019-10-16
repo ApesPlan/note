@@ -1,10 +1,16 @@
+npm -v
+npm install -g cnpm --registry=https://registry.npm.taobao.org
 要使用 npm 命令全局安装 Angular CLI 
     npm install -g @angular/cli
+    cnpm install -g @angular/cli
+    ng version
 会安装必要的 Angular npm 包和其他依赖包
     ng new xxx 
 ng new xxx --skip-install  // 先跳过npm安装
 ng new xxx --skip-install --style css --routing false
 使用 CLI 命令 ng serve 和 --open 选项来启动服务器。
+npm install 安装npm包
+
 ng serve 命令会启动开发服务器、监视文件，并在这些文件发生更改时重建应用。
 ng serve
 --open（或者只用 -o 缩写）选项会自动打开你的浏览器，并访问 http://localhost:4200/。

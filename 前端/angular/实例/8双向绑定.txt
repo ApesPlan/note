@@ -1,0 +1,19 @@
+跟模块中导入
+import { FormsModule } from '@angular/forms';
+
+imports: [
+    。。。
+    FormsModule
+  ],
+
+<input [value]="username" (input)="username = $event.target.value">
+    [value]="username" --绑定username值到input的value
+    (input)="表达式" --绑定表达式到input的input事件
+    username = $event.target.value --在input事件触发时执行
+    $event --表达式，提供事件的数据
+
+ngModel
+FormsModule 中提供的指令
+使用[(ngModel)]="变量" 形式进行双向绑定
+其实是一个语法糖
+[ngModel]="username" (ngModelChange)="username = $event"

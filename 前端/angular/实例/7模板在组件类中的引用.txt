@@ -1,0 +1,23 @@
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
+
+// 引用名
+    <div #helloDiv>123</div>
+    @ViewChild('helloDiv') helloDivRef: ElementRef;
+@ViewChild 是一个选择器，用来查找要引用的DOM元素或者组件
+ElementRef是DOM元素的一个包装类
+因为DOM元素不是Angular中的类，所以需要一个包装类以便在Angular中使用和标识其类型
+
+// 组件类型
+<app-image-slider [sliders]="imageSliders"></app-image-slider>
+@ViewChild('ImageSliderComponent') imageSliders: ImageSliderComponent;
+
+引用多个模板元素
+<img #img *ngFor="let slider of sliders" [src]="slider.imgUrl" [alt]="slider.caption">
+@ViewChildren('img') imgs: QueryList<ElementRef>;
+在@ViewChildren中可以使用引用名或者使用Angular组件/指令的类型。声明类型为QueryList<?>

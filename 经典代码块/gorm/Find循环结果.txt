@@ -1,0 +1,8 @@
+var companyValue []string
+company := make([]*Company, 0)
+if err := db.DB.Select("name").Find(&company).Error; err != nil {
+    return companyValue
+}
+for _, v := range company {
+    companyValue = append(companyValue, v.Name)
+}

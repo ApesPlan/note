@@ -1,0 +1,19 @@
+<div *ngIf="条件表达式">
+    在条件为真的时候需要显示的内容
+</div>
+
+<div *ngIf="条件表达式 else elseContent">
+    在条件为真的时候需要显示的内容
+</div>
+<ng-template #elseContent>
+    在条件为假的时候需要显示的内容
+</ng-template>
+
+<div *ngIf="条件表达式; then thenTemplate; else elseContent">
+</div>
+<ng-template #thenTemplate>
+    在条件为真的时候需要显示的内容
+</ng-template>
+<ng-template #elseContent>
+    在条件为假的时候需要显示的内容
+</ng-template>

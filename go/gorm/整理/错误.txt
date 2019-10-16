@@ -1,0 +1,8 @@
+GORM 提供了一个处理 RecordNotFound 错误的快捷方式，如果发生了多个错误，它将检查每个错误
+if db.Where("name = ?", "hello world").First(&user).RecordNotFound() {
+  // 数据没有找到
+}
+
+if err := db.Where("name = ?", "jinzhu").First(&user).Error; gorm.IsRecordNotFoundError(err) {
+  // 数据没有找到
+}
