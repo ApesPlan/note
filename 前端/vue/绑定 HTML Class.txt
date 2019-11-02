@@ -1,0 +1,57 @@
+<div v-bind:class="{ active: isActive }"></div>
+<div
+  class="static"
+  v-bind:class="{ active: isActive, 'text-danger': hasError }"
+></div>
+data: {
+  isActive: true,
+  hasError: false
+}
+<div class="static active"></div>
+如果 hasError 的值为 true，class 列表将变为 "static active text-danger"
+
+<div v-bind:class="classObject"></div>
+data: {
+  classObject: {
+    active: true,
+    'text-danger': false
+  }
+}
+
+在这里绑定一个返回对象的计算属性
+<div v-bind:class="classObject"></div>
+data: {
+  isActive: true,
+  error: null
+},
+computed: {
+  classObject: function () {
+    return {
+      active: this.isActive && !this.error,
+      'text-danger': this.error && this.error.type === 'fatal'
+    }
+  }
+}
+
+数组语法
+<div v-bind:class="[activeClass, errorClass]"></div>
+data: {
+  activeClass: 'active',
+  errorClass: 'text-danger'
+}
+<div v-bind:class="[isActive ? activeClass : '', errorClass]"></div>
+
+当在一个自定义组件上使用 class 属性时，这些 class 将被添加到该组件的根元素上面。这个元素上已经存在的 class 不会被覆盖。
+例如，如果你声明了这个组件：
+Vue.component('my-component', {
+  template: '<p class="foo bar">Hi</p>'
+})
+然后在使用它的时候添加一些 class：
+<my-component class="baz boo"></my-component>
+HTML 将被渲染为:
+<p class="foo bar baz boo">Hi</p>
+
+对于带数据绑定 class 也同样适用：
+<my-component v-bind:class="{ active: isActive }"></my-component>
+当 isActive 为 truthy[1] 时，HTML 将被渲染成为：
+<p class="foo bar active">Hi</p>

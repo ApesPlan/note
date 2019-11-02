@@ -1,0 +1,4 @@
+npm view vue-cli 查看vue-cli版本
+npm uninstall -g vue-cli 删除vue-cli
+
+npm list -g --depth 0

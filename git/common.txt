@@ -73,6 +73,7 @@ git log --pretty=oneline
     8fc1d335c007a4183e33dc1482f98a617fc710d9 第三次提交
     dc5763be4ac74babc7405278f7c20e58e21f8af4 第二次提交
     d5e46b5c7060488211251ec8a50768599b00200e 第一次提交
+git log --pretty=format:"%h - %an, %ar : %s"
 
 git reset --hard HEAD~3 // 从当前提交（第四次提交）回退了3次 到了第一次提交
     HEAD is now at d5e46b5 第一次提交
@@ -82,3 +83,67 @@ git reset --hard dc5763be4ac74babc7405278f7c20e58e21f8af4 // 回退到指定版�
 
 git diff activity_618 master app/Data/OrderMoney.php // 以master分支为基础对比activity_618分支的增减
 git diff activity_618 master --stat   //  以master分支为基础 显示出所有有差异的文件列表
+
+git tag v0.0.1
+创建一个带附注的标签
+git tag -a v1.0.1 -m 'release version'
+删除标签
+git tag -d v0.0.1
+git tag -l "查询（v*）"
+
+// 查看文件修改详细
+git blame test.txt
+
+git diff // 比较暂存区与工作区的区别
+git diff HEAD // 比较最新提交与工作区之间的区别
+git diff cached // 比较最新提交与暂存区的区别
+
+git remote show // 远程链接展示
+git remote show origin // 远程链接origin的详细信息 包括push到哪 拉的是谁
+git remote add origin 仓库地址 // 关联远程仓库 下次默认为origin
+git push -u origin master  // 推送并关联分支，下次默认为master
+git fetch === git push + merge 
+
+// 等级最高
+git config --local user.name 'zhangsan'
+git config --local user.email 'test@test.com'
+git config user.name // zhangsan
+git config --list
+git config --local --unset user.name
+
+staged 已暂存
+modified 已修改
+
+git checkout -- test.txt 撤销工作区的文件
+git rm test.txt 执行了两个操作，1删除文件，2，将被删除的文件纳入到暂存区
+若想恢复需要进行两个动作：
+1 git reset HEAD test.txt 暂存区恢复到工作区
+2 git checkout -- test.txt 丢弃工作区的修改（git add/rm 去更新修改 ）
+
+如果是 rm test.txt直接删除的话（被删除的文件没有纳入到暂存区），只需要 git checkout -- test.txt 撤回
+
+git commit --amend -m "合并上一次提交"
+
+git 合并分支的时候会使用fast-forward模式，删除分支后会丢掉分支信息
+加上 --no-ff 会禁用掉，这样就会保留分支信息，多一个commit id 
+git merge --no-ff dev
+git log --graph
+
+会退了找不到hash
+通过git reflog 查看操作hash 来回退到最新
+然后重新设置 HEAD  git reset --hard commit id
+
+
+git checkout -- test.txt 丢弃相对于暂存区中最后一次添加的文件内容所做的变更
+
+git reset HEAD test.txt 将暂存区的内容回退到工作区
+
+git branch -m master master2 改名为master2
+
+git stash
+git stash list
+git stash pop 恢复同时也删除对应log
+git stash save 'hello basic'
+git stash apply 内容并不删除 
+git stash apply stash@{0}
+git stash drop stash@{0}手动删除

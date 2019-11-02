@@ -1,0 +1,17 @@
+随着事件流中的元素的变化随之做出相应的动作
+流的种类： 无限、有限、单个、空
+流的状态： next, error, complete
+rxjs 所有操作都是异步
+
+this.route.paramMap.subscribe(params => {
+    // next块
+    console.log('路径参数', params);
+    this.selectedTabLink = params.get('tabLink');
+    this.selectedTabLink.markForCheck(); // 脏值检测
+}, err => {
+    // error块
+    console.log(err);
+}, () => {
+    // complete块
+    // 无论错误还是最终结束，都会走到complete块
+});

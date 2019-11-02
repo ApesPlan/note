@@ -1,0 +1,100 @@
+ng build
+--prod
+--aot 默认自带
+--build-optimizer 提升性能
+--vendor-chunk 用到的第三方单独打包
+
+
+docker-compose restart nginx
+docker-compose exec nginx service nginx reload 
+
+
+worker_processes  1;
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    gzip on;
+    gzip_comp_level 6;
+    gzip_vary on;
+
+    gzip_min_length  1k;
+    gzip_proxied any;
+
+    gzip_types       text/plain application/x-javascript text/css application/xml;
+    gzip_buffers     32 8k;
+
+    # 设置Web API 服务器
+    upstream api_server {
+        server xx.xx.xx.xx:9001
+    }
+
+    server {
+        listen       80;
+        server_name  localhost;
+        charset utf-8;
+
+        # 反向代理，前端访问 /api/* 的请求
+        # 会被转发到 api_server
+        # 上面定义的 xx.xx.xx.xx:9001
+        # 跨域只针对于前端，对服务器无效
+        location /api/ {
+            proxy_pass http://api_server/;
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        location / {
+            root    "/usr/share/nginx/html ";
+            index   index.html;
+            expires -1;
+            add_header Pragma "no-cache";
+            add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

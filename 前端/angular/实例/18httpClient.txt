@@ -1,0 +1,12 @@
+HttpClientModule值需在根模块中导入一次，不要在其它模块导入
+不规范的请求使用request方法
+
+// this.service.getTabs().subscribe(tabs => {
+//   this.topMenus = tabs;
+// }); // 如果这里是http请求，需要订阅subscribe
+// console.log(this.baseUrl);
+返回的值是Observable
+必须订阅，才会发送请求，否则不会发送
+
+
+拦截器
