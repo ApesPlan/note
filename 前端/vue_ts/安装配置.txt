@@ -1,0 +1,48 @@
+npm init
+cnpm install --save typescript ts-loader css-loader vue vue-loader @types/jquery file-loader jquery less less-loader vue-property-decorator vue-router url-loader babel-loader postcss-loader autoprefixer 
+    @babel/core @babel/preset-env babel-plugin-syntax-dynamic-import    
+    promise-polyfill JSON js-cookie     
+    qrcodejs2
+    babel-polyfill      import 'babel-polyfill'
+// 在 package.json 文件里面提现出来的区别就是，使用 --save-dev 安装的 插件，被写入到 devDependencies 对象里面去，而使用 --save 安装的插件，责被写入到 dependencies 对象里面去。
+cnpm install --save-dev html-webpack-plugin@next uglifyjs-webpack-plugin mini-css-extract-plugin webpack webpack-cli webpack-merge clean-webpack-plugin webpack-dev-server
+
+    eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node eslint-plugin-html 
+        .eslintrc
+        {
+        "extends": "standard",
+        "plugins": [
+            "html"
+        ],
+        "rules": {
+            "no-new": "off"
+        }
+        }
+eslint-loader babel-eslint     实时进行eslint代码审查
+        {
+        "extends": "standard",
+        "plugins": [
+            "html"
+        ],
+        "rules": {
+            "no-new": "off"
+        },
+        "parserOptions":{
+            "parser": "babel-eslint"
+        }
+        }
+webpack.config.js
+        {
+        test: /\.(vue|js)$/,
+        loader: 'eslint-loader',
+        exclude: /node_modules/,
+        enforce: 'pre'
+        }
+tsc --init
+
+
+npm run lint
+npm run lint-fix
+
+ 
+   

@@ -1,0 +1,30 @@
+of(...items) —— 返回一个 Observable 实例，它用同步的方式把参数中提供的这些值发送出来。
+
+from(iterable) —— 把它的参数转换成一个 Observable 实例。 该方法通常用于把一个数组转换成一个（发送多个值的）可观察对象。
+return from([this.imageSliders]); // 模拟数据 Observable[]
+  imageSliders: ImageSlider[] = [
+    {
+      id: 1,
+      imgUrl: 'http://ngassets.twigcodes.com/banner001.png',
+      link: '',
+      caption: ''
+    },
+    {
+      id: 2,
+      imgUrl: 'http://ngassets.twigcodes.com/banner002.png',
+      link: '',
+      caption: ''
+    },
+    {
+      id: 3,
+      imgUrl: 'http://ngassets.twigcodes.com/banner003.png',
+      link: '',
+      caption: ''
+    },
+    {
+      id: 4,
+      imgUrl: 'http://ngassets.twigcodes.com/banner004.png',
+      link: '',
+      caption: ''
+    },
+  ];
