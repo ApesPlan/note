@@ -48,14 +48,14 @@ docker-compose up
 git checkout master
 git merge --no-ff pack_dist_server
 git tag
-git tag release-v0.0.27
+git tag release-v0.0.5
 git push --tag
 git push
 git push --tags // 上传所有标签
 
 git reset --soft HEAD^ // 撤销commit
 
-git log --pretty=onelinee //日志一行显示
+git log --pretty=oneline //日志一行显示
 // 当前提交
 git reset --hard HEAD^ // 回到上一次提交，删除了当前提交
 git reflog // 查看提交记录和版本号

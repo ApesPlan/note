@@ -43,7 +43,7 @@ this.route.paramsMap.subscribe(params => {});
 配置
 {path: ':tabLink', component: HomeContainerComponent}
 激活
-<a [routeLink]="['/home', tab.link, {name: 'val1'}]"></a>
+<a [routerLink]="['/home', tab.link, {name: 'val1'}]"></a>
 this.router.navigate(['home', tab.link, {name: 'val1'}]);
 URL
 http://localhost:4200/home/sports;name=val1
@@ -54,7 +54,7 @@ this.route.paramsMap.subscribe(params => {});
 配置
 {path: 'home', component: HomeContainerComponent}
 激活
-<a [routeLink]="['/home']" [queryParams]={name:'val1'}></a>
+<a [routerLink]="['/home']" [queryParams]={name:'val1'}></a>
 this.router.navigate(['home'], {queryParams: {name: 'val1'}});
 URL
 http://localhost:4200/home?name=val1

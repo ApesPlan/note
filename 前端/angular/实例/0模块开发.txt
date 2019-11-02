@@ -1,0 +1,104 @@
+ng g m shared 创建模块
+ng g m help --routing 创建带路由的模块
+
+ng g s hero 创建服务
+
+ng generate module app-routing --flat --module=app
+--flat 把这个文件放进了 src/app 中，而不是单独的目录中。
+--module=app 告诉 CLI 把它注册到 AppModule 的 imports 数组中。
+src/app/app-routing.module.ts 
+
+ng generate component hero -it 生成不会带有模板文件组件 不加载html
+ng generate class hero // 创建数据类
+
+<button [style.font-size.em]="isSpecial ? 3 : 1" >Big</button>
+<button [style.font-size.%]="!isSpecial ? 150 : 50" >Small</button>
+
+即当 badCurly 有值时 class 这个 attribute 设置的内容会被完全覆盖
+<!-- reset/override all class names with a binding  -->
+<div class="bad curly special"
+     [class]="badCurly">Bad curly</div>
+
+能在 AppComponent 中使用 RouterOutlet，是因为 AppModule 导入了 AppRoutingModule，而 AppRoutingModule 中导出了 RouterModule。
+
+{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
+const id = +this.route.snapshot.paramMap.get('id');
+route.snapshot 是一个路由信息的静态快照，抓取自组件刚刚创建完毕之后。
+
+路由参数总会是字符串。 JavaScript 的 (+) 操作符会把字符串转换成数字，英雄的 id 就是数字类型。
+
+
+import { Location } from '@angular/common';
+private location: Location
+goBack(): void {
+  this.location.back();
+}
+
+import { catchError, map, tap } from 'rxjs/operators';
+
+getHeroes (): Observable<Hero[]> {
+  return this.http.get<Hero[]>(this.heroesUrl)
+    .pipe(
+      catchError(this.handleError<Hero[]>('getHeroes', []))
+    );
+}
+catchError() 操作符会拦截失败的 Observable。 它把错误对象传给错误处理器，错误处理器会处理这个错误。
+
+它们可以使用 RxJS 的 tap 操作符来实现，该操作符会查看 Observable 中的值，使用那些值做一些事情，并且把它们传出来。 这种 tap 回调不会改变这些值本身。
+下面是 getHeroes 的最终版本，它使用 tap 来记录各种操作。
+/** GET heroes from the server */
+getHeroes (): Observable<Hero[]> {
+  return this.http.get<Hero[]>(this.heroesUrl)
+    .pipe(
+      tap(_ => this.log('fetched heroes')),
+      catchError(this.handleError<Hero[]>('getHeroes', []))
+    );
+}
+
+/** GET hero by id. Will 404 if id not found */
+getHero(id: number): Observable<Hero> {
+  const url = `${this.heroesUrl}/${id}`;
+  return this.http.get<Hero>(url).pipe(
+    tap(_ => this.log(`fetched hero id=${id}`)),
+    catchError(this.handleError<Hero>(`getHero id=${id}`))
+  );
+}
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+updateHero (hero: Hero): Observable<any> {
+  return this.http.put(this.heroesUrl, hero, httpOptions).pipe(
+    tap(_ => this.log(`updated hero id=${hero.id}`)),
+    catchError(this.handleError<any>('updateHero'))
+  );
+}
+put
+    URL 地址
+    要修改的数据（这里就是修改后的英雄）
+    选项
+
+<button (click)="add(heroName.value); heroName.value=''">
+
+add(name: string): void {
+  name = name.trim();
+  if (!name) { return; }
+  this.heroService.addHero({ name } as Hero)
+    .subscribe(hero => {
+      this.heroes.push(hero);
+    });
+}
+
+
+addHero (hero: Hero): Observable<Hero> {
+  return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
+    tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
+    catchError(this.handleError<Hero>('addHero'))
+  );
+}
+
+this.http.get<Hero>(url)
+this.http.put(this.heroesUrl, hero, httpOptions)
+this.http.post<Hero>(this.heroesUrl, hero, httpOptions)
+this.http.delete<Hero>(url, httpOptions)
