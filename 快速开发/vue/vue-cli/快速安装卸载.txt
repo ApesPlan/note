@@ -1,0 +1,5 @@
+npm view vue-cli 查看vue-cli版本
+vue -V 查看vue-cli版本
+vue --version 查看vue-cli版本
+
+通过 npm uninstall vue-cli -g 或 yarn global remove vue-cli 卸载

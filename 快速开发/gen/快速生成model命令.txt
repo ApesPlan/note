@@ -1,6 +1,7 @@
 默认回生成到根目录/model/下
 	gen --connstr "root:root@tcp(127.0.0.1:3306)/share_surname_wang?&parseTime=True"  --table help_doc --json --gorm
 
+    
 	//生成样版
 package model
 

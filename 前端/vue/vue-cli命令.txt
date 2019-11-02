@@ -1,4 +1,5 @@
 npm view vue-cli 查看vue-cli版本
 npm uninstall -g vue-cli 删除vue-cli
+通过 npm uninstall vue-cli -g 或 yarn global remove vue-cli 卸载
 
 npm list -g --depth 0

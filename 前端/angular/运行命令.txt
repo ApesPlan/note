@@ -13,7 +13,7 @@ npm install 安装npm包
 
 ng serve 命令会启动开发服务器、监视文件，并在这些文件发生更改时重建应用。
 ng serve
---open（或者只用 -o 缩写）选项会自动打开你的浏览器，并访问 http://localhost:4200/。
+--open（或者只用 -o 缩写）选项会自动打开你的浏览器，并访问 http://localhost:4200/
 ng serve --open
 
 安装软件包到生产环境
