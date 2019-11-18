@@ -1,0 +1,14 @@
+git log --pretty=oneline
+
+git reset --hard b814b6940821d3e1517c23bc47364c07c9122db9
+git reset --hard 6c6b5
+
+// 已经commit了想撤销
+git reset --soft HEAD~1 //可用 HEAD~2撤销两次提交
+git reset --soft HEAD^
+
+
+查看书写过程
+git reset --hard 6c6b5 // 回退到指定版本
+git reset --soft HEAD^ // 撤销commit
+// 减（Unstage All Changes） 再撤销（Discard All Changes），继续查看下一个版本

@@ -1,0 +1,40 @@
+生成命令
+在 app/Console/Commands 目录中创建一个新的命令类
+    php artisan make:command SendEmails
+    php artisan make:command SendEmails --command=emails:send // 带命令写入
+输入 php artisan list 时能够清楚知道用法。执行命令时会调用 handle 方法
+public function handle()
+{
+    print_r(123);
+}
+
+php artisan emails:send 运行命令
+
+#必须传值
+protected $signature = 'email:send {user}';
+php artisan email:send 1（必须有这个，否则报错）
+
+#可有可无传值
+protected $signature = 'email:send {user?}';
+php artisan email:send  1(可有可无)
+
+#默认值
+protected $signature = 'email:send {user=1024}';
+php artisan email:send 1(可有可无)
+
+
+开关传递
+开关：表示一开一关，换成返回未：1/0，true/false
+
+protected $signature = 'email:send {user} {--queue}';
+// --queue这个名字可以随便取，避免认为是队列，
+//如果--queue开关被传递，其值是true，否则其值是false：
+
+php artisan email:send 1 --queue
+开关分配值
+//选项值被用户通过=来分配：
+protected $signature = 'email:send {user} {--queue=}';
+php artisan email:send 1 --queue='on'
+
+选项别名
+email:send {user} {--Q|queue}

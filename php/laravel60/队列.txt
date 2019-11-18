@@ -1,0 +1,7 @@
+为了使用 database 队列驱动，你需要一张数据表来存储任务。运行 queue:table Artisan 命令来创建这张表的迁移文件。当迁移文件创建好后，你就可以使用 migrate 命令来进行迁移：
+
+php artisan queue:table
+
+php artisan migrate
+
+jobs 表自动生成

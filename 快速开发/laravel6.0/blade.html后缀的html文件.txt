@@ -1,0 +1,10 @@
+laravel加载的视图文件后缀为blade.php
+换为blade.html
+
+app\Providers\AppServiceProvider 
+
+use Illuminate\Support\Facades\View;
+public function boot()
+{
+    View::addExtension('blade.html', 'blade');
+}

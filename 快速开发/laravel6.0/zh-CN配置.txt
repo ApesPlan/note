@@ -1,0 +1,5 @@
+config\app.php
+
+'locale' => 'en',
+
+'locale' => 'zh-CN', // 对应laravel resources\lang\zh-CN里的翻译文件包

@@ -1,0 +1,43 @@
+PHP >= 7.2.0
+BCMath PHP 拓展
+Ctype PHP 拓展
+JSON PHP 拓展
+Mbstring PHP 拓展
+OpenSSL PHP 拓展
+PDO PHP 拓展
+Tokenizer PHP 拓展
+XML PHP 拓展
+
+安装composer前提下
+    composer global require laravel/installer  // 安装 Laravel 安装器
+laravel new 命令会在你指定的目录创建一个全新的 Laravel 项目
+    laravel new laravel60_test  // 直接就创建了项目
+
+// 在.env中配置好了默认的数据库laravel60_test，然后再迁移数据到库中
+    php artisan migrate
+failed_jobs
+migrations
+password_resets
+users
+
+
+php artisan tinker // 命令行运行  打开tinker命令行
+    factory(App\User::class, 10)->create(); // 添加了10调记录
+    App\User::all();
+    App\User::count();
+    App\User::where('name', 'Alene Turner')->first();
+
+// 创建一个新用户
+    $user = new App\User;
+    $user->name = "imax";
+    $user->email = "imax@gmail.com";
+    $user->password = bcrypt("12345");
+    $user->save();
+// 删除一个用户
+    $user = App\User::find(1);
+    $user->delete();
+
+查阅某个 类 / 方法 的注释文档
+doc <functionName>
+查看源码
+show <functionName>

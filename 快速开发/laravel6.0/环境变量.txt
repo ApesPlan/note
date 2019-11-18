@@ -1,0 +1,19 @@
+如果你需要使用包含空格的值定义环境变量，可以通过将值括在双引号中来实现 APP_NAME="我的 应用"
+
+获取.env中的值
+    env('APP_DEBUG', false) // 传递给 env 函数的第二个值是「默认值」
+
+确定当前环境
+    应用程序当前所处环境是通过 .env 文件中的 APP_ENV 变量确定的。你可以通过 App facade 中的 environment 方法来访问此值：
+
+    $environment = App::environment();
+你还可以传递参数给 environment 方法，以检查当前的环境配置是否与给定值匹配。 如果与给定的任意值匹配，该方法将返回 true：
+
+    if (App::environment('local')) {
+        // 当前环境是 local
+    }
+
+    if (App::environment(['local', 'staging'])) {
+        // 当前的环境是 local 或 staging...
+    }
+Tip：应用程序当前所处环境检测可以被服务器级的 APP_ENV 环境变量覆盖。这在为相同的应用程序配置不同的环境时是非常有用的，这样你可以在你的服务器配置中为给定的主机设置与其匹配的给定的环境

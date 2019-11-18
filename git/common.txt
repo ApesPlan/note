@@ -24,7 +24,7 @@ git rm --cached 文件名 // 停止跟踪文件但不删除
 git log // 查看提交历史
 git log -p 文件名 // 查看指定文件的提交历史
 git blame 文件名 // 以列表形式查看指定文件的提交历史
-git reset --hard HEAD // 撤销工作目录中所有未提交文件的修改内容
+git reset --hard HEAD // 撤销工作目录中所有未提交文件的修改内容 已经commit就不行了
 git checkout HEAD 文件名 // 撤销指定的未提交文件的修改内容
 git branch // 显示所有本地分支
 git checkout 分支名/tag // 切换到指定分支或标签
@@ -37,11 +37,6 @@ git remote add origin 仓库地址 // 关联远程仓库
 git push origin --delete xxx # 删除github上的xxx分支
 git branch -D xxx # 删除本地xxx分支
 git push --tags // 上传所有标签
-
-docker image 查看已经打包好tag的镜像
-docker stop id 关闭镜像
-打开docker-compose.yml文件 更改docker id 保存
-docker-compose up
 
 当更新到了master分支后，在master分支上打tag
 步骤

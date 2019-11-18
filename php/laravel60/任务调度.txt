@@ -1,0 +1,10 @@
+后台任务
+默认情况下，计划同时运行的多个命令将会顺序执行。若你有长时间运行的命令，这可能导致后续命令的启动时间比预期的更晚。你可以使用 runInBackground 方法让命令在后台运行，如此，它们便可同时运行了:
+
+$schedule->command('analytics:report')
+         ->daily()
+         ->runInBackground();
+注意：仅能在通过 command 和 exec 方法调度任务时，方能使用 runInBackground 方法。
+
+任务输出
+注意：emailOutputTo，emailOutputOnFailure，sendOutputTo 和 appendOutputTo 方法是 command 和 exec 独有的。
